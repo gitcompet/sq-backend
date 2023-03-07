@@ -1,0 +1,10 @@
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\bin\Debug\netstandard2.0\Data_Access_Layer_Old.deps.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\bin\Debug\netstandard2.0\Data_Access_Layer_Old.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\bin\Debug\netstandard2.0\Data_Access_Layer_Old.pdb
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\obj\Debug\netstandard2.0\Data_Access_Layer_Old.csproj.AssemblyReference.cache
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\obj\Debug\netstandard2.0\Data_Access_Layer_Old.GeneratedMSBuildEditorConfig.editorconfig
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\obj\Debug\netstandard2.0\Data_Access_Layer_Old.AssemblyInfoInputs.cache
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\obj\Debug\netstandard2.0\Data_Access_Layer_Old.AssemblyInfo.cs
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\obj\Debug\netstandard2.0\Data_Access_Layer_Old.csproj.CoreCompileInputs.cache
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\obj\Debug\netstandard2.0\Data_Access_Layer_Old.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\Data_Access_Layer\obj\Debug\netstandard2.0\Data_Access_Layer_Old.pdb

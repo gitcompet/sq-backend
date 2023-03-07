@@ -1,0 +1,65 @@
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.csproj.AssemblyReference.cache
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.AssemblyInfoInputs.cache
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.AssemblyInfo.cs
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.csproj.CoreCompileInputs.cache
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.MvcApplicationPartsAssemblyInfo.cs
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.MvcApplicationPartsAssemblyInfo.cache
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\appsettings.Development.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\appsettings.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Web API.exe
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Web API.deps.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Web API.runtimeconfig.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Web API.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Web API.pdb
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\AutoMapper.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.OpenApi.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\MySqlConnector.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Pomelo.EntityFrameworkCore.MySql.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Business_Logic_Layer.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Data_Access_Layer.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Business_Logic_Layer.pdb
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Data_Access_Layer.pdb
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\staticwebassets\msbuild.Web API.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\staticwebassets\msbuild.build.Web API.props
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.Web API.props
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.Web API.props
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\staticwebassets.pack.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\staticwebassets.build.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\staticwebassets.development.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\scopedcss\bundle\Web API.styles.css
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.csproj.CopyComplete
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\refint\Web API.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.pdb
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\Web API.genruntimeconfig.cache
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\obj\Debug\net7.0\ref\Web API.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Web API.staticwebassets.runtime.json
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\JWT.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.AspNetCore.Identity.UI.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.Extensions.FileProviders.Embedded.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.Extensions.Identity.Core.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.Extensions.Options.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.IdentityModel.Logging.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\JwtCore.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Humanizer.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Design.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Microsoft.Extensions.DependencyModel.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\Mono.TextTemplating.dll
+C:\Pc Portable\CompetenceRH\Test\3-Tier-architecture-main\3-Tier-architecture-main\WebApplication6\bin\Debug\net7.0\System.CodeDom.dll
