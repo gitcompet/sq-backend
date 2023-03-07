@@ -2,6 +2,7 @@
 using Data_Access_Layer.Repository.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 
 
@@ -26,10 +27,15 @@ namespace Data_Access_Layer.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            string connectionString = "server=145.239.0.38;user id=skillquizusr;Pwd=SkillQuiz5!;;port=3310; database=skillquizdb;";
+
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-V1IICF3\\SQLEXPRESS;Initial Catalog=PersonDatabase;Integrated Security=True");
+                optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+
+
+                //optionsBuilder.UseMySql("Data Source=DESKTOP-V1IICF3\\SQLEXPRESS;Initial Catalog=PersonDatabase;Integrated Security=True");
             }
         }
 
