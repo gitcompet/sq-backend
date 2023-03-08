@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Data_Access_Layer.Repository;
 using System;
 
 
@@ -21,7 +23,13 @@ namespace SkillQuizzWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             // Add services to the container.
-            
+            //var connectionString = Configuration.GetConnectionString("skillquizconnection");
+
+            //services.AddDbContext<CompetenceDbContext>(options =>
+            //{
+            //    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+
+            //});
             //services.aadInfrastrucure(Configuration);
             services.AddControllers();
             services.AddSwaggerGen();

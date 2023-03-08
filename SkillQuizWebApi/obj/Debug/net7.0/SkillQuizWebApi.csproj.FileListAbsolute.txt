@@ -94,6 +94,7 @@ C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Microsoft.IdentityModel.Tokens.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Microsoft.OpenApi.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Microsoft.Win32.SystemEvents.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Mono.TextTemplating.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\MySqlConnector.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Newtonsoft.Json.dll
@@ -102,7 +103,16 @@ C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\System.CodeDom.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\System.Configuration.ConfigurationManager.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\System.Drawing.Common.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\System.Security.Cryptography.ProtectedData.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\System.Security.Permissions.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\System.Windows.Extensions.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Business_Logic_Layer.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Data_Access_Layer.dll
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Business_Logic_Layer.pdb

@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Configuration;
 using Data_Access_Layer.Repository.Entities;
+using Data_Access_Layer.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
+
 
 
 
@@ -12,22 +14,28 @@ using Microsoft.Extensions.Configuration;
 
 namespace Data_Access_Layer.Repository
 {
-    public partial class PersonDbContext : DbContext
+    public partial class CompetenceDbContext : DbContext
     {
-        public PersonDbContext()
+        public CompetenceDbContext()
         {
         }
 
-        public PersonDbContext(DbContextOptions<PersonDbContext> options)
+        public CompetenceDbContext(DbContextOptions<CompetenceDbContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Person> Person { get; set; }
 
+        public virtual DbSet<Domain> Domain { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = "server=145.239.0.38;user id=skillquizusr;Pwd=SkillQuiz5!;;port=3310; database=skillquizdb;";
+
+            //string connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            //string? connectionString = ConfigurationManager.AppSettings["countoffiles"];
 
             if (!optionsBuilder.IsConfigured)
             {
@@ -41,18 +49,18 @@ namespace Data_Access_Layer.Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Person>(entity =>
-            {
-                entity.Property(e => e.Address).IsUnicode(false);
+            //modelBuilder.Entity<Person>(entity =>
+            //{
+            //    entity.Property(e => e.Address).IsUnicode(false);
 
-                entity.Property(e => e.FirstName).IsUnicode(false);
+            //    entity.Property(e => e.FirstName).IsUnicode(false);
 
-                entity.Property(e => e.LastName).IsUnicode(false);
+            //    entity.Property(e => e.LastName).IsUnicode(false);
 
-                entity.Property(e => e.PhoneNumber).IsUnicode(false);
-            });
+            //    entity.Property(e => e.PhoneNumber).IsUnicode(false);
+            //});
 
-            OnModelCreatingPartial(modelBuilder);
+            //OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

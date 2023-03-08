@@ -11,13 +11,13 @@ namespace Data_Access_Layer
     {
         public List<Person> GetAllPersons()
         {
-            var db = new PersonDbContext();
+            var db = new CompetenceDbContext();
             return db.Person.ToList();
         }
 
         public Person GetPersonById(int id)
         {
-            var db = new PersonDbContext();
+            var db = new CompetenceDbContext();
             Person p = new Person();
 
             p = db.Person.FirstOrDefault(x => x.Id == id);      
@@ -28,7 +28,7 @@ namespace Data_Access_Layer
 
         public void postPerson(Person person)
         {
-            var db = new PersonDbContext();
+            var db = new CompetenceDbContext();
             db.Add(person);
             db.SaveChanges();
         }
