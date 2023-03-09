@@ -4,18 +4,19 @@ using AutoMapper;
 using Business_Logic_Layer.Models;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
+using Data_Access_Layer.DAL;
 
 namespace Business_Logic_Layer
 {
     public class DomainBLL : InterfaceDomain 
         {
 
-        private Data_Access_Layer.DomainDAL _DAL;
+        private DomainDAL _DAL;
         private Mapper _DomainMapper;
 
         public DomainBLL()
         {
-            _DAL = new Data_Access_Layer.DomainDAL();
+            _DAL = new Data_Access_Layer.DAL.DomainDAL();
             var _configDomain = new MapperConfiguration(cfg => cfg.CreateMap<Domain, DomainModel>().ReverseMap());
 
             _DomainMapper = new Mapper(_configDomain);

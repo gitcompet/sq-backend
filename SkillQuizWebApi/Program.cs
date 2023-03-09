@@ -27,7 +27,6 @@ namespace SkillQuizzWebApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped<InterfacePerson, PersonBLL>();
             builder.Services.AddScoped<InterfaceDomain, DomainBLL>();
 
             //builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
@@ -79,7 +78,6 @@ namespace SkillQuizzWebApi
 
                 }).ConfigureServices(services =>
                 {
-                    services.AddScoped<InterfacePerson, PersonBLL>();
                     services.AddScoped<InterfaceDomain, DomainBLL>();
 
                 });

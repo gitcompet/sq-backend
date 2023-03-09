@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace Data_Access_Layer
+namespace Data_Access_Layer.DAL
 {
     public class DomainDAL
     {

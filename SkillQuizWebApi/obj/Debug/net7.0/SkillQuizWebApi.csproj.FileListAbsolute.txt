@@ -138,3 +138,14 @@ C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\obj\Debug\net7.0\
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\obj\Debug\net7.0\SkillQuizWebApi.pdb
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\obj\Debug\net7.0\SkillQuizWebApi.genruntimeconfig.cache
 C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\obj\Debug\net7.0\ref\SkillQuizWebApi.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\Google.Protobuf.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\K4os.Compression.LZ4.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\K4os.Compression.LZ4.Streams.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\K4os.Hash.xxHash.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\MySql.Data.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\BouncyCastle.Crypto.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win-x64\native\comerr64.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win-x64\native\gssapi64.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win-x64\native\k5sprt64.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win-x64\native\krb5_64.dll
+C:\Pc Portable\CompetenceRH\rh-project-backend\SkillQuizWebApi\bin\Debug\net7.0\runtimes\win-x64\native\krbcc64.dll

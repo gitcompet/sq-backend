@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Configuration;
-using Data_Access_Layer.Repository.Entities;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using MySql;
 
 
 
@@ -25,8 +25,7 @@ namespace Data_Access_Layer.Repository
         {
         }
 
-        public virtual DbSet<Person> Person { get; set; }
-
+        
         public virtual DbSet<Domain> Domain { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
