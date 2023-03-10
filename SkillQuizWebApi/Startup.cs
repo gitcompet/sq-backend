@@ -5,7 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Data_Access_Layer.Repository;
 using System;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.Extensions.Hosting;
 
 
 namespace SkillQuizzWebApi
@@ -31,6 +34,26 @@ namespace SkillQuizzWebApi
 
             //});
             //services.aadInfrastrucure(Configuration);
+
+            var key = "This is my first Test Key";
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
+                };
+            });
+
+            
             services.AddControllers();
             services.AddSwaggerGen();
 
@@ -99,12 +122,16 @@ namespace SkillQuizzWebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.UseHttpsRedirection();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
+            app.UseHttpsRedirection();
             app.UseRouting();
 
+            app.UseAuthentication(); // This need to be added	
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
