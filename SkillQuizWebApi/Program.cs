@@ -6,9 +6,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+
+using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SkillQuizzWebApi
@@ -26,8 +31,34 @@ namespace SkillQuizzWebApi
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
+            builder.Services.AddAuthentication().AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateAudience = false,
+                    ValidateIssuer = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                            builder.Configuration.GetSection("AppSettings:Token").Value!))
+                };
+            });
+
+
             builder.Services.AddScoped<InterfaceDomain, DomainBLL>();
+            
+            //builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>();
 
             //builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
             //{
@@ -49,37 +80,27 @@ namespace SkillQuizzWebApi
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
-            app.UseCors("ApiCorsPolicy");
+            //app.UseCors("ApiCorsPolicy");
 
-            app.UseCors(build =>
-            {
-                build.WithOrigins("http://localhost:4200/");
-                build.AllowAnyMethod();
-                build.AllowAnyOrigin();
-                build.AllowAnyHeader();
+            //app.UseCors(build =>
+            //{
+            //    build.WithOrigins("http://localhost:4200/");
+            //    build.AllowAnyMethod();
+            //    build.AllowAnyOrigin();
+            //    build.AllowAnyHeader();
 
 
-            });
+            //});
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.MapControllers();
 
             app.Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-
-                }).ConfigureServices(services =>
-                {
-                    services.AddScoped<InterfaceDomain, DomainBLL>();
-
-                });
+      
     }
 }
