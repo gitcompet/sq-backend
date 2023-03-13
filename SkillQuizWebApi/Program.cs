@@ -20,14 +20,20 @@ namespace SkillQuizzWebApi
 {
     public class Program
     {
+       
         public static void Main(string[] args)
         {
             //CreateHostBuilder(args).Build().Run();
 
-           var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddCors(policy=>policy.AddPolicy("CorsPolicy",build =>
+            {
+                build.AllowAnyOrigin() //ALLOWING ALL ORIGINS BUT WITH RESTRICT IT TO A SET OR DOMAINS
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            }));
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -43,61 +49,45 @@ namespace SkillQuizzWebApi
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
-            builder.Services.AddAuthentication().AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateAudience = false,
-                    ValidateIssuer = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                            builder.Configuration.GetSection("AppSettings:Token").Value!))
-                };
-            });
 
 
-            builder.Services.AddScoped<InterfaceDomain, DomainBLL>();
-            
-            //builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>();
-
-            //builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            //builder.Services.AddAuthentication().AddJwtBearer(options =>
             //{
-            //    builder.WithOrigins("http://localhost:4200/").AllowAnyMethod().AllowAnyHeader();
-            //}));
+            //    options.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        ValidateAudience = false,
+            //        ValidateIssuer = false,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            //                builder.Configuration.GetSection("AppSettings:Token").Value!))
+            //    };
+            //});
+                      
+            //builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>();         
 
             //test
-
 
             //builder.Services.AddDbContext<FullStackDbContext>(options =>
             //    options.UseSqlServer(builder.Configuration.GetConnectionString("FullStackConnectionString")));
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            //// Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+           // app.UseHttpsRedirection(); IF ACTIVE IT THROWS CORS ERROR ONLY ACTIVATE THIS IN PROD
+            app.UseStaticFiles();
+            app.UseRouting();
 
-            //app.UseHttpsRedirection();
-
-            //app.UseCors("ApiCorsPolicy");
-
-            //app.UseCors(build =>
-            //{
-            //    build.WithOrigins("http://localhost:4200/");
-            //    build.AllowAnyMethod();
-            //    build.AllowAnyOrigin();
-            //    build.AllowAnyHeader();
-
-
-            //});
-
-            //app.UseAuthorization();
-
+            // Shows UseCors with CorsPolicyBuilder.
+            app.UseCors("CorsPolicy");
+            
+            //app.UseAuthentication(); // This need to be added	
+            app.UseAuthorization();
             app.MapControllers();
-
             app.Run();
         }
 
