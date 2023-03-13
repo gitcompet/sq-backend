@@ -2,13 +2,14 @@ using Business_Logic_Layer;
 using Business_Logic_Layer.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
+using SkillQuizWebApi.ExceptionDealer;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
@@ -20,15 +21,28 @@ namespace SkillQuizzWebApi
 {
     public class Program
     {
-       
+        //errorHandler General // MUST BE REDONE TO BE A ERROR 500 NOT 404
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+                  IApiVersionDescriptionProvider provider)
+        {
+            // ...
+            Middlewares(app, env);
+        }            
+
+        void Middlewares(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.ConfigureExceptionHandler(env.IsDevelopment());
+        }
+
         public static void Main(string[] args)
         {
+
             //CreateHostBuilder(args).Build().Run();
 
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddCors(policy=>policy.AddPolicy("CorsPolicy",build =>
+            builder.Services.AddCors(policy => policy.AddPolicy("CorsPolicy", build =>
             {
                 build.AllowAnyOrigin() //ALLOWING ALL ORIGINS BUT WITH RESTRICT IT TO A SET OR DOMAINS
                       .AllowAnyMethod()
@@ -50,6 +64,9 @@ namespace SkillQuizzWebApi
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
+            builder.Services.AddScoped<InterfaceDomain, DomainBLL>();
+            builder.Services.AddScoped<InterfaceLanguages, LanguagesBLL>();
+
 
             //builder.Services.AddAuthentication().AddJwtBearer(options =>
             //{
@@ -62,7 +79,7 @@ namespace SkillQuizzWebApi
             //                builder.Configuration.GetSection("AppSettings:Token").Value!))
             //    };
             //});
-                      
+
             //builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>();         
 
             //test
@@ -78,19 +95,21 @@ namespace SkillQuizzWebApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-           // app.UseHttpsRedirection(); IF ACTIVE IT THROWS CORS ERROR ONLY ACTIVATE THIS IN PROD
+            // app.UseHttpsRedirection(); IF ACTIVE IT THROWS CORS ERROR ONLY ACTIVATE THIS IN PROD
             app.UseStaticFiles();
             app.UseRouting();
 
             // Shows UseCors with CorsPolicyBuilder.
             app.UseCors("CorsPolicy");
-            
+
             //app.UseAuthentication(); // This need to be added	
             app.UseAuthorization();
             app.MapControllers();
             app.Run();
+
+
         }
 
-      
+
     }
 }

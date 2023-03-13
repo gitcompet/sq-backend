@@ -2455,24 +2455,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\hentzfa\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Aklinar\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Pc Portable\\CompetenceRH\\rh-project-backend\\Data_Access_Layer\\Data_Access_Layer.csproj",
+      "projectUniqueName": "C:\\Users\\Aklinar\\Source\\Repos\\rh-project-backend\\Data_Access_Layer\\Data_Access_Layer.csproj",
       "projectName": "Data_Access_Layer",
-      "projectPath": "C:\\Pc Portable\\CompetenceRH\\rh-project-backend\\Data_Access_Layer\\Data_Access_Layer.csproj",
-      "packagesPath": "C:\\Users\\hentzfa\\.nuget\\packages\\",
-      "outputPath": "C:\\Pc Portable\\CompetenceRH\\rh-project-backend\\Data_Access_Layer\\obj\\",
+      "projectPath": "C:\\Users\\Aklinar\\Source\\Repos\\rh-project-backend\\Data_Access_Layer\\Data_Access_Layer.csproj",
+      "packagesPath": "C:\\Users\\Aklinar\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Aklinar\\Source\\Repos\\rh-project-backend\\Data_Access_Layer\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\hentzfa\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Aklinar\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2480,7 +2475,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2538,7 +2532,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
