@@ -31,6 +31,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+[Oo]bj/[Dd]ebug
 [Oo]ut/
 [Dd]ebug\
 [Dd]ebugPublic\
@@ -41,7 +42,7 @@ x86\
 build\
 bld\
 [Bb]in\
-[Oo]bj\
+[Oo]bj\[Dd]ebug
 [Oo]ut\
 msbuild.log
 msbuild.err
