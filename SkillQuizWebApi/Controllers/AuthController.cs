@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SkillQuizWebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace JwtWebApiDotNet7.Controllers
@@ -38,7 +40,7 @@ namespace JwtWebApiDotNet7.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult<User> Login(UserDto request)
+        public ActionResult<TokenResponse> Login(UserDto request)
         {
             if (user.Username != request.Username)
             {
@@ -53,9 +55,10 @@ namespace JwtWebApiDotNet7.Controllers
             {
                 return BadRequest("Wrong password.");
             }
-            string token = CreateToken(user);
+            String token = CreateToken(user);
+            String refreshToken = GenerateRefreshToken();
 
-            return Ok(token);
+            return Ok(new TokenResponse(token,refreshToken));
         }
 
         private string CreateToken(User user)
@@ -72,6 +75,8 @@ namespace JwtWebApiDotNet7.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(
+                    issuer: "http://localhost:63869",
+                    audience: "http://localhost:63869",
                     claims: claims,
                     expires: DateTime.Now.AddDays(1),
                     signingCredentials: creds
@@ -80,6 +85,15 @@ namespace JwtWebApiDotNet7.Controllers
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt;
+        }
+        private String GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
     }
 }
