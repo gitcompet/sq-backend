@@ -10,51 +10,51 @@ namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PersonController : ControllerBase
+    public class DomainController : ControllerBase
     {
 
-        private Business_Logic_Layer.PersonBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfacePerson _IPerson;
-        public PersonController(Business_Logic_Layer.Interface.InterfacePerson interfacePerson)
+        private Business_Logic_Layer.DomainBLL _BLL;
+        private readonly Business_Logic_Layer.Interface.InterfaceDomain _IDomain;
+        public DomainController(Business_Logic_Layer.Interface.InterfaceDomain interfaceDomain)
         {
-            _BLL = new Business_Logic_Layer.PersonBLL();
-            _IPerson = interfacePerson;
-        }
-     
-       
-        [HttpGet]
-        [Route("getPersons")]
-      
-       
-        public List<PersonModel> GetAllPersons()
-        {
-            return _BLL.GetAllPersons();
+            _BLL = new Business_Logic_Layer.DomainBLL();
+            _IDomain = interfaceDomain;
         }
 
 
+        [HttpGet]
+        [Route("getDomains")]
+
+
+        public List<DomainModel> GetAllDomain()
+        {
+            return _IDomain.GetAllDomain();
+        }
+
+
 
         [HttpGet]
-        [Route("getPerson")]
-        public ActionResult<PersonModel> GetPersonById(int id)
+        [Route("getDomain")]
+        public ActionResult<DomainModel> GetDomainById(int id)
         {
-            var person= _IPerson.GetPersonById(id);
+            var domain = _IDomain.GetDomainById(id);
 
-            if (person == null)
+            if (domain == null)
             {
                 return NotFound("Invalid ID");
             }
 
-            return Ok(person);
+            return Ok(domain);
         }
 
 
- 
-    
-        [Route("postPerson")]
+
+
+        [Route("postDomain")]
         [HttpPost]
-        public void postPerson([FromBody] PersonModel personModel)
+        public void postDomain([FromBody] DomainModel domainModel)
         {
-            _IPerson.PostPerson(personModel);
+            _IDomain.PostDomain(domainModel);
         }
 
 
@@ -78,3 +78,4 @@ namespace SkillQuizzWebApi.Controllers
 
     }
 }
+

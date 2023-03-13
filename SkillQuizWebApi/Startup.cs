@@ -1,15 +1,22 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Data_Access_Layer.Repository;
 using System;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.Extensions.Hosting;
 
 
 namespace SkillQuizzWebApi
 {
     public class Startup
     {
+        static string policyName = "ApiCorsPolicy";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -21,8 +28,34 @@ namespace SkillQuizzWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             // Add services to the container.
-            
+            //var connectionString = Configuration.GetConnectionString("skillquizconnection");
+
+            //services.AddDbContext<CompetenceDbContext>(options =>
+            //{
+            //    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+
+            //});
             //services.aadInfrastrucure(Configuration);
+
+            var key = "This is my first Test Key";
+            //services.AddAuthentication(x =>
+            //{
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(x =>
+            //{
+            //    x.RequireHttpsMetadata = false;
+            //    x.SaveToken = true;
+            //    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
+            //    };
+            //});
+
+            
             services.AddControllers();
             services.AddSwaggerGen();
 
@@ -75,15 +108,7 @@ namespace SkillQuizzWebApi
             //});
 
 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(
-            //        name: "AllowOrigin",
-            //        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200/")
-            //        );
-
-
-            //});
+            services.AddCors();
             //services.AddCors();
         }
 
@@ -91,12 +116,10 @@ namespace SkillQuizzWebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
