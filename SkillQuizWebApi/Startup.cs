@@ -15,6 +15,8 @@ namespace SkillQuizzWebApi
 {
     public class Startup
     {
+        static string policyName = "ApiCorsPolicy";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,22 +38,22 @@ namespace SkillQuizzWebApi
             //services.aadInfrastrucure(Configuration);
 
             var key = "This is my first Test Key";
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
-                };
-            });
+            //services.AddAuthentication(x =>
+            //{
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(x =>
+            //{
+            //    x.RequireHttpsMetadata = false;
+            //    x.SaveToken = true;
+            //    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
+            //    };
+            //});
 
             
             services.AddControllers();
@@ -106,15 +108,7 @@ namespace SkillQuizzWebApi
             //});
 
 
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy(
-            //        name: "AllowOrigin",
-            //        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:4200/")
-            //        );
-
-
-            //});
+            services.AddCors();
             //services.AddCors();
         }
 
@@ -126,12 +120,6 @@ namespace SkillQuizzWebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
-            app.UseRouting();
-
-            app.UseAuthentication(); // This need to be added	
-            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,4 +1,5 @@
 ﻿using JwtWebApiDotNet7.Models;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Text;
 
@@ -15,7 +17,7 @@ namespace JwtWebApiDotNet7.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User();
+        public static User user = new User("test1","Test1Test$");
         private readonly IConfiguration _configuration;
 
         public AuthController(IConfiguration configuration)
@@ -43,11 +45,14 @@ namespace JwtWebApiDotNet7.Controllers
                 return BadRequest("User not found.");
             }
 
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            //if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            //{
+            //    return BadRequest("Wrong password.");
+            //}
+            if (user.PasswordHash != request.Password)
             {
                 return BadRequest("Wrong password.");
             }
-
             string token = CreateToken(user);
 
             return Ok(token);
