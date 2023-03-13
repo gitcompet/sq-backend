@@ -2229,24 +2229,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\hentzfa\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Aklinar\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Pc Portable\\CompetenceRH\\rh-project-backend\\Business_Logic_Layer\\Business_Logic_Layer.csproj",
+      "projectUniqueName": "C:\\Users\\Aklinar\\Source\\Repos\\rh-project-backend\\Business_Logic_Layer\\Business_Logic_Layer.csproj",
       "projectName": "Business_Logic_Layer",
-      "projectPath": "C:\\Pc Portable\\CompetenceRH\\rh-project-backend\\Business_Logic_Layer\\Business_Logic_Layer.csproj",
-      "packagesPath": "C:\\Users\\hentzfa\\.nuget\\packages\\",
-      "outputPath": "C:\\Pc Portable\\CompetenceRH\\rh-project-backend\\Business_Logic_Layer\\obj\\",
+      "projectPath": "C:\\Users\\Aklinar\\Source\\Repos\\rh-project-backend\\Business_Logic_Layer\\Business_Logic_Layer.csproj",
+      "packagesPath": "C:\\Users\\Aklinar\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Aklinar\\Source\\Repos\\rh-project-backend\\Business_Logic_Layer\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\hentzfa\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Aklinar\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2254,15 +2249,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Pc Portable\\CompetenceRH\\rh-project-backend\\Data_Access_Layer\\Data_Access_Layer.csproj": {
-              "projectPath": "C:\\Pc Portable\\CompetenceRH\\rh-project-backend\\Data_Access_Layer\\Data_Access_Layer.csproj"
+            "C:\\Users\\Aklinar\\Source\\Repos\\rh-project-backend\\Data_Access_Layer\\Data_Access_Layer.csproj": {
+              "projectPath": "C:\\Users\\Aklinar\\Source\\Repos\\rh-project-backend\\Data_Access_Layer\\Data_Access_Layer.csproj"
             }
           }
         }
@@ -2298,7 +2292,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   }
