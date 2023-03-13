@@ -29,6 +29,7 @@ namespace Data_Access_Layer.Repository
 
         public virtual DbSet<Domain> Domain { get; set; }
         public virtual DbSet<Languages> Languages { get; set; }
+        public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
