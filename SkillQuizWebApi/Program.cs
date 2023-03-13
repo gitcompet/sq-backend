@@ -1,5 +1,7 @@
 using Business_Logic_Layer;
 using Business_Logic_Layer.Interface;
+using Data_Access_Layer;
+using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -65,6 +67,16 @@ namespace SkillQuizzWebApi
             });
 
             builder.Services.AddScoped<InterfaceDomain, DomainBLL>();
+            builder.Services.AddScoped<InterfaceUserType, UserTypeBLL>();
+            builder.Services.AddScoped<InterfaceElementTranslation, ElementTranslationBLL>();
+            builder.Services.AddScoped<InterfaceDomainCompose, DomainComposeBLL>();
+            builder.Services.AddScoped<InterfaceSubDomain, SubDomainBLL>();
+            builder.Services.AddScoped<InterfaceTestStatus, TestStatusBLL>();
+            builder.Services.AddScoped<InterfaceAnswer, AnswerBLL>();
+            builder.Services.AddScoped<InterfaceQuestion, QuestionBLL>();
+            builder.Services.AddScoped< InterfaceTestCategory, TestCategoryBLL>();
+            builder.Services.AddScoped<InterfaceTest, TestBLL>();
+            builder.Services.AddScoped<InterfaceAnswerQuestion, AnswerQuestionBLL>();
             builder.Services.AddScoped<InterfaceLanguages, LanguagesBLL>();
             builder.Services.AddScoped<InterfaceUser, UserBLL>();
 
