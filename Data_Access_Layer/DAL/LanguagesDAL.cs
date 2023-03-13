@@ -19,9 +19,7 @@ namespace Data_Access_Layer.DAL
         {
             var db = new CompetenceDbContext();
             Languages d = new Languages();
-
             d = db.Languages.FirstOrDefault(x => x.LanguagesID == id);
-
             return d;
         }
 
