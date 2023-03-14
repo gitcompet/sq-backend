@@ -12,7 +12,7 @@ namespace SkillQuizzWebApi.Controllers
         [Route("hello")]
         public ActionResult<string> hello()
         {
-            return Ok("Hello World! Test commit");
+            return Ok("Hello World!");
         }
     }
 }
