@@ -2,10 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-
-
-
-
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
@@ -24,14 +20,10 @@ namespace SkillQuizzWebApi.Controllers
 
         [HttpGet]
         [Route("getDomains")]
-
-
         public List<DomainModel> GetAllDomain()
         {
             return _IDomain.GetAllDomain();
         }
-
-
 
         [HttpGet]
         [Route("getDomain")]
@@ -47,17 +39,12 @@ namespace SkillQuizzWebApi.Controllers
             return Ok(domain);
         }
 
-
-
-
         [Route("postDomain")]
         [HttpPost]
         public void postDomain([FromBody] DomainModel domainModel)
         {
             _IDomain.PostDomain(domainModel);
         }
-
-
 
         //(This is the bad practise!) = > this should instead also call the BLL 
         //[Route("deletePerson")]
