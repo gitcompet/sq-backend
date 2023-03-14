@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class LanguagesController : ControllerBase
     {
 
