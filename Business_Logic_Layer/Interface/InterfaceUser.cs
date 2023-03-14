@@ -10,9 +10,8 @@ namespace Business_Logic_Layer.Interface
     public interface InterfaceUser
     {
         List<UserModel> GetAllUser();
-
-
         UserModel GetUserById(int id);
-        int PostUser(UserModelDTO userModelDTO);
+        UserModel GetUserByUsername(string username);
+        CreatedUserDTO PostUser(UserModelDTO userModelDTO);
     }
 }

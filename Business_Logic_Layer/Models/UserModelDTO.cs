@@ -14,8 +14,8 @@ namespace Business_Logic_Layer.Models
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string Email { get; set; }
-        public string Comment { get; set; }
-        public string LanguageId { get; set; }
-        public string TypeUserId { get; set; }
+        public string? Comment { get; set; }
+        public string? LanguageId { get; set; }
+        public string? TypeUserId { get; set; }
     }
 }

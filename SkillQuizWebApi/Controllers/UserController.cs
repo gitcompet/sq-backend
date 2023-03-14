@@ -1,12 +1,13 @@
 ﻿using Business_Logic_Layer.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
 
@@ -21,8 +22,6 @@ namespace SkillQuizzWebApi.Controllers
 
         [HttpGet]
         [Route("getUsers")]
-
-
         public List<UserModel> GetAllUser()
         {
             return _IUser.GetAllUser();
@@ -44,14 +43,17 @@ namespace SkillQuizzWebApi.Controllers
             return Ok(User);
         }
 
-
-
-
         [Route("postUser")]
         [HttpPost]
-        public int postUser([FromBody] UserModelDTO userModelDTO)
-        {
-            return _IUser.PostUser(userModelDTO);
+        public ActionResult<CreatedUserDTO> postUser([FromBody] UserModelDTO userModelDTO)
+        {   
+            CreatedUserDTO CreatedUser = _IUser.PostUser(userModelDTO);
+
+            if(CreatedUser.Id == -1 ) return BadRequest("User already exists.");
+
+            Uri uri = new Uri($"http://localhost:63869/api/Users/{CreatedUser.Id}");
+            //RETURN 201 CREATED STATUS
+            return Created(uri,CreatedUser);
         }
 
 

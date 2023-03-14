@@ -1,13 +1,18 @@
-﻿using JwtWebApiDotNet7.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
+using JwtWebApiDotNet7.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Extensions;
 using SkillQuizWebApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -19,56 +24,59 @@ namespace JwtWebApiDotNet7.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        public static User user = new User("test1","Test1Test$");
+        private readonly InterfaceUser _IUser;
         private readonly IConfiguration _configuration;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration,InterfaceUser interfaceUser)
         {
             _configuration = configuration;
+            _IUser = interfaceUser;
         }
-
-        [HttpPost("register")]
-        public ActionResult<User> Register(UserDto request)
-        {
-            string passwordHash
-                = BCrypt.Net.BCrypt.HashPassword(request.Password);
-
-            user.Username = request.Username;
-            user.PasswordHash = passwordHash;
-
-            return Ok(user);
-        }
+          
 
         [HttpPost("login")]
-        public ActionResult<TokenResponse> Login(UserDto request)
+        public ActionResult<TokenResponse> Login(UserLoginDTO request)
         {
-            if (user.Username != request.Username)
+            var userModel = _IUser.GetUserByUsername(request.Login);
+            if (userModel ==  null)
             {
                 return BadRequest("User not found.");
             }
-
-            //if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-            //{
-            //    return BadRequest("Wrong password.");
-            //}
-            if (user.PasswordHash != request.Password)
+              
+           if (!BCrypt.Net.BCrypt.Verify(request.Password, userModel.Password))
             {
                 return BadRequest("Wrong password.");
-            }
-            String token = CreateToken(user);
+            }   
+            String token = CreateToken(userModel);
             String refreshToken = GenerateRefreshToken();
 
             return Ok(new TokenResponse(token,refreshToken));
         }
 
-        private string CreateToken(User user)
+        private string CreateToken(UserModel user)
         {
-            List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "Admin"),
-                new Claim(ClaimTypes.Role, "User"),
-            };
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
+            List<string> roles = new()
+            {
+                //CHANGE IMPLEMENTATION FOR ROLES FOR FUTURE NEW ROLES AND RETTRIEVE FROM DB
+                "USER"
+            };
+            if (user.TypeUserId.Equals("0")) {
+                roles.Add("ADMIN");                
+            }
+            if (user.TypeUserId.Equals("1"))
+            {
+                roles.Add("RH");
+            }
+            //END
+            List<Claim> claims = new List<Claim> {
+                new Claim(ClaimTypes.Name, user.Login)             
+            };
+            foreach (string role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role,role));
+            }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration.GetSection("AppSettings:Token").Value!));
 
@@ -81,10 +89,7 @@ namespace JwtWebApiDotNet7.Controllers
                     expires: DateTime.Now.AddDays(1),
                     signingCredentials: creds
                 );
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
         private String GenerateRefreshToken()
         {

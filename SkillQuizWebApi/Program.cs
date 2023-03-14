@@ -4,6 +4,7 @@ using Data_Access_Layer;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,6 +52,10 @@ namespace SkillQuizzWebApi
                       .AllowAnyHeader();
             }));
             builder.Services.AddControllers();
+            builder.Services.Configure<JsonOptions>(options =>
+             {
+                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+             });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
 

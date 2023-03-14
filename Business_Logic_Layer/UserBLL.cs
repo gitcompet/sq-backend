@@ -3,6 +3,7 @@ using Business_Logic_Layer.Interface;
 using Business_Logic_Layer.Models;
 using Data_Access_Layer.DAL;
 using Data_Access_Layer.Repository.Models;
+using Org.BouncyCastle.Crypto.Generators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,20 +43,33 @@ namespace Business_Logic_Layer
             return UserModel;
         }
 
+        public UserModel GetUserByUsername(string username)
+        {
+            var UserEntity = _DAL.GetUserByUsername(username);
 
-        public int PostUser(UserModelDTO userModelDTO)
+            UserModel UserModel = _UserMapper.Map<User, UserModel>(UserEntity);
+
+            return UserModel;
+        }
+
+
+        public CreatedUserDTO PostUser(UserModelDTO userModelDTO)
         {
             var userModel = new UserModel(userModelDTO);
+            string passwordHash
+                = BCrypt.Net.BCrypt.HashPassword(userModel.Password);
+            userModel.Password = passwordHash;
             System.Diagnostics.Debug.WriteLine("==============================================");
             System.Diagnostics.Debug.WriteLine(userModel.LoginId);
             System.Diagnostics.Debug.WriteLine(userModel.DateCreat);
             System.Diagnostics.Debug.WriteLine("==============================================");
-            User languagesEntity = _UserMapper.Map<UserModel, User>(userModel);
+            User userEntity = _UserMapper.Map<UserModel, User>(userModel);
             System.Diagnostics.Debug.WriteLine("==============================================");
-            System.Diagnostics.Debug.WriteLine(languagesEntity.LoginId);
-            System.Diagnostics.Debug.WriteLine(languagesEntity.DateCreat);
+            System.Diagnostics.Debug.WriteLine(userEntity.LoginId);
+            System.Diagnostics.Debug.WriteLine(userEntity.DateCreat);
             System.Diagnostics.Debug.WriteLine("==============================================");
-            return _DAL.postUser(languagesEntity);
+            int userId = _DAL.postUser(userEntity);
+            return new CreatedUserDTO(userId);
         }
 
     }
