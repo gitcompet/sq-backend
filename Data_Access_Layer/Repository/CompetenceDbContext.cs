@@ -53,6 +53,8 @@ namespace Data_Access_Layer.Repository
 
         public virtual DbSet<QuizCompose> QuizCompose { get; set; }
 
+        public virtual DbSet<AnswerCandidateTest> AnswerCandidateTest { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = "server=145.239.0.38;user id=skillquizusr;Pwd=SkillQuiz5!;;port=3310; database=skillquizdb;";
