@@ -55,6 +55,8 @@ namespace Data_Access_Layer.Repository
 
         public virtual DbSet<AnswerCandidateTest> AnswerCandidateTest { get; set; }
 
+        public virtual DbSet<TestCompose> TestCompose { get; set; }
+
         public virtual DbSet<TestAttribution> TestAttribution { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
