@@ -24,7 +24,15 @@ namespace Data_Access_Layer.DAL
         }
 
 
-        public int postLanguages(Languages languages)
+        public int RemoveLanguage(int id)
+        {
+            var db = new CompetenceDbContext();
+            var d = db.Remove(db.Languages.Single(x => x.LanguagesID == id));
+            db.SaveChanges();
+            return 1;
+        }
+
+        public int PostLanguages(Languages languages)
         {
             var tempLanguage = new Languages();
             var db = new CompetenceDbContext();

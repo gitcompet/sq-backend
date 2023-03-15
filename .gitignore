@@ -52,3 +52,5 @@ msbuild.wrn
 .vs/
 .vs
 .vs\
+/.vs
+\.vs
