@@ -13,6 +13,7 @@ namespace Business_Logic_Layer.Interface
 
 
         LanguagesModel GetLanguagesById(int id);
+        int RemoveLanguage(int id);
         int PostLanguages(LanguagesModelDTO languagesModelDTO);
     }
 }

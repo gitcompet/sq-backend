@@ -1,4 +1,5 @@
 ﻿using Business_Logic_Layer.Models;
+using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -48,8 +49,18 @@ namespace SkillQuizzWebApi.Controllers
             return Ok(languages);
         }
 
+        [Route("removeLanguage")]
+        [HttpPost]
+        public ActionResult<int> RemoveLanguage([FromBody] ResponseIdDTO responseIdDTO)
+        {
+            var result = _ILanguages.RemoveLanguage(Int32.Parse(responseIdDTO.GenericId));
 
-
+            if (result == 0)
+            {
+                return NotFound("Invalid ID");
+            }
+            return Ok(result);
+        }
 
         [Route("postLanguages")]
         [HttpPost]

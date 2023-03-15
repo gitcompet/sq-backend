@@ -40,11 +40,16 @@ namespace Business_Logic_Layer
         }
 
 
+        public int RemoveLanguage(int id)
+        {
+            return _DAL.RemoveLanguage(id);
+        }
+
         public int PostLanguages(LanguagesModelDTO languagesModelDTO)
         {
             var languagesModel = new LanguagesModel(languagesModelDTO);
             Languages languagesEntity = _LanguagesMapper.Map<LanguagesModel, Languages>(languagesModel);
-            return _DAL.postLanguages(languagesEntity);
+            return _DAL.PostLanguages(languagesEntity);
         }
 
     }
