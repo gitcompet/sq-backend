@@ -25,9 +25,9 @@ namespace Business_Logic_Layer
         public List<DomainModel> GetAllDomain()
         {
             List<Domain> domainFromDB = _DAL.GetAllDomain();
-            List<DomainModel> personsModel = _DomainMapper.Map<List<Domain>, List<DomainModel>>(domainFromDB);
+            List<DomainModel> domainModel = _DomainMapper.Map<List<Domain>, List<DomainModel>>(domainFromDB);
 
-            return personsModel;
+            return domainModel;
         }
 
         public DomainModel GetDomainById(int id)

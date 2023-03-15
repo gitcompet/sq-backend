@@ -27,40 +27,8 @@ namespace SkillQuizzWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add services to the container.
-            //var connectionString = Configuration.GetConnectionString("skillquizconnection");
-
-            //services.AddDbContext<CompetenceDbContext>(options =>
-            //{
-            //    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-
-            //});
-            //services.aadInfrastrucure(Configuration);
-
-            var key = "This is my first Test Key";
-            //services.AddAuthentication(x =>
-            //{
-            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false,
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key))
-            //    };
-            //});
-
-            
             services.AddControllers();
             services.AddSwaggerGen();
-
-
-
             //services.AddDbContext<ApplicationDbContext>(options =>
             //{
             //    options.UseMySQL(connectionString);
@@ -106,10 +74,7 @@ namespace SkillQuizzWebApi
             //    options.Cookie.HttpOnly = true;
             //    options.Cookie.IsEssential = true;
             //});
-
-
             services.AddCors();
-            //services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,6 +85,7 @@ namespace SkillQuizzWebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

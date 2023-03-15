@@ -31,10 +31,26 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+[Oo]bj/[Dd]ebug
 [Oo]ut/
+[Dd]ebug\
+[Dd]ebugPublic\
+[Rr]elease\
+[Rr]eleases\
+x64\
+x86\
+build\
+bld\
+[Bb]in\
+[Oo]bj\[Dd]ebug
+[Oo]ut\
 msbuild.log
 msbuild.err
 msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+.vs
+.vs\
+/.vs
+\.vs

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +26,38 @@ namespace Data_Access_Layer.Repository
         {
         }
 
-        
-        public virtual DbSet<Domain> Domain { get; set; }
 
+        public virtual DbSet<Domain> Domain { get; set; }
+        public virtual DbSet<Languages> Languages { get; set; }
+        public virtual DbSet<User> User { get; set; }
+
+        public virtual DbSet<UserType> UserType { get; set; }
+
+        public virtual DbSet<ElementTranslation> ElementTranslation { get; set; }
+
+        public virtual DbSet<DomainCompose> DomainCompose { get; set; }
+
+        public virtual DbSet<SubDomain> SubDomain { get; set; }
+
+        public virtual DbSet<TestStatus> TestStatus { get; set; }
+
+        public virtual DbSet<Answer> Answer { get; set; }
+
+        public virtual DbSet<Question> Question { get; set; }
+
+        public virtual DbSet<TestCategory> TestCategory { get; set; }
+
+        public virtual DbSet<Test> Test { get; set; }
+
+        public virtual DbSet<AnswerQuestion> AnswerQuestion { get; set; }
+
+        public virtual DbSet<QuizCompose> QuizCompose { get; set; }
+
+        public virtual DbSet<AnswerCandidateTest> AnswerCandidateTest { get; set; }
+
+        public virtual DbSet<TestCompose> TestCompose { get; set; }
+
+        public virtual DbSet<TestAttribution> TestAttribution { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = "server=145.239.0.38;user id=skillquizusr;Pwd=SkillQuiz5!;;port=3310; database=skillquizdb;";

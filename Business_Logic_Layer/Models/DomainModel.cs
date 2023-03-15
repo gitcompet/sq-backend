@@ -8,9 +8,9 @@ namespace Business_Logic_Layer.Models
 {
     public class DomainModel
     {
-        public int DomainId { get; set; }
+        public String DomainId { get; set; }
         public string Name { get; set; }
-        public Boolean Active { get; set; }
-        public Boolean Deleted { get; set; }
+        public Boolean isActive { get; set; }
+        public Boolean isDeleted { get; set; }
     }
 }
