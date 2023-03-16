@@ -3,6 +3,7 @@ using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
@@ -10,11 +11,17 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using System.Data;
 
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Route("[controller]")]
+    [Authorize(
+        AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        Roles = "ADMIN"
+     )]
     public class DomainController : ControllerBase
     {
         private readonly InterfaceDomain _IDomain;

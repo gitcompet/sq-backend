@@ -1,5 +1,6 @@
 ﻿using Business_Logic_Layer.Interface;
 using Business_Logic_Layer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
@@ -14,6 +15,11 @@ using System.Text.Json.Nodes;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
+    [Authorize(
+        AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        Roles = "USER"
+     )]
     [Route("api/v1/[controller]")]
     public class QuestionController : ControllerBase
     {
@@ -139,6 +145,16 @@ namespace SkillQuizzWebApi.Controllers
         {
             var question = _IQuestion.GetQuestionById(id);
 
+        [Route("postQuestion")]
+        [HttpPost]
+        [Authorize(
+            AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+            Roles = "ADMIN,RH"
+        )]
+        public void postQuestion([FromBody] QuestionModel questionModel)
+        {
+            _IQuestion.PostQuestion(questionModel);
+        }
             if (question == null)
             {
                 return NotFound("Invalid ID");
