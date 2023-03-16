@@ -51,7 +51,8 @@ namespace SkillQuizzWebApi
                       .AllowAnyMethod()
                       .AllowAnyHeader();
             }));
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddNewtonsoftJson();
             builder.Services.Configure<JsonOptions>(options =>
              {
                  options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
