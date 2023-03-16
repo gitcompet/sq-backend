@@ -13,8 +13,7 @@ namespace Data_Access_Layer.Repository.Models
         public int SubDomainId { get; set; }
         public int Level { get; set; }
         public decimal Weight { get; set; }
-        public DateTime Time { get; set; }
-        public DateTime EndDateTime { get; set; }
+        public int Duration { get; set; }
         public String Comment { get; set; }
         public Boolean isActive { get; set; }
         public Boolean isDeleted { get; set; }
