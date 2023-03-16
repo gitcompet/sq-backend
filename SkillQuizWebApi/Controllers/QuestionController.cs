@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class QuestionController : ControllerBase
     {
 
@@ -21,20 +21,18 @@ namespace SkillQuizzWebApi.Controllers
             _IQuestion = interfaceQuestion;
         }
 
-
+        //GET api/v1/Question
         [HttpGet]
-        [Route("getQuestions")]
-
-
+        [Route("")]
         public List<QuestionModel> GetAllQuestion()
         {
             return _IQuestion.GetAllQuestion();
         }
 
 
-
+        //GET api/v1/Question/{id}
         [HttpGet]
-        [Route("getQuestion")]
+        [Route("{id:int}")]
         public ActionResult<QuestionModel> GetQuestionById(int id)
         {
             var question = _IQuestion.GetQuestionById(id);
@@ -47,16 +45,29 @@ namespace SkillQuizzWebApi.Controllers
             return Ok(question);
         }
 
-
-
-
-        [Route("postQuestion")]
+        //POST api/v1/Question
         [HttpPost]
-        public void postQuestion([FromBody] QuestionModel questionModel)
+        [Route("")]
+        public void PostQuestion([FromBody] QuestionModelPostDTO questionModel)
         {
             _IQuestion.PostQuestion(questionModel);
         }
 
+        //PATCH api/v1/Question/{id}
+        [HttpPatch]
+        [Route("{id:int}")]
+        public void PatchQuestion([FromBody] QuestionModelPatchDTO questionModel)
+        {
+            _IQuestion.PatchQuestion(questionModel);
+        }
+
+        //DELETE api/v1/Question/{id}
+        [HttpPatch]
+        [Route("{id:int}")]
+        public void DeleteQuestion(int id)
+        {
+            _IQuestion.DeleteQuestion(id);
+        }
 
 
         //(This is the bad practise!) = > this should instead also call the BLL 
