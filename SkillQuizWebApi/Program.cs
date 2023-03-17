@@ -83,6 +83,7 @@ namespace SkillQuizzWebApi
             builder.Services.AddScoped<InterfaceQuiz, QuizBLL>();
             builder.Services.AddScoped< InterfaceTestCategory, TestCategoryBLL>();
             builder.Services.AddScoped<InterfaceTest, TestBLL>();
+            builder.Services.AddScoped<InterfaceTestCompose, TestComposeBLL>();
             builder.Services.AddScoped<InterfaceAnswerQuestion, AnswerQuestionBLL>();
             builder.Services.AddScoped<InterfaceLanguages, LanguagesBLL>();
             builder.Services.AddScoped<InterfaceUser, UserBLL>();
