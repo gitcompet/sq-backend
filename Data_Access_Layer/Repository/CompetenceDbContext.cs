@@ -44,6 +44,7 @@ namespace Data_Access_Layer.Repository
         public virtual DbSet<Answer> Answer { get; set; }
 
         public virtual DbSet<Question> Question { get; set; }
+        public virtual DbSet<Quiz> Quiz { get; set; }
 
         public virtual DbSet<TestCategory> TestCategory { get; set; }
 
@@ -78,6 +79,9 @@ namespace Data_Access_Layer.Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Quiz>()
+                        .Property(p => p.Weight)
+                        .HasPrecision(5);
             //modelBuilder.Entity<Person>(entity =>
             //{
             //    entity.Property(e => e.Address).IsUnicode(false);
