@@ -5,6 +5,7 @@ using Business_Logic_Layer.Models;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Business_Logic_Layer
 {
@@ -40,11 +41,35 @@ namespace Business_Logic_Layer
         }
 
 
-        public void PostTest(TestModel testModel)
+        public TestModel PostTest(TestModel testModel)
         {
             Test testEntity = _TestMapper.Map<TestModel, Test>(testModel);
-            _DAL.postTest(testEntity);
+            var test = _DAL.PostTest(testEntity);
+            TestModel testModelReturn = _TestMapper.Map<Test, TestModel>(test);
+            return testModelReturn;
         }
 
+
+        public TestModel PatchTest(int id, JsonPatchDocument<Test> testModelJSON)
+        {
+            var testEntity = _DAL.PatchTest(id, testModelJSON);
+
+            TestModel testModel = _TestMapper.Map<Test, TestModel>(testEntity);
+
+            return testModel;
+        }
+
+        public TestModel PutTest(TestModel testModel)
+        {
+            Test testEntity = _TestMapper.Map<TestModel, Test>(testModel);
+            var test = _DAL.PutTest(testEntity);
+            TestModel testModelReturn = _TestMapper.Map<Test, TestModel>(test);
+            return testModelReturn;
+        }
+        public void DeleteTest(int id)
+        {
+            _DAL.DeleteTest(id);
+        }
     }
 }
+
