@@ -62,7 +62,9 @@ namespace Data_Access_Layer.DAL
             }
             catch
             {
-
+                db.Add(question);
+                db.SaveChanges();
+                d = question;
             }
             return d;
         }
