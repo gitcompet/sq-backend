@@ -110,61 +110,6 @@ namespace JwtWebApiDotNet7.Controllers
                 throw new SecurityTokenException("Invalid token");
             return false;
         }
-        [HttpPost("refresh")]
-        [Consumes("application/x-www-form-urlencoded")]
-        [Authorize(
-             AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-             Roles = "USER"
-        )]
-        public ActionResult<TokenResponse> RefreshToken([FromForm] string token, [FromForm] string refreshToken)
-        {
-            var principal = GetPrincipalFromExpiredToken(token);
-            var username = (principal.Identity as ClaimsIdentity)
-                .Claims
-                .Where(c => c.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault();
-            var roles = (principal.Identity as ClaimsIdentity)
-                            .Claims
-                            .Where(c => c.Type == ClaimTypes.Role).FirstOrDefault();
-            var email = (principal.Identity as ClaimsIdentity)
-                .Claims
-                .Where(c => c.Type == JwtRegisteredClaimNames.Email).FirstOrDefault();
-
-            if (!IsRefreshInvalid(refreshToken))
-            {
-                UserModel userModel = new UserModel();
-                userModel.Login = username.Value;
-                userModel.TypeUserId = roles.Value;
-                userModel.Email = email.Value;
-                String  newToken = CreateToken(userModel);
-                String newRefreshToken = GenerateRefreshToken();
-
-                return Ok(new TokenResponse(token, refreshToken));
-            }
-            return BadRequest();
-
-        }
-
-        private bool IsRefreshInvalid(string refreshToken)
-        {
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = false, //you might want to validate the audience and issuer depending on your use case
-                ValidateIssuer = false,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                                     _configuration["JWT:Secret"])),
-                ValidateLifetime = true
-            };
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(refreshToken, tokenValidationParameters, out securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512Signature, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid token");
-            return false;
-        }
-
         private string CreateToken(UserModel user)
         {
 
