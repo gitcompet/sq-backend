@@ -18,10 +18,12 @@ namespace SkillQuizzWebApi.Controllers
     {
 
         private Business_Logic_Layer.QuestionBLL _BLL;
+        private Business_Logic_Layer.AnswerBLL _BLL2;
         private readonly Business_Logic_Layer.Interface.InterfaceQuestion _IQuestion;
         public QuestionController(Business_Logic_Layer.Interface.InterfaceQuestion interfaceQuestion)
         {
             _BLL = new Business_Logic_Layer.QuestionBLL();
+            _BLL2 = new Business_Logic_Layer.AnswerBLL();
             _IQuestion = interfaceQuestion;
         }
 
@@ -45,6 +47,9 @@ namespace SkillQuizzWebApi.Controllers
             {
                 return NotFound("Invalid ID");
             }
+
+            _BLL2.PostAnswer(id);
+            //private readonly Business_Logic_Layer.Interface.InterfaceAnswer _IAnswer;
 
             return Ok(question);
         }
