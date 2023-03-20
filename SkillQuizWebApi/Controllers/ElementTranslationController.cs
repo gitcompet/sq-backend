@@ -21,7 +21,7 @@ namespace SkillQuizzWebApi.Controllers
             _BLL = new Business_Logic_Layer.ElementTranslationBLL();
             _IElementTranslation = interfaceElementTranslation;
         }
-
+        /*
 
         [HttpGet]
         [Route("getElementTranslations")]
@@ -75,7 +75,7 @@ namespace SkillQuizzWebApi.Controllers
         //    db.Person.Remove(p);
         //    db.SaveChanges();
         //}
-
+        */
 
     }
 }
