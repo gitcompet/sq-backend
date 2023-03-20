@@ -11,7 +11,7 @@ namespace Data_Access_Layer.Repository.Models
     {
         public int TestAttributionId { get; set; }
         public int TestId { get; set; }
-        public int LogonId { get; set; }
+        public int LoginId { get; set; }
         public int LanguagesID { get; set; }
         public int TestStatusId { get; set; }
         public Boolean isWithTimer { get; set; }

@@ -12,7 +12,7 @@ namespace Business_Logic_Layer.Models
         public TestAttributionModel(TestAttributionModelPostDTO testAttributionModelPostDTO)
         {
             this.TestId = testAttributionModelPostDTO.TestId;
-            this.LogonId = testAttributionModelPostDTO.LogonId;
+            this.LoginId = testAttributionModelPostDTO.LoginId;
             this.LanguagesID = testAttributionModelPostDTO.LanguagesID;
             this.TestStatusId = testAttributionModelPostDTO.TestStatusId;
             this.isWithTimer = testAttributionModelPostDTO.isWithTimer;
@@ -30,7 +30,7 @@ namespace Business_Logic_Layer.Models
         }
         public String TestAttributionId { get; set; }
         public string TestId { get; set; }
-        public string LogonId { get; set; }
+        public string LoginId { get; set; }
         public string LanguagesID { get; set; }
         public string TestStatusId { get; set; }
         public Boolean isWithTimer { get; set; }

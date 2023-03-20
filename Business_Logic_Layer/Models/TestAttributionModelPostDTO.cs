@@ -9,7 +9,7 @@ namespace Business_Logic_Layer.Models
     public class TestAttributionModelPostDTO
     {
         public string TestId { get; set; }
-        public string LogonId { get; set; }
+        public string LoginId { get; set; }
         public string LanguagesID { get; set; }
         public string TestStatusId { get; set; } //Je ne sais pas ce que ça représente
         public Boolean isWithTimer { get; set; }
