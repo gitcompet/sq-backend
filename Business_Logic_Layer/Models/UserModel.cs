@@ -22,8 +22,8 @@ namespace Business_Logic_Layer.Models
             this.LanguageId = userModelDTO.LanguageId == null ? "0" : userModelDTO.LanguageId;
             this.TypeUserId = userModelDTO.TypeUserId == null ? "0" : userModelDTO.TypeUserId; ;
             this.DateCreat = DateTime.Now;
-            this.IsActive = true;
-            this.IsDeleted = false;
+            this.isActive = true;
+            this.isDeleted = false;
         }
         public String LoginId { get; set; }
         public string Login { get; set; }
@@ -36,7 +36,7 @@ namespace Business_Logic_Layer.Models
         public string LanguageId { get; set; }
         public string TypeUserId { get; set; }
         public DateTime DateCreat { get; set; }
-        public Boolean IsActive { get; set; }
-        public Boolean IsDeleted { get; set; }
+        public Boolean isActive { get; set; }
+        public Boolean isDeleted { get; set; }
     }
 }

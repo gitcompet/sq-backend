@@ -21,7 +21,7 @@ namespace Data_Access_Layer.Repository.Models
         public int LanguageId { get; set; }
         public int TypeUserId { get; set; }
         public DateTime DateCreat { get; set; }
-        public Boolean IsActive { get; set; }
-        public Boolean IsDeleted { get; set; }
+        public Boolean isActive { get; set; }
+        public Boolean isDeleted { get; set; }
     }
 }
