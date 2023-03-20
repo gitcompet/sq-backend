@@ -1,4 +1,6 @@
 ﻿using Business_Logic_Layer.Models;
+using Data_Access_Layer.Repository.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +12,10 @@ namespace Business_Logic_Layer.Interface
     {
 
         List<DomainModel> GetAllDomain();
-
-
         DomainModel GetDomainById(int id);
-        void PostDomain(DomainModel domainModel);
+        DomainModel PostDomain(DomainModel domainModel);
+        DomainModel PatchDomain(int id, JsonPatchDocument<Domain> domainModelJSON);
+        DomainModel PutDomain(DomainModel domainModel);
+        void DeleteDomain(int id);
     }
 }
