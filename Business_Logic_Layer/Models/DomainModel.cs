@@ -8,6 +8,20 @@ namespace Business_Logic_Layer.Models
 {
     public class DomainModel
     {
+        public DomainModel() { }
+        public DomainModel(DomainModelPostDTO domainModelPostDTO)
+        {
+            if (domainModelPostDTO.Name != null)
+            {
+                this.Name = domainModelPostDTO.Name;
+            }
+            else
+            {
+                this.Name = "";
+            }
+            this.isActive = true;
+            this.isDeleted = false;
+        }
         public String DomainId { get; set; }
         public string Name { get; set; }
         public Boolean isActive { get; set; }
