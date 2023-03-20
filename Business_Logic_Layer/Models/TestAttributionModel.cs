@@ -8,6 +8,26 @@ namespace Business_Logic_Layer.Models
 {
     public class TestAttributionModel
     {
+        public TestAttributionModel() { }
+        public TestAttributionModel(TestAttributionModelPostDTO testAttributionModelPostDTO)
+        {
+            this.TestId = testAttributionModelPostDTO.TestId;
+            this.LogonId = testAttributionModelPostDTO.LogonId;
+            this.LanguagesID = testAttributionModelPostDTO.LanguagesID;
+            this.TestStatusId = testAttributionModelPostDTO.TestStatusId;
+            this.isWithTimer = testAttributionModelPostDTO.isWithTimer;
+            this.EndDate = testAttributionModelPostDTO.EndDate;
+            this.TestDate = testAttributionModelPostDTO.TestDate;
+            if (testAttributionModelPostDTO.Comment != null)
+            {
+                this.Comment = testAttributionModelPostDTO.Comment;
+            }
+            else
+            {
+                this.Comment = "";
+            }
+            this.isDeleted = false;
+        }
         public String TestAttributionId { get; set; }
         public string TestId { get; set; }
         public string LogonId { get; set; }

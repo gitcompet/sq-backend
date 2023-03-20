@@ -1,14 +1,19 @@
 ﻿using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
-
-
+using System.Reflection;
+using System.Text.Json.Nodes;
 
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class TestAttributionController : ControllerBase
     {
 
@@ -20,42 +25,103 @@ namespace SkillQuizzWebApi.Controllers
             _ITestAttribution = interfaceTestAttribution;
         }
 
-
+        //GET api/v1/TestAttribution
         [HttpGet]
-        [Route("getTestAttributions")]
-
-
+        [Route("")]
         public List<TestAttributionModel> GetAllTestAttribution()
         {
             return _ITestAttribution.GetAllTestAttribution();
         }
 
 
-
+        //GET api/v1/TestAttribution/{id}
         [HttpGet]
-        [Route("getTestAttribution")]
+        [Route("{id:int}")]
         public ActionResult<TestAttributionModel> GetTestAttributionById(int id)
         {
-            var testattribution = _ITestAttribution.GetTestAttributionById(id);
+            var testAttribution = _ITestAttribution.GetTestAttributionById(id);
 
-            if (testattribution == null)
+            if (testAttribution == null)
             {
                 return NotFound("Invalid ID");
             }
 
-            return Ok(testattribution);
+            return Ok(testAttribution);
         }
 
-
-
-
-        [Route("postTestAttribution")]
+        //POST api/v1/TestAttribution
         [HttpPost]
-        public void postTestAttribution([FromBody] TestAttributionModel testattributionModel)
+        [Route("")]
+        public ActionResult<TestAttributionModel> PostTestAttribution([FromBody] TestAttributionModelPostDTO testAttributionModelPostDTO)
         {
-            _ITestAttribution.PostTestAttribution(testattributionModel);
+            if (testAttributionModelPostDTO != null)
+            {
+                var testAttributionModel = new TestAttributionModel(testAttributionModelPostDTO);
+                var testAttributionResult = _ITestAttribution.PostTestAttribution(testAttributionModel);
+                if (testAttributionResult != null)
+                {
+                    return Created("/api/v1/TestAttribution/" + testAttributionModel.TestAttributionId, testAttributionResult);
+                }
+            }
+            return BadRequest(ModelState);
         }
 
+        //PATCH api/v1/TestAttribution/{id}
+        [HttpPatch]
+        [Route("{id:int}")]
+        public ActionResult<TestAttributionModel> PatchTestAttribution([FromRoute] int id, [FromBody] JsonPatchDocument<TestAttribution> testAttributionModelJSON)
+        {
+            if (testAttributionModelJSON != null)
+            {
+                var testAttribution = _ITestAttribution.PatchTestAttribution(id, testAttributionModelJSON);
+                return Ok(testAttribution);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        //PUT api/v1/TestAttribution
+        [HttpPut]
+        [Route("{id:int}")]
+        public ActionResult<TestAttributionModel> PatchTestAttribution([FromRoute] int id, [FromBody] TestAttributionModel testAttributionModel)
+        {
+            if (testAttributionModel.TestAttributionId != id.ToString())
+            {
+                return BadRequest("ID mismatch");
+            }
+            else
+                if (testAttributionModel != null)
+            {
+                var testAttribution = _ITestAttribution.PutTestAttribution(testAttributionModel);
+                return Ok(testAttribution);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        //DELETE api/v1/TestAttribution/{id}
+        [HttpDelete]
+        [Route("{id:int}")]
+        public ActionResult<TestAttributionModel> DeleteTestAttribution([FromRoute] int id)
+        {
+            var testAttribution = _ITestAttribution.GetTestAttributionById(id);
+
+            if (testAttribution == null)
+            {
+                return NotFound("Invalid ID");
+            }
+            else
+            {
+                _ITestAttribution.DeleteTestAttribution(id);
+                return Ok(testAttribution);
+            }
+
+            //_ITestAttribution.DeleteTestAttribution(id);
+        }
 
 
         //(This is the bad practise!) = > this should instead also call the BLL 
