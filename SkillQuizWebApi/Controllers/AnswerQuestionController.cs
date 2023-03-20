@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api[controller]")]
     public class AnswerQuestionController : ControllerBase
     {
 
@@ -22,7 +22,7 @@ namespace SkillQuizzWebApi.Controllers
             _IAnswerQuestion = interfaceAnswerQuestion;
         }
 
-
+        /*
         [HttpGet]
         [Route("getAnswerQuestions")]
 
@@ -75,7 +75,7 @@ namespace SkillQuizzWebApi.Controllers
         //    db.Person.Remove(p);
         //    db.SaveChanges();
         //}
-
+        */
 
     }
 }
