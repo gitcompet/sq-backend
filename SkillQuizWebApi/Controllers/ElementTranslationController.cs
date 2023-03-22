@@ -19,7 +19,7 @@ namespace SkillQuizzWebApi.Controllers
         {
             _IElementTranslation = interfaceElementTranslation;
         }
-
+        /*
 
         [HttpGet]
         [Route("getElementTranslations")]
@@ -73,7 +73,7 @@ namespace SkillQuizzWebApi.Controllers
         //    db.Person.Remove(p);
         //    db.SaveChanges();
         //}
-
+        */
 
     }
 }
