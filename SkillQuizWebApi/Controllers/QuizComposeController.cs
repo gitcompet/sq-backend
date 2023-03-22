@@ -1,4 +1,5 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
@@ -16,12 +17,9 @@ namespace SkillQuizzWebApi.Controllers
     [Route("api/v1/[controller]")]
     public class QuizComposeController : ControllerBase
     {
-
-        private Business_Logic_Layer.QuizComposeBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceQuizCompose _IQuizCompose;
-        public QuizComposeController(Business_Logic_Layer.Interface.InterfaceQuizCompose interfaceQuizCompose)
+        private readonly InterfaceQuizCompose _IQuizCompose;
+        public QuizComposeController(InterfaceQuizCompose interfaceQuizCompose)
         {
-            _BLL = new Business_Logic_Layer.QuizComposeBLL();
             _IQuizCompose = interfaceQuizCompose;
         }
 

@@ -1,4 +1,5 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,9 @@ namespace SkillQuizzWebApi.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-
-        private Business_Logic_Layer.UserBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceUser _IUser;
-        public UserController(Business_Logic_Layer.Interface.InterfaceUser interfaceUser)
+        private readonly InterfaceUser _IUser;
+        public UserController(InterfaceUser interfaceUser)
         {
-            _BLL = new Business_Logic_Layer.UserBLL();
             _IUser = interfaceUser;
         }
 

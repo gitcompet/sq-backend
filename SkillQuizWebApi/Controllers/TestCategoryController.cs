@@ -1,4 +1,5 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
@@ -16,12 +17,9 @@ namespace SkillQuizzWebApi.Controllers
     [Route("api/v1/[controller]")]
     public class TestCategoryController : ControllerBase
     {
-
-        private Business_Logic_Layer.TestCategoryBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceTestCategory _ITestCategory;
-        public TestCategoryController(Business_Logic_Layer.Interface.InterfaceTestCategory interfaceTestCategory)
+        private readonly InterfaceTestCategory _ITestCategory;
+        public TestCategoryController(InterfaceTestCategory interfaceTestCategory)
         {
-            _BLL = new Business_Logic_Layer.TestCategoryBLL();
             _ITestCategory = interfaceTestCategory;
         }
 

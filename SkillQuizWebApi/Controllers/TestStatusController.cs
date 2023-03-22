@@ -1,4 +1,5 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -10,12 +11,9 @@ namespace SkillQuizzWebApi.Controllers
     [Route("[controller]")]
     public class TestStatusController : ControllerBase
     {
-
-        private Business_Logic_Layer.TestStatusBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceTestStatus _ITestStatus;
-        public TestStatusController(Business_Logic_Layer.Interface.InterfaceTestStatus interfaceTestStatus)
+        private readonly InterfaceTestStatus _ITestStatus;
+        public TestStatusController(InterfaceTestStatus interfaceTestStatus)
         {
-            _BLL = new Business_Logic_Layer.TestStatusBLL();
             _ITestStatus = interfaceTestStatus;
         }
 
