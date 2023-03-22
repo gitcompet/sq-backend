@@ -6,6 +6,7 @@ using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
 using Microsoft.AspNetCore.JsonPatch;
+using Data_Access_Layer;
 
 namespace Business_Logic_Layer
 {
@@ -13,11 +14,13 @@ namespace Business_Logic_Layer
     {
 
         private AnswerDAL _DAL;
+        private ElementTranslationDAL _DALLibelle;
         private Mapper _AnswerMapper;
 
         public AnswerBLL()
         {
-            _DAL = new Data_Access_Layer.DAL.AnswerDAL();
+            _DAL = new AnswerDAL();
+            _DALLibelle = new ElementTranslationDAL();
             var _configAnswer = new MapperConfiguration(cfg => cfg.CreateMap<Answer, AnswerModel>().ReverseMap());
 
             _AnswerMapper = new Mapper(_configAnswer);
@@ -38,6 +41,15 @@ namespace Business_Logic_Layer
             AnswerModel answerModel = _AnswerMapper.Map<Answer, AnswerModel>(answerEntity);
 
             return answerModel;
+        }
+
+        public IEnumerable<String> GetAnswerByListId(IEnumerable<String> ids, string elementType, int languageId)
+        {
+            var answerList = _DALLibelle.GetAnswerByListId(ids, elementType, languageId);
+
+
+
+            return answerList;
         }
 
 

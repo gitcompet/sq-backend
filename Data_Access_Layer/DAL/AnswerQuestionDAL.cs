@@ -24,7 +24,36 @@ namespace Data_Access_Layer
 
             return d;
         }
+        public Boolean[] GetAnswerQuestionByQuestionId(int id)
+        {
 
+            var result = new List<Boolean>();
+
+            var db = new CompetenceDbContext();
+            //var d = new List<AnswerQuestion>();
+            var d = db.AnswerQuestion.Where(x => x.QuestionId == id).ToList();
+            foreach (AnswerQuestion e in d)
+            {
+                result.Add(e.isAnswerOK);
+            }
+
+            return result.ToArray();
+        }
+        public IEnumerable<String> GetAnswerByListId(int id)
+        {
+
+            var result = new List<String>();
+
+            var db = new CompetenceDbContext();
+            //var d = new List<AnswerQuestion>();
+            var d = db.AnswerQuestion.Where(x => x.QuestionId == id).ToList();
+            foreach (AnswerQuestion e in d)
+            {
+                result.Add(e.AnswerId.ToString());
+            }
+
+            return result;
+        }
 
         public void postAnswerQuestion(AnswerQuestion answerquestion)
         {

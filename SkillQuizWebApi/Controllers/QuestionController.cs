@@ -1,4 +1,5 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
@@ -16,15 +17,15 @@ namespace SkillQuizzWebApi.Controllers
     [Route("api/v1/[controller]")]
     public class QuestionController : ControllerBase
     {
-
-        private Business_Logic_Layer.QuestionBLL _BLL;
-        private Business_Logic_Layer.AnswerBLL _BLL2;
-        private readonly Business_Logic_Layer.Interface.InterfaceQuestion _IQuestion;
-        public QuestionController(Business_Logic_Layer.Interface.InterfaceQuestion interfaceQuestion)
+        private readonly InterfaceQuestion _IQuestion;
+        private readonly InterfaceAnswer _IAnswer;
+        private readonly InterfaceAnswerQuestion _IAnswerQuestion;
+        private readonly string TYPE_LIBELLE = "ANSWER_LIBELLE";
+        public QuestionController(Business_Logic_Layer.Interface.InterfaceQuestion interfaceQuestion, Business_Logic_Layer.Interface.InterfaceAnswer interfaceAnswer, Business_Logic_Layer.Interface.InterfaceAnswerQuestion interfaceAnswerQuestion)
         {
-            _BLL = new Business_Logic_Layer.QuestionBLL();
-            _BLL2 = new Business_Logic_Layer.AnswerBLL();
             _IQuestion = interfaceQuestion;
+            _IAnswer = interfaceAnswer;
+            _IAnswerQuestion = interfaceAnswerQuestion;
         }
 
         //GET api/v1/Question
@@ -39,19 +40,26 @@ namespace SkillQuizzWebApi.Controllers
         //GET api/v1/Question/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<QuestionModel> GetQuestionById(int id)
+        public ActionResult<QuestionMoreModelGetDTO> GetQuestionById(int id)
         {
             var question = _IQuestion.GetQuestionById(id);
+            var answerQuestion = _IAnswerQuestion.GetAnswerQuestionByQuestionId(id);//list[true, false, ...]
+            var answerList = _IAnswerQuestion.GetAnswerByListId(id);//list[ID, ID, ...]
+            var answer = _IAnswer.GetAnswerByListId(answerList, TYPE_LIBELLE, 2); //DEFAULT ENGLISH = 2
+            System.Diagnostics.Debug.WriteLine("============================================================");
+            System.Diagnostics.Debug.WriteLine(question.QuestionId);
+            System.Diagnostics.Debug.WriteLine("============================================================");
+            var encapsulation = new QuestionMoreModelGetDTO(question, answer, answerQuestion);
 
             if (question == null)
             {
                 return NotFound("Invalid ID");
             }
 
-            _BLL2.PostAnswer(id);
+            _IAnswer.PostAnswer(id);
             //private readonly Business_Logic_Layer.Interface.InterfaceAnswer _IAnswer;
 
-            return Ok(question);
+            return Ok(encapsulation);
         }
 
         //POST api/v1/Question
