@@ -88,6 +88,7 @@ namespace SkillQuizzWebApi
             builder.Services.AddScoped<InterfaceLanguages, LanguagesBLL>();
             builder.Services.AddScoped<InterfaceUser, UserBLL>();
             builder.Services.AddScoped<InterfaceQuizCompose, QuizComposeBLL>();
+            builder.Services.AddScoped<InterfaceTestUser, TestUserBLL>();
 
 
             //builder.Services.AddAuthentication().AddJwtBearer(options =>
