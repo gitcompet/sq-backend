@@ -1,12 +1,12 @@
 ﻿using Data_Access_Layer.Repository;
 using Data_Access_Layer.Repository.Models;
-using MySqlX.XDevAPI.Common;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
-
-namespace Data_Access_Layer
+namespace Data_Access_Layer.DAL
 {
     public class ElementTranslationDAL
     {
@@ -27,10 +27,54 @@ namespace Data_Access_Layer
         }
 
 
-        public void postElementTranslation(ElementTranslation elementtranslation)
+        public ElementTranslation PostElementTranslation(ElementTranslation elementTranslation)
         {
             var db = new CompetenceDbContext();
-            db.Add(elementtranslation);
+            db.Add(elementTranslation);
+            db.SaveChanges();
+            return (elementTranslation);
+        }
+
+        public ElementTranslation PatchElementTranslation(int id, JsonPatchDocument<ElementTranslation> elementTranslationModelJSON)
+        {
+            var db = new CompetenceDbContext();
+            ElementTranslation d = new ElementTranslation();
+
+            d = db.ElementTranslation.FirstOrDefault(x => x.ElementTranslationId == id);
+            elementTranslationModelJSON.ApplyTo(d);
+            db.Update(d);
+            db.SaveChanges();
+            return d;
+        }
+
+        public ElementTranslation PutElementTranslation(ElementTranslation elementTranslation)
+        {
+            var db = new CompetenceDbContext();
+            ElementTranslation d = new ElementTranslation();
+            try
+            {
+                d = db.ElementTranslation.First(x => x.ElementTranslationId == elementTranslation.ElementTranslationId);
+                foreach (PropertyInfo property in d.GetType().GetProperties())
+                {
+                    d.GetType().GetProperty(property.Name).SetValue(d, elementTranslation.GetType().GetProperty(property.Name).GetValue(elementTranslation));
+                }
+                db.SaveChanges();
+            }
+            catch
+            {
+                db.Add(elementTranslation);
+                db.SaveChanges();
+                d = elementTranslation;
+            }
+            return d;
+        }
+
+        public void DeleteElementTranslation(int id)
+        {
+            var db = new CompetenceDbContext();
+            ElementTranslation d = new ElementTranslation();
+            d = this.GetElementTranslationById(id);
+            db.ElementTranslation.Remove(d);
             db.SaveChanges();
         }
 
