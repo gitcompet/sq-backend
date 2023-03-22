@@ -37,7 +37,14 @@ namespace Business_Logic_Layer
 
             return answerquestionModel;
         }
-
+        public Boolean[] GetAnswerQuestionByQuestionId(int id)
+        {
+            return _DAL.GetAnswerQuestionByQuestionId(id);
+        }
+        public IEnumerable<String> GetAnswerByListId(int id)
+        {
+            return _DAL.GetAnswerByListId(id);
+        }
 
         public void PostAnswerQuestion(AnswerQuestionModel answerquestionModel)
         {

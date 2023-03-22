@@ -11,6 +11,8 @@ namespace Business_Logic_Layer.Interface
 
 
         AnswerQuestionModel GetAnswerQuestionById(int id);
-            void PostAnswerQuestion(AnswerQuestionModel answerquestionModel);
+        Boolean[] GetAnswerQuestionByQuestionId(int id);
+        IEnumerable<String> GetAnswerByListId(int id);
+        void PostAnswerQuestion(AnswerQuestionModel answerquestionModel);
         }
     }
