@@ -1,17 +1,20 @@
 ﻿using Business_Logic_Layer.Interface;
 using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text.Json.Nodes;
 
-
-
-
-
-namespace SkillQuizzWebApi.Controllers
+namespace SkillElementTranslationzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class ElementTranslationController : ControllerBase
     {
         private readonly InterfaceElementTranslation _IElementTranslation;
@@ -19,62 +22,102 @@ namespace SkillQuizzWebApi.Controllers
         {
             _IElementTranslation = interfaceElementTranslation;
         }
-        /*
 
+        //GET api/v1/ElementTranslation
         [HttpGet]
-        [Route("getElementTranslations")]
-
-
+        [Route("")]
         public List<ElementTranslationModel> GetAllElementTranslation()
         {
             return _IElementTranslation.GetAllElementTranslation();
         }
 
 
-
+        //GET api/v1/ElementTranslation/{id}
         [HttpGet]
-        [Route("getElementTranslation")]
+        [Route("{id:int}")]
         public ActionResult<ElementTranslationModel> GetElementTranslationById(int id)
         {
-            var elementtranslation = _IElementTranslation.GetElementTranslationById(id);
+            var elementTranslation = _IElementTranslation.GetElementTranslationById(id);
 
-            if (elementtranslation == null)
+            if (elementTranslation == null)
             {
                 return NotFound("Invalid ID");
             }
 
-            return Ok(elementtranslation);
+            return Ok(elementTranslation);
         }
 
-
-
-
-        [Route("postElementTranslation")]
+        //POST api/v1/ElementTranslation
         [HttpPost]
-        public void postElementTranslation([FromBody] ElementTranslationModel elementtranslationModel)
+        [Route("")]
+        public ActionResult<ElementTranslationModel> PostElementTranslation([FromBody] ElementTranslationModelPostDTO elementTranslationModelPostDTO)
         {
-            _IElementTranslation.PostElementTranslation(elementtranslationModel);
+            if (elementTranslationModelPostDTO != null)
+            {
+                var elementTranslationModel = new ElementTranslationModel(elementTranslationModelPostDTO);
+                var elementTranslationResult = _IElementTranslation.PostElementTranslation(elementTranslationModel);
+                if (elementTranslationResult != null)
+                {
+                    return Created("/api/v1/ElementTranslation/" + elementTranslationModel.ElementTranslationId, elementTranslationResult);
+                }
+            }
+            return BadRequest(ModelState);
         }
 
+        //PATCH api/v1/ElementTranslation/{id}
+        [HttpPatch]
+        [Route("{id:int}")]
+        public ActionResult<ElementTranslationModel> PatchElementTranslation([FromRoute] int id, [FromBody] JsonPatchDocument<ElementTranslation> elementTranslationModelJSON)
+        {
+            if (elementTranslationModelJSON != null)
+            {
+                var elementTranslation = _IElementTranslation.PatchElementTranslation(id, elementTranslationModelJSON);
+                return Ok(elementTranslation);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
 
+        //PUT api/v1/ElementTranslation
+        [HttpPut]
+        [Route("{id:int}")]
+        public ActionResult<ElementTranslationModel> PatchElementTranslation([FromRoute] int id, [FromBody] ElementTranslationModel elementTranslationModel)
+        {
+            if (elementTranslationModel.ElementTranslationId != id.ToString())
+            {
+                return BadRequest("ID mismatch");
+            }
+            else
+                if (elementTranslationModel != null)
+            {
+                var elementTranslation = _IElementTranslation.PutElementTranslation(elementTranslationModel);
+                return Ok(elementTranslation);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
 
-        //(This is the bad practise!) = > this should instead also call the BLL 
-        //[Route("deletePerson")]
-        //[HttpDelete]
-        //public void deletePerson(int id)
-        //{
-        //    var db = new PersonDbContext();
-        //    Person p = new Person();
-        //    p = db.Person.FirstOrDefault(x => x.Id == id);
+        //DELETE api/v1/ElementTranslation/{id}
+        [HttpDelete]
+        [Route("{id:int}")]
+        public ActionResult<ElementTranslationModel> DeleteElementTranslation([FromRoute] int id)
+        {
+            var elementTranslation = _IElementTranslation.GetElementTranslationById(id);
 
-        //    if (p == null)
-        //        throw new Exception("Not found");
-
-        //    db.Person.Remove(p);
-        //    db.SaveChanges();
-        //}
-        */
-
+            if (elementTranslation == null)
+            {
+                return NotFound("Invalid ID");
+            }
+            else
+            {
+                _IElementTranslation.DeleteElementTranslation(id);
+                return Ok(elementTranslation);
+            }
+        }
     }
 }
 
