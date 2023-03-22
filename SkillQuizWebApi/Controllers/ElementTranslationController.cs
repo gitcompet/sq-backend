@@ -1,4 +1,5 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -13,12 +14,9 @@ namespace SkillQuizzWebApi.Controllers
     [Route("[controller]")]
     public class ElementTranslationController : ControllerBase
     {
-
-        private Business_Logic_Layer.ElementTranslationBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceElementTranslation _IElementTranslation;
-        public ElementTranslationController(Business_Logic_Layer.Interface.InterfaceElementTranslation interfaceElementTranslation)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        public ElementTranslationController(InterfaceElementTranslation interfaceElementTranslation)
         {
-            _BLL = new Business_Logic_Layer.ElementTranslationBLL();
             _IElementTranslation = interfaceElementTranslation;
         }
 

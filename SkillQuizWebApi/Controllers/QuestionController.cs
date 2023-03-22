@@ -21,7 +21,7 @@ namespace SkillQuizzWebApi.Controllers
         private readonly InterfaceAnswer _IAnswer;
         private readonly InterfaceAnswerQuestion _IAnswerQuestion;
         private readonly string TYPE_LIBELLE = "ANSWER_LIBELLE";
-        public QuestionController(Business_Logic_Layer.Interface.InterfaceQuestion interfaceQuestion, Business_Logic_Layer.Interface.InterfaceAnswer interfaceAnswer, Business_Logic_Layer.Interface.InterfaceAnswerQuestion interfaceAnswerQuestion)
+        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceAnswer interfaceAnswer, InterfaceAnswerQuestion interfaceAnswerQuestion)
         {
             _IQuestion = interfaceQuestion;
             _IAnswer = interfaceAnswer;

@@ -1,4 +1,5 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,12 +15,9 @@ namespace SkillQuizzWebApi.Controllers
     [Route("api/[controller]")]
     public class LanguagesController : ControllerBase
     {
-
-        private Business_Logic_Layer.LanguagesBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceLanguages _ILanguages;
-        public LanguagesController(Business_Logic_Layer.Interface.InterfaceLanguages interfaceLanguages)
+        private readonly InterfaceLanguages _ILanguages;
+        public LanguagesController(InterfaceLanguages interfaceLanguages)
         {
-            _BLL = new Business_Logic_Layer.LanguagesBLL();
             _ILanguages = interfaceLanguages;
         }
 
