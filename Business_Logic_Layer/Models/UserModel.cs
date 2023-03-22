@@ -10,7 +10,7 @@ namespace Business_Logic_Layer.Models
     public class UserModel
     {
         public UserModel(){}
-        public UserModel(UserModelDTO userModelDTO)
+        public UserModel(UserModelPostDTO userModelDTO)
         {
             this.Login = userModelDTO.Login;
             this.Password = userModelDTO.Password;

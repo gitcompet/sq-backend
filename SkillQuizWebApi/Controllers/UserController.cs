@@ -1,14 +1,20 @@
 ﻿using Business_Logic_Layer.Interface;
 using Business_Logic_Layer.Models;
+using Data_Access_Layer.Repository.Models;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text.Json.Nodes;
 
-
-namespace SkillQuizzWebApi.Controllers
+namespace SkillUserzWebApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class UserController : ControllerBase
     {
         private readonly InterfaceUser _IUser;
@@ -17,42 +23,120 @@ namespace SkillQuizzWebApi.Controllers
             _IUser = interfaceUser;
         }
 
-
+        //GET api/v1/User
         [HttpGet]
-        [Route("getUsers")]
+        [Route("")]
         public List<UserModel> GetAllUser()
         {
             return _IUser.GetAllUser();
         }
 
 
-
+        //GET api/v1/User/{id}
         [HttpGet]
-        [Route("getUser")]
+        [Route("{id:int}")]
         public ActionResult<UserModel> GetUserById(int id)
         {
-            var User = _IUser.GetUserById(id);
+            var user = _IUser.GetUserById(id);
 
-            if (User == null)
+            if (user == null)
             {
                 return NotFound("Invalid ID");
             }
 
-            return Ok(User);
+            return Ok(user);
         }
 
-        [Route("postUser")]
+        //POST api/v1/User
         [HttpPost]
-        public ActionResult<CreatedUserDTO> postUser([FromBody] UserModelDTO userModelDTO)
-        {   
-            CreatedUserDTO CreatedUser = _IUser.PostUser(userModelDTO);
-
-            if(CreatedUser.Id == -1 ) return BadRequest("User already exists.");
-
-            Uri uri = new Uri($"http://localhost:63869/api/Users/{CreatedUser.Id}");
-            //RETURN 201 CREATED STATUS
-            return Created(uri,CreatedUser);
+        [Route("")]
+        public ActionResult<UserModel> PostUser([FromBody] UserModelPostDTO userModelPostDTO)
+        {
+            if (userModelPostDTO != null)
+            {
+                var userModel = new UserModel(userModelPostDTO);
+                var userResult = _IUser.PostUser(userModel);
+                if (userResult != null)
+                {
+                    return Created("/api/v1/User/" + userModel.LoginId, userResult);
+                }
+            }
+            return BadRequest(ModelState);
         }
+
+        //PATCH api/v1/User/{id}
+        [HttpPatch]
+        [Route("{id:int}")]
+        public ActionResult<UserModel> PatchUser([FromRoute] int id, [FromBody] JsonPatchDocument<User> userModelJSON)
+        {
+            if (userModelJSON != null)
+            {
+                var user = _IUser.PatchUser(id, userModelJSON);
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        //PUT api/v1/User
+        [HttpPut]
+        [Route("{id:int}")]
+        public ActionResult<UserModel> PatchUser([FromRoute] int id, [FromBody] UserModel userModel)
+        {
+            if (userModel.LoginId != id.ToString())
+            {
+                return BadRequest("ID mismatch");
+            }
+            else
+                if (userModel != null)
+            {
+                var user = _IUser.PutUser(userModel);
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        //DELETE api/v1/User/{id}
+        [HttpDelete]
+        [Route("{id:int}")]
+        public ActionResult<UserModel> DeleteUser([FromRoute] int id)
+        {
+            var user = _IUser.GetUserById(id);
+
+            if (user == null)
+            {
+                return NotFound("Invalid ID");
+            }
+            else
+            {
+                _IUser.DeleteUser(id);
+                return Ok(user);
+            }
+
+            //_IUser.DeleteUser(id);
+        }
+
+
+        //(This is the bad practise!) = > this should instead also call the BLL 
+        //[Route("deletePerson")]
+        //[HttpDelete]
+        //public void deletePerson(int id)
+        //{
+        //    var db = new PersonDbContext();
+        //    Person p = new Person();
+        //    p = db.Person.FirstOrDefault(x => x.Id == id);
+
+        //    if (p == null)
+        //        throw new Exception("Not found");
+
+        //    db.Person.Remove(p);
+        //    db.SaveChanges();
+        //}
 
 
     }
