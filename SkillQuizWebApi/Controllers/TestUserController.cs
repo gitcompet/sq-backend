@@ -35,7 +35,7 @@ namespace SkillTestUserzWebApi.Controllers
         //GET api/v1/TestUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<TestUserModel> GetTestUserById(int id)
+        public ActionResult<IEnumerable<TestUserModel>> GetTestUserById(int id) 
         {
             var testUser = _ITestUser.GetTestUserById(id);
 

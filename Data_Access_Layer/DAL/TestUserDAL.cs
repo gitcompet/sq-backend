@@ -26,6 +26,14 @@ namespace Data_Access_Layer.DAL
             return d;
         }
 
+        public IEnumerable<TestUser> GetTestUserByUserId(int id)
+        {
+            var db = new CompetenceDbContext();
+            var d = db.TestUser.Where(x => x.LoginId == id);
+
+            return d;
+        }
+
 
         public TestUser PostTestUser(TestUser testUser)
         {

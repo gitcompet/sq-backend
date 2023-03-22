@@ -40,6 +40,18 @@ namespace Business_Logic_Layer
             return testUserModel;
         }
 
+        public IEnumerable<TestUserModel> GetTestUserByUserId(int id)
+        {
+            var testUserEntity = _DAL.GetTestUserByUserId(id);
+            var result = new List<TestUserModel>();
+
+            foreach (var item in testUserEntity)
+            {
+                result.Add(_TestUserMapper.Map<TestUser, TestUserModel>(item));
+            }
+
+            return result;
+        }
 
         public TestUserModel PostTestUser(TestUserModel testUserModel)
         {
