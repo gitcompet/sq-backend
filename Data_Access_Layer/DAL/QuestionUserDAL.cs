@@ -26,6 +26,15 @@ namespace Data_Access_Layer.DAL
             return d;
         }
 
+        public IEnumerable<QuestionUser> GetQuestionUserByLinkId(int id)
+        {
+
+            var db = new CompetenceDbContext();
+            var d = db.QuestionUser.Where(x => x.QuizUserId == id);
+
+            return d;
+        }
+
 
         public QuestionUser PostQuestionUser(QuestionUser questionUser)
         {
