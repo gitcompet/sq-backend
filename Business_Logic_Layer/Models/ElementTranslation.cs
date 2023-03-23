@@ -8,10 +8,28 @@ namespace Business_Logic_Layer.Models
 {
     public class ElementTranslationModel
     {
-        public String ElementTranslationId { get; set; }
+        public ElementTranslationModel ()
+        {
+
+        }
+        public ElementTranslationModel (ElementTranslationModelPostDTO elementTranslationModelPostDTO)
+        {
+            this.ElementId = elementTranslationModelPostDTO.ElementId;
+            this.ElementType = elementTranslationModelPostDTO.ElementType;
+            this.LanguagesId = elementTranslationModelPostDTO.LanguagesId;
+            if (elementTranslationModelPostDTO.Description != null)
+            {
+                this.Description = elementTranslationModelPostDTO.Description;
+            }
+            else
+            {
+                this.Description = "";
+            }
+        }
+        public string ElementTranslationId { get; set; }
         public int ElementId { get; set; }
-        public String ElementType { get; set; }
+        public string ElementType { get; set; }
         public int LanguagesId { get; set; }
-        public String Description { get; set; }
+        public string Description { get; set; }
     }
 }

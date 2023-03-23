@@ -1,5 +1,7 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -10,19 +12,16 @@ using System.Collections.Generic;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/api[controller]")]
     public class AnswerQuestionController : ControllerBase
     {
-
-        private Business_Logic_Layer.AnswerQuestionBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceAnswerQuestion _IAnswerQuestion;
-        public AnswerQuestionController(Business_Logic_Layer.Interface.InterfaceAnswerQuestion interfaceAnswerQuestion)
+        private readonly InterfaceAnswerQuestion _IAnswerQuestion;
+        public AnswerQuestionController(InterfaceAnswerQuestion interfaceAnswerQuestion)
         {
-            _BLL = new Business_Logic_Layer.AnswerQuestionBLL();
             _IAnswerQuestion = interfaceAnswerQuestion;
         }
 
-
+        
         [HttpGet]
         [Route("getAnswerQuestions")]
 
@@ -75,7 +74,7 @@ namespace SkillQuizzWebApi.Controllers
         //    db.Person.Remove(p);
         //    db.SaveChanges();
         //}
-
+        
 
     }
 }

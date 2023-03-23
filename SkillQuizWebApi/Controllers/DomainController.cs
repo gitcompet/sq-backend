@@ -1,33 +1,41 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
+using Data_Access_Layer.Repository.Models;
+using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text.Json.Nodes;
 
 
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/v1/[controller]")]
     public class DomainController : ControllerBase
     {
-
-        private Business_Logic_Layer.DomainBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceDomain _IDomain;
-        public DomainController(Business_Logic_Layer.Interface.InterfaceDomain interfaceDomain)
+        private readonly InterfaceDomain _IDomain;
+        public DomainController(InterfaceDomain interfaceDomain)
         {
-            _BLL = new Business_Logic_Layer.DomainBLL();
             _IDomain = interfaceDomain;
         }
 
-
+        //GET api/v1/Domain
         [HttpGet]
-        [Route("getDomains")]
+        [Route("")]
         public List<DomainModel> GetAllDomain()
         {
             return _IDomain.GetAllDomain();
         }
 
+
+        //GET api/v1/Domain/{id}
         [HttpGet]
-        [Route("getDomain")]
+        [Route("{id:int}")]
         public ActionResult<DomainModel> GetDomainById(int id)
         {
             var domain = _IDomain.GetDomainById(id);
@@ -40,12 +48,80 @@ namespace SkillQuizzWebApi.Controllers
             return Ok(domain);
         }
 
-        [Route("postDomain")]
+        //POST api/v1/Domain
         [HttpPost]
-        public void postDomain([FromBody] DomainModel domainModel)
+        [Route("")]
+        public ActionResult<DomainModel> PostDomain([FromBody] DomainModelPostDTO domainModelPostDTO)
         {
-            _IDomain.PostDomain(domainModel);
+            if (domainModelPostDTO != null)
+            {
+                var domainModel = new DomainModel(domainModelPostDTO);
+                var domainResult = _IDomain.PostDomain(domainModel);
+                if (domainResult != null)
+                {
+                    return Created("/api/v1/Domain/" + domainModel.DomainId, domainResult);
+                }
+            }
+            return BadRequest(ModelState);
         }
+
+        //PATCH api/v1/Domain/{id}
+        [HttpPatch]
+        [Route("{id:int}")]
+        public ActionResult<DomainModel> PatchDomain([FromRoute] int id, [FromBody] JsonPatchDocument<Domain> domainModelJSON)
+        {
+            if (domainModelJSON != null)
+            {
+                var domain = _IDomain.PatchDomain(id, domainModelJSON);
+                return Ok(domain);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        //PUT api/v1/Domain
+        [HttpPut]
+        [Route("{id:int}")]
+        public ActionResult<DomainModel> PatchDomain([FromRoute] int id, [FromBody] DomainModel domainModel)
+        {
+            if (domainModel.DomainId != id.ToString())
+            {
+                return BadRequest("ID mismatch");
+            }
+            else
+                if (domainModel != null)
+            {
+                var domain = _IDomain.PutDomain(domainModel);
+                return Ok(domain);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        //DELETE api/v1/Domain/{id}
+        [HttpDelete]
+        [Route("{id:int}")]
+        public ActionResult<DomainModel> DeleteDomain([FromRoute] int id)
+        {
+            var domain = _IDomain.GetDomainById(id);
+
+            if (domain == null)
+            {
+                return NotFound("Invalid ID");
+            }
+            else
+            {
+                _IDomain.DeleteDomain(id);
+                return Ok(domain);
+            }
+
+            //_IDomain.DeleteDomain(id);
+        }
+
 
         //(This is the bad practise!) = > this should instead also call the BLL 
         //[Route("deletePerson")]

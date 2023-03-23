@@ -10,7 +10,7 @@ namespace Data_Access_Layer.Repository.Models
     public class QuizCompose
     {
         [Key]
-        public int TestComposeId { get; set; }
+        public int QuizComposeId { get; set; }
         public int QuizId { get; set; }
         public int QuestionId { get; set; }
         public int QuestionLevel { get; set; }

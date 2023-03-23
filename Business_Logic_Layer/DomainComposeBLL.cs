@@ -5,6 +5,7 @@ using Business_Logic_Layer.Models;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Business_Logic_Layer
 {
@@ -24,28 +25,51 @@ namespace Business_Logic_Layer
 
         public List<DomainComposeModel> GetAllDomainCompose()
         {
-            List<DomainCompose> domaincomposeFromDB = _DAL.GetAllDomainCompose();
-            List<DomainComposeModel> domaincomposeModel = _DomainComposeMapper.Map<List<DomainCompose>, List<DomainComposeModel>>(domaincomposeFromDB);
+            List<DomainCompose> domainComposeFromDB = _DAL.GetAllDomainCompose();
+            List<DomainComposeModel> domainComposeModel = _DomainComposeMapper.Map<List<DomainCompose>, List<DomainComposeModel>>(domainComposeFromDB);
 
-            return domaincomposeModel;
+            return domainComposeModel;
         }
 
         public DomainComposeModel GetDomainComposeById(int id)
         {
-            var domaincomposeEntity = _DAL.GetDomainComposeById(id);
+            var domainComposeEntity = _DAL.GetDomainComposeById(id);
 
-            DomainComposeModel domaincomposeModel = _DomainComposeMapper.Map<DomainCompose, DomainComposeModel>(domaincomposeEntity);
+            DomainComposeModel domainComposeModel = _DomainComposeMapper.Map<DomainCompose, DomainComposeModel>(domainComposeEntity);
 
-            return domaincomposeModel;
+            return domainComposeModel;
         }
 
 
-        public void PostDomainCompose(DomainComposeModel domaincomposeModel)
+        public DomainComposeModel PostDomainCompose(DomainComposeModel domainComposeModel)
         {
-            DomainCompose domaincomposeEntity = _DomainComposeMapper.Map<DomainComposeModel, DomainCompose>(domaincomposeModel);
-            _DAL.postDomainCompose(domaincomposeEntity);
+            DomainCompose domainComposeEntity = _DomainComposeMapper.Map<DomainComposeModel, DomainCompose>(domainComposeModel);
+            var domainCompose = _DAL.PostDomainCompose(domainComposeEntity);
+            DomainComposeModel domainComposeModelReturn = _DomainComposeMapper.Map<DomainCompose, DomainComposeModel>(domainCompose);
+            return domainComposeModelReturn;
         }
 
+
+        public DomainComposeModel PatchDomainCompose(int id, JsonPatchDocument<DomainCompose> domainComposeModelJSON)
+        {
+            var domainComposeEntity = _DAL.PatchDomainCompose(id, domainComposeModelJSON);
+
+            DomainComposeModel domainComposeModel = _DomainComposeMapper.Map<DomainCompose, DomainComposeModel>(domainComposeEntity);
+
+            return domainComposeModel;
+        }
+
+        public DomainComposeModel PutDomainCompose(DomainComposeModel domainComposeModel)
+        {
+            DomainCompose domainComposeEntity = _DomainComposeMapper.Map<DomainComposeModel, DomainCompose>(domainComposeModel);
+            var domainCompose = _DAL.PutDomainCompose(domainComposeEntity);
+            DomainComposeModel domainComposeModelReturn = _DomainComposeMapper.Map<DomainCompose, DomainComposeModel>(domainCompose);
+            return domainComposeModelReturn;
+        }
+        public void DeleteDomainCompose(int id)
+        {
+            _DAL.DeleteDomainCompose(id);
+        }
     }
 }
 

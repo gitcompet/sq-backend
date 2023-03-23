@@ -8,7 +8,15 @@ namespace Business_Logic_Layer.Models
 {
     public class QuizComposeModel
     {
-        public String TestComposeId { get; set; }
+        public QuizComposeModel() { }
+        public QuizComposeModel(QuizComposeModelPostDTO quizComposeModelPostDTO)
+        {
+            this.QuizId = quizComposeModelPostDTO.QuizId;
+            this.QuestionId = quizComposeModelPostDTO.QuestionId;
+            this.QuestionLevel = quizComposeModelPostDTO.QuestionLevel;
+            this.QuestionWeight = quizComposeModelPostDTO.QuestionWeight;
+        }
+        public string QuizComposeId { get; set; }
         public string QuizId { get; set; }
         public string QuestionId { get; set; }
         public int QuestionLevel { get; set; }

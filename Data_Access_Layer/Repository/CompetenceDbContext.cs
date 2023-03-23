@@ -44,6 +44,7 @@ namespace Data_Access_Layer.Repository
         public virtual DbSet<Answer> Answer { get; set; }
 
         public virtual DbSet<Question> Question { get; set; }
+        public virtual DbSet<Quiz> Quiz { get; set; }
 
         public virtual DbSet<TestCategory> TestCategory { get; set; }
 
@@ -53,11 +54,15 @@ namespace Data_Access_Layer.Repository
 
         public virtual DbSet<QuizCompose> QuizCompose { get; set; }
 
-        public virtual DbSet<AnswerCandidateTest> AnswerCandidateTest { get; set; }
-
         public virtual DbSet<TestCompose> TestCompose { get; set; }
 
-        public virtual DbSet<TestAttribution> TestAttribution { get; set; }
+        public virtual DbSet<TestUser> TestUser { get; set; }
+
+        public virtual DbSet<QuizUser> QuizUser { get; set; }
+
+        public virtual DbSet<QuestionUser> QuestionUser { get; set; }
+
+        public virtual DbSet<AnswerUser> AnswerUser { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = "server=145.239.0.38;user id=skillquizusr;Pwd=SkillQuiz5!;;port=3310; database=skillquizdb;";
@@ -78,6 +83,9 @@ namespace Data_Access_Layer.Repository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Quiz>()
+                        .Property(p => p.Weight)
+                        .HasPrecision(5);
             //modelBuilder.Entity<Person>(entity =>
             //{
             //    entity.Property(e => e.Address).IsUnicode(false);

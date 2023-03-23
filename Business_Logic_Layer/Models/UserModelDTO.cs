@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Business_Logic_Layer.Models
 {
-    public class UserModelDTO
+    public class UserModelPostDTO
     {
         public string Login { get; set; }
         public string Password { get; set; }
