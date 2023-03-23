@@ -22,7 +22,7 @@ using System.Text;
 
 namespace JwtWebApiDotNet7.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/[controller]")] 
     [ApiController]
     public class AuthController : ControllerBase
     {
