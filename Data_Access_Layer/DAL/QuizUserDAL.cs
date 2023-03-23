@@ -1,6 +1,7 @@
 ﻿using Data_Access_Layer.Repository;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,15 @@ namespace Data_Access_Layer.DAL
             QuizUser d = new QuizUser();
 
             d = db.QuizUser.FirstOrDefault(x => x.QuizUserId == id);
+
+            return d;
+        }
+        
+        public IEnumerable<QuizUser> GetQuizUserByLinkId(int id)
+        {
+
+            var db = new CompetenceDbContext();
+            var d = db.QuizUser.Where(x => x.TestUserId == id); 
 
             return d;
         }

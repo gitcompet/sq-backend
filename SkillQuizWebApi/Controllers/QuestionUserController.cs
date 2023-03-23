@@ -35,9 +35,9 @@ namespace SkillQuestionUserzWebApi.Controllers
         //GET api/v1/QuestionUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<QuestionUserModel> GetQuestionUserById(int id)
+        public ActionResult<IEnumerable<QuestionUserModel>> GetQuestionUserByLinkId(int id)
         {
-            var questionUser = _IQuestionUser.GetQuestionUserById(id);
+            var questionUser = _IQuestionUser.GetQuestionUserByLinkId(id);
 
             if (questionUser == null)
             {

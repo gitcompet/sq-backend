@@ -29,7 +29,6 @@ namespace Data_Access_Layer.DAL
         public IEnumerable<TestUser> GetTestUserByUserId(int id)
         {
             var db = new CompetenceDbContext();
-            System.Diagnostics.Debug.WriteLine(id);
             var d = db.TestUser.Where(x => x.LoginId == id);
 
             return d;

@@ -58,11 +58,11 @@ namespace Data_Access_Layer.Repository
 
         public virtual DbSet<TestUser> TestUser { get; set; }
 
-        public virtual DbSet<TestUser> QuizUser { get; set; }
+        public virtual DbSet<QuizUser> QuizUser { get; set; }
 
-        public virtual DbSet<TestUser> QuestionUser { get; set; }
+        public virtual DbSet<QuestionUser> QuestionUser { get; set; }
 
-        public virtual DbSet<TestUser> AnswerUser { get; set; }
+        public virtual DbSet<AnswerUser> AnswerUser { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = "server=145.239.0.38;user id=skillquizusr;Pwd=SkillQuiz5!;;port=3310; database=skillquizdb;";

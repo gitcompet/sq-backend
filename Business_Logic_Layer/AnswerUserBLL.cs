@@ -6,6 +6,7 @@ using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Business_Logic_Layer
 {
@@ -38,6 +39,20 @@ namespace Business_Logic_Layer
             AnswerUserModel answerUserModel = _AnswerUserMapper.Map<AnswerUser, AnswerUserModel>(answerUserEntity);
 
             return answerUserModel;
+        }
+
+
+        public ActionResult<IEnumerable<AnswerUserModel>> GetAnswerUserByLinkId(int id)
+        {
+            var answerUserEntity = _DAL.GetAnswerUserByLinkId(id);
+            var result = new List<AnswerUserModel>();
+
+            foreach (var item in answerUserEntity)
+            {
+                result.Add(_AnswerUserMapper.Map<AnswerUser, AnswerUserModel>(item));
+            }
+
+            return result;
         }
 
 
