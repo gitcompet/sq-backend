@@ -14,7 +14,7 @@ namespace Business_Logic_Layer.Models
             this.DomainId = domainComposeModelPostDTO.DomainId;
             this.SubDomainid = domainComposeModelPostDTO.SubDomainid;
         }
-        public String DomainComposeId { get; set; }
+        public string DomainComposeId { get; set; }
         public string DomainId { get; set; }
         public string SubDomainid { get; set; }
     }

@@ -25,11 +25,11 @@ namespace Business_Logic_Layer.Models
             this.isActive = true;
             this.isDeleted = false;
         }
-        public String QuizId { get; set; }
-        public String DomainId { get; set; }
-        public String SubDomainId { get; set; }
+        public string QuizId { get; set; }
+        public string DomainId { get; set; }
+        public string SubDomainId { get; set; }
         public decimal Weight { get; set; }
-        public String Comment { get; set; }
+        public string Comment { get; set; }
         public Boolean isActive { get; set; }
         public Boolean isDeleted { get; set; }
     }

@@ -41,7 +41,7 @@ namespace Business_Logic_Layer
         {
             return _DAL.GetAnswerQuestionByQuestionId(id);
         }
-        public IEnumerable<String> GetAnswerByListId(int id)
+        public IEnumerable<string> GetAnswerByListId(int id)
         {
             return _DAL.GetAnswerByListId(id);
         }

@@ -8,6 +8,6 @@ namespace Business_Logic_Layer.Models
 {
     public class TestCategoryModelPostDTO
     {
-        public String Description { get; set; }
+        public string Description { get; set; }
     }
 }

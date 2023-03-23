@@ -21,7 +21,7 @@ namespace SkillQuizzWebApi.Controllers
 
         [HttpGet]
         [Route("getError")]
-        public ActionResult<String> ErrorHandler()
+        public ActionResult<string> ErrorHandler()
         {
             var errorText = "OOps something went wrong";
 

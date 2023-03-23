@@ -8,9 +8,9 @@ namespace Business_Logic_Layer.Models
 {
     public class AnswerQuestionModel
     {
-        public String AnswerQuestionId { get; set; }
-        public String QuestionId { get; set; }
-        public String AnswerId { get; set; }
+        public string AnswerQuestionId { get; set; }
+        public string QuestionId { get; set; }
+        public string AnswerId { get; set; }
         public Boolean isAnswerOk { get; set; }
     }
 }

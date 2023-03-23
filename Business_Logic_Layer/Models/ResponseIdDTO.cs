@@ -8,6 +8,6 @@ namespace Business_Logic_Layer.Models
 {
     public class ResponseIdDTO
     {
-        public String GenericId { get; set; }
+        public string GenericId { get; set; }
     }
 }

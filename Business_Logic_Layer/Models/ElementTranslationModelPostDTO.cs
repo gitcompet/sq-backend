@@ -9,8 +9,8 @@ namespace Business_Logic_Layer.Models
     public class ElementTranslationModelPostDTO
     {
         public int ElementId { get; set; }
-        public String ElementType { get; set; }
+        public string ElementType { get; set; }
         public int LanguagesId { get; set; }
-        public String Description { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace Business_Logic_Layer.Models
             this.isActive = true;
             this.isDeleted = false;
         }
-        public String UserTypeId { get; set; }
+        public string UserTypeId { get; set; }
         public string Description { get; set; }
         public Boolean isActive { get; set; }
         public Boolean isDeleted { get; set; }

@@ -8,7 +8,7 @@ namespace Business_Logic_Layer.Models
 {
     public class TestComposeModelPostDTO
     {
-        public String TestId { get; set; }
-        public String QuizId { get; set; }
+        public string TestId { get; set; }
+        public string QuizId { get; set; }
     }
 }

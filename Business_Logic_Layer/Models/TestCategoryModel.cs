@@ -23,7 +23,7 @@ namespace Business_Logic_Layer.Models
             this.isActive = true;
             this.isDeleted = false;
         }
-        public String TestCategoryId { get; set; }
+        public string TestCategoryId { get; set; }
         public string Description { get; set; }
         public Boolean isActive { get; set; }
         public Boolean isDeleted { get; set; }

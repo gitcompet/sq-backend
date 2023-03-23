@@ -4,12 +4,12 @@ namespace SkillQuizWebApi.Models
 {
     public class TokenResponse
     { 
-        public TokenResponse(String accessToken, String refreshToken)
+        public TokenResponse(string accessToken, string refreshToken)
         {
             this.AccessToken = accessToken;
             this.RefreshToken = refreshToken;
         }
-        public string AccessToken { get; set; } = String.Empty;
-        public string RefreshToken { get; set; } = String.Empty;
+        public string AccessToken { get; set; } = string.Empty;
+        public string RefreshToken { get; set; } = string.Empty;
     }
 }
