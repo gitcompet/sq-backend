@@ -29,7 +29,7 @@ namespace JwtWebApiDotNet7.Controllers
         private readonly InterfaceUser _IUser;
         private readonly IConfiguration _configuration;
 
-        public AuthController(IConfiguration configuration,InterfaceUser interfaceUser)
+        public AuthController(IConfiguration configuration, InterfaceUser interfaceUser)
         {
             _configuration = configuration;
             _IUser = interfaceUser;
@@ -42,19 +42,19 @@ namespace JwtWebApiDotNet7.Controllers
         public ActionResult<TokenResponse> Login(UserLoginDTO request)
         {
             var userModel = _IUser.GetUserByUsername(request.Login);
-            if (userModel ==  null)
+            if (userModel == null)
             {
                 return BadRequest("User not found.");
             }
-              
-           if (!BCrypt.Net.BCrypt.Verify(request.Password, userModel.Password))
+
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, userModel.Password))
             {
                 return BadRequest("Wrong password.");
-            }   
-            string token = CreateToken(userModel);
-            string refreshToken = GenerateRefreshToken();
+            }
+            String token = CreateToken(userModel);
+            String refreshToken = GenerateRefreshToken();
 
-            return Ok(new TokenResponse(token,refreshToken));
+            return Ok(new TokenResponse(token, refreshToken));
         }
         [HttpPost("refresh")]
         [Consumes("application/x-www-form-urlencoded")]
@@ -81,7 +81,7 @@ namespace JwtWebApiDotNet7.Controllers
                 userModel.Login = username.Value;
                 userModel.TypeUserId = roles.Value;
                 userModel.Email = email.Value;
-                String  newToken = CreateToken(userModel);
+                String newToken = CreateToken(userModel);
                 String newRefreshToken = GenerateRefreshToken();
 
                 return Ok(new TokenResponse(token, refreshToken));
@@ -119,8 +119,9 @@ namespace JwtWebApiDotNet7.Controllers
                 //CHANGE IMPLEMENTATION FOR ROLES FOR FUTURE NEW ROLES AND RETTRIEVE FROM DB
                 "USER"
             };
-            if (user.TypeUserId.Equals("0")) {
-                roles.Add("ADMIN");                
+            if (user.TypeUserId.Equals("0"))
+            {
+                roles.Add("ADMIN");
             }
             if (user.TypeUserId.Equals("1"))
             {
@@ -128,13 +129,13 @@ namespace JwtWebApiDotNet7.Controllers
             }
             //END
             List<Claim> claims = new List<Claim> {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Login),            
+                new Claim(JwtRegisteredClaimNames.Sub, user.Login),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
             };
             foreach (string role in roles)
             {
-                claims.Add(new Claim(ClaimTypes.Role,role));
+                claims.Add(new Claim(ClaimTypes.Role, role));
             }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                _configuration["JWT:Secret"]));
@@ -151,6 +152,28 @@ namespace JwtWebApiDotNet7.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
         private string GenerateRefreshToken()
+        {
+
+            List<Claim> claims = new List<Claim> {
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+               _configuration["JWT:Secret"]));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                    issuer: _configuration["JWT:ValidIssuer"],
+                    audience: _configuration["JWT:ValidAudience"],
+                    claims: claims,
+                    expires: DateTime.Now.AddDays(30),
+                    signingCredentials: creds
+                );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
