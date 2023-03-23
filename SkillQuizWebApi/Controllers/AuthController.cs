@@ -1,6 +1,8 @@
 ﻿using Business_Logic_Layer.Interface;
 using Business_Logic_Layer.Models;
+using Data_Access_Layer.Repository.Models;
 using JwtWebApiDotNet7.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +22,7 @@ using System.Text;
 
 namespace JwtWebApiDotNet7.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -31,10 +33,12 @@ namespace JwtWebApiDotNet7.Controllers
         {
             _configuration = configuration;
             _IUser = interfaceUser;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
-          
+
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public ActionResult<TokenResponse> Login(UserLoginDTO request)
         {
             var userModel = _IUser.GetUserByUsername(request.Login);
@@ -52,10 +56,63 @@ namespace JwtWebApiDotNet7.Controllers
 
             return Ok(new TokenResponse(token,refreshToken));
         }
+        [HttpPost("refresh")]
+        [Consumes("application/x-www-form-urlencoded")]
+        [Authorize(
+             AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+             Roles = "USER"
+        )]
+        public ActionResult<TokenResponse> RefreshToken([FromForm] string token, [FromForm] string refreshToken)
+        {
+            var principal = GetPrincipalFromExpiredToken(token);
+            var username = (principal.Identity as ClaimsIdentity)
+                .Claims
+                .Where(c => c.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault();
+            var roles = (principal.Identity as ClaimsIdentity)
+                            .Claims
+                            .Where(c => c.Type == ClaimTypes.Role).FirstOrDefault();
+            var email = (principal.Identity as ClaimsIdentity)
+                .Claims
+                .Where(c => c.Type == JwtRegisteredClaimNames.Email).FirstOrDefault();
+
+            if (!IsRefreshInvalid(refreshToken))
+            {
+                UserModel userModel = new UserModel();
+                userModel.Login = username.Value;
+                userModel.TypeUserId = roles.Value;
+                userModel.Email = email.Value;
+                String  newToken = CreateToken(userModel);
+                String newRefreshToken = GenerateRefreshToken();
+
+                return Ok(new TokenResponse(token, refreshToken));
+            }
+            return BadRequest();
+
+        }
+
+        private bool IsRefreshInvalid(string refreshToken)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false, //you might want to validate the audience and issuer depending on your use case
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                                     _configuration["JWT:Secret"])),
+                ValidateLifetime = true
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(refreshToken, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512Signature, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+            return false;
+        }
 
         private string CreateToken(UserModel user)
         {
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             List<string> roles = new()
             {
@@ -71,20 +128,22 @@ namespace JwtWebApiDotNet7.Controllers
             }
             //END
             List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, user.Login)             
+                new Claim(JwtRegisteredClaimNames.Sub, user.Login),            
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
             };
             foreach (string role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role,role));
             }
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value!));
+               _configuration["JWT:Secret"]));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
             var token = new JwtSecurityToken(
-                    issuer: "http://localhost:63869",
-                    audience: "http://localhost:63869",
+                    issuer: _configuration["JWT:ValidIssuer"],
+                    audience: _configuration["JWT:ValidAudience"],
                     claims: claims,
                     expires: DateTime.Now.AddDays(1),
                     signingCredentials: creds
@@ -93,12 +152,25 @@ namespace JwtWebApiDotNet7.Controllers
         }
         private string GenerateRefreshToken()
         {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
+            var tokenValidationParameters = new TokenValidationParameters
             {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
+                ValidateAudience = false, //you might want to validate the audience and issuer depending on your use case
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+               _configuration["JWT:Secret"])),
+                ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+            var jwtSecurityToken = securityToken as JwtSecurityToken;
+            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512Signature, StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid token");
+
+            return principal;
         }
+
     }
 }
