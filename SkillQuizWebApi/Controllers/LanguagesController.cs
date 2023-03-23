@@ -1,5 +1,7 @@
-﻿using Business_Logic_Layer.Models;
+﻿using Business_Logic_Layer.Interface;
+using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,15 +13,16 @@ using System.Collections.Generic;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
+    [Authorize(
+        AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        Roles = "ADMIN"
+     )]
     [Route("api/[controller]")]
     public class LanguagesController : ControllerBase
     {
-
-        private Business_Logic_Layer.LanguagesBLL _BLL;
-        private readonly Business_Logic_Layer.Interface.InterfaceLanguages _ILanguages;
-        public LanguagesController(Business_Logic_Layer.Interface.InterfaceLanguages interfaceLanguages)
+        private readonly InterfaceLanguages _ILanguages;
+        public LanguagesController(InterfaceLanguages interfaceLanguages)
         {
-            _BLL = new Business_Logic_Layer.LanguagesBLL();
             _ILanguages = interfaceLanguages;
         }
 

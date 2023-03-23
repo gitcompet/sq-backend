@@ -1,4 +1,6 @@
 ﻿using Business_Logic_Layer.Models;
+using Data_Access_Layer.Repository.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +12,10 @@ namespace Business_Logic_Layer.Interface
     {
 
         List<TestModel> GetAllTest();
-
-
         TestModel GetTestById(int id);
-        void PostTest(TestModel testModel);
+        TestModel PostTest(TestModel testModel);
+        TestModel PatchTest(int id, JsonPatchDocument<Test> testModelJSON);
+        TestModel PutTest(TestModel testModel);
+        void DeleteTest(int id);
     }
 }

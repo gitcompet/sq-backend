@@ -1,14 +1,11 @@
-﻿using AutoMapper;
-using Business_Logic_Layer.Interface;
-using Business_Logic_Layer.Models;
-using Data_Access_Layer.DAL;
-using Data_Access_Layer.Repository.Models;
-using Org.BouncyCastle.Crypto.Generators;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AutoMapper;
+using Business_Logic_Layer.Models;
+using Business_Logic_Layer.Interface;
+using Data_Access_Layer.Repository.Models;
+using Data_Access_Layer.DAL;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Business_Logic_Layer
 {
@@ -28,21 +25,21 @@ namespace Business_Logic_Layer
 
         public List<UserModel> GetAllUser()
         {
-            List<User> UserFromDB = _DAL.GetAllUser();
-            List<UserModel> personsModel = _UserMapper.Map<List<User>, List<UserModel>>(UserFromDB);
+            List<User> userFromDB = _DAL.GetAllUser();
+            List<UserModel> userModel = _UserMapper.Map<List<User>, List<UserModel>>(userFromDB);
 
-            return personsModel;
+            return userModel;
         }
 
         public UserModel GetUserById(int id)
         {
-            var UserEntity = _DAL.GetUserById(id);
+            var userEntity = _DAL.GetUserById(id);
 
-            UserModel UserModel = _UserMapper.Map<User, UserModel>(UserEntity);
+            UserModel userModel = _UserMapper.Map<User, UserModel>(userEntity);
 
-            return UserModel;
+            return userModel;
         }
-
+        
         public UserModel GetUserByUsername(string username)
         {
             var UserEntity = _DAL.GetUserByUsername(username);
@@ -52,25 +49,35 @@ namespace Business_Logic_Layer
             return UserModel;
         }
 
-
-        public CreatedUserDTO PostUser(UserModelDTO userModelDTO)
+        public UserModel PostUser(UserModel userModel)
         {
-            var userModel = new UserModel(userModelDTO);
-            string passwordHash
-                = BCrypt.Net.BCrypt.HashPassword(userModel.Password);
-            userModel.Password = passwordHash;
-            System.Diagnostics.Debug.WriteLine("==============================================");
-            System.Diagnostics.Debug.WriteLine(userModel.LoginId);
-            System.Diagnostics.Debug.WriteLine(userModel.DateCreat);
-            System.Diagnostics.Debug.WriteLine("==============================================");
             User userEntity = _UserMapper.Map<UserModel, User>(userModel);
-            System.Diagnostics.Debug.WriteLine("==============================================");
-            System.Diagnostics.Debug.WriteLine(userEntity.LoginId);
-            System.Diagnostics.Debug.WriteLine(userEntity.DateCreat);
-            System.Diagnostics.Debug.WriteLine("==============================================");
-            int userId = _DAL.postUser(userEntity);
-            return new CreatedUserDTO(userId);
+            var user = _DAL.PostUser(userEntity);
+            UserModel userModelReturn = _UserMapper.Map<User, UserModel>(user);
+            return userModelReturn;
         }
 
+
+        public UserModel PatchUser(int id, JsonPatchDocument<User> userModelJSON)
+        {
+            var userEntity = _DAL.PatchUser(id, userModelJSON);
+
+            UserModel userModel = _UserMapper.Map<User, UserModel>(userEntity);
+
+            return userModel;
+        }
+
+        public UserModel PutUser(UserModel userModel)
+        {
+            User userEntity = _UserMapper.Map<UserModel, User>(userModel);
+            var user = _DAL.PutUser(userEntity);
+            UserModel userModelReturn = _UserMapper.Map<User, UserModel>(user);
+            return userModelReturn;
+        }
+        public void DeleteUser(int id)
+        {
+            _DAL.DeleteUser(id);
+        }
     }
 }
+

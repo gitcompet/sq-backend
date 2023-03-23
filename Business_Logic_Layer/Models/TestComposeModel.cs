@@ -8,8 +8,14 @@ namespace Business_Logic_Layer.Models
 {
     public class TestComposeModel
     {
-        public String TestComposeId { get; set; }
-        public String TestId { get; set; }
-        public String QuizId { get; set; }
+        public TestComposeModel() { }
+        public TestComposeModel(TestComposeModelPostDTO testComposeModelPostDTO)
+        {
+            this.QuizId = testComposeModelPostDTO.QuizId;
+            this.TestId = testComposeModelPostDTO.TestId;
+        }
+        public string TestComposeId { get; set; }
+        public string TestId { get; set; }
+        public string QuizId { get; set; }
     }
 }

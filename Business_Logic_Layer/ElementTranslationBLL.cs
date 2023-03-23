@@ -4,18 +4,20 @@ using AutoMapper;
 using Business_Logic_Layer.Models;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
+using Data_Access_Layer.DAL;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Business_Logic_Layer
 {
     public class ElementTranslationBLL : InterfaceElementTranslation
     {
 
-        private Data_Access_Layer.ElementTranslationDAL _DAL;
+        private ElementTranslationDAL _DAL;
         private Mapper _ElementTranslationMapper;
 
         public ElementTranslationBLL()
         {
-            _DAL = new Data_Access_Layer.ElementTranslationDAL();
+            _DAL = new Data_Access_Layer.DAL.ElementTranslationDAL();
             var _configElementTranslation = new MapperConfiguration(cfg => cfg.CreateMap<ElementTranslation, ElementTranslationModel>().ReverseMap());
 
             _ElementTranslationMapper = new Mapper(_configElementTranslation);
@@ -23,27 +25,51 @@ namespace Business_Logic_Layer
 
         public List<ElementTranslationModel> GetAllElementTranslation()
         {
-            List<ElementTranslation> elementtranslationFromDB = _DAL.GetAllElementTranslation();
-            List<ElementTranslationModel> elementtranslationModel = _ElementTranslationMapper.Map<List<ElementTranslation>, List<ElementTranslationModel>>(elementtranslationFromDB);
+            List<ElementTranslation> elementTranslationFromDB = _DAL.GetAllElementTranslation();
+            List<ElementTranslationModel> elementTranslationModel = _ElementTranslationMapper.Map<List<ElementTranslation>, List<ElementTranslationModel>>(elementTranslationFromDB);
 
-            return elementtranslationModel;
+            return elementTranslationModel;
         }
 
         public ElementTranslationModel GetElementTranslationById(int id)
         {
-            var elementtranslationEntity = _DAL.GetElementTranslationById(id);
+            var elementTranslationEntity = _DAL.GetElementTranslationById(id);
 
-            ElementTranslationModel elementtranslationModel = _ElementTranslationMapper.Map<ElementTranslation, ElementTranslationModel>(elementtranslationEntity);
+            ElementTranslationModel elementTranslationModel = _ElementTranslationMapper.Map<ElementTranslation, ElementTranslationModel>(elementTranslationEntity);
 
-            return elementtranslationModel;
+            return elementTranslationModel;
         }
 
 
-        public void PostElementTranslation(ElementTranslationModel elementtranslationModel)
+        public ElementTranslationModel PostElementTranslation(ElementTranslationModel elementTranslationModel)
         {
-            ElementTranslation elementtranslationEntity = _ElementTranslationMapper.Map<ElementTranslationModel, ElementTranslation>(elementtranslationModel);
-            _DAL.postElementTranslation(elementtranslationEntity);
+            ElementTranslation elementTranslationEntity = _ElementTranslationMapper.Map<ElementTranslationModel, ElementTranslation>(elementTranslationModel);
+            var elementTranslation = _DAL.PostElementTranslation(elementTranslationEntity);
+            ElementTranslationModel elementTranslationModelReturn = _ElementTranslationMapper.Map<ElementTranslation, ElementTranslationModel>(elementTranslation);
+            return elementTranslationModelReturn;
         }
 
+
+        public ElementTranslationModel PatchElementTranslation(int id, JsonPatchDocument<ElementTranslation> elementTranslationModelJSON)
+        {
+            var elementTranslationEntity = _DAL.PatchElementTranslation(id, elementTranslationModelJSON);
+
+            ElementTranslationModel elementTranslationModel = _ElementTranslationMapper.Map<ElementTranslation, ElementTranslationModel>(elementTranslationEntity);
+
+            return elementTranslationModel;
+        }
+
+        public ElementTranslationModel PutElementTranslation(ElementTranslationModel elementTranslationModel)
+        {
+            ElementTranslation elementTranslationEntity = _ElementTranslationMapper.Map<ElementTranslationModel, ElementTranslation>(elementTranslationModel);
+            var elementTranslation = _DAL.PutElementTranslation(elementTranslationEntity);
+            ElementTranslationModel elementTranslationModelReturn = _ElementTranslationMapper.Map<ElementTranslation, ElementTranslationModel>(elementTranslation);
+            return elementTranslationModelReturn;
+        }
+        public void DeleteElementTranslation(int id)
+        {
+            _DAL.DeleteElementTranslation(id);
+        }
     }
 }
+

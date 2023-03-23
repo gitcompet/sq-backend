@@ -5,6 +5,7 @@ using Business_Logic_Layer.Models;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Business_Logic_Layer
 {
@@ -24,28 +25,51 @@ namespace Business_Logic_Layer
 
         public List<SubDomainModel> GetAllSubDomain()
         {
-            List<SubDomain> subdomainFromDB = _DAL.GetAllSubDomain();
-            List<SubDomainModel> subdomainModel = _SubDomainMapper.Map<List<SubDomain>, List<SubDomainModel>>(subdomainFromDB);
+            List<SubDomain> subDomainFromDB = _DAL.GetAllSubDomain();
+            List<SubDomainModel> subDomainModel = _SubDomainMapper.Map<List<SubDomain>, List<SubDomainModel>>(subDomainFromDB);
 
-            return subdomainModel;
+            return subDomainModel;
         }
 
         public SubDomainModel GetSubDomainById(int id)
         {
-            var subdomainEntity = _DAL.GetSubDomainById(id);
+            var subDomainEntity = _DAL.GetSubDomainById(id);
 
-            SubDomainModel subdomainModel = _SubDomainMapper.Map<SubDomain, SubDomainModel>(subdomainEntity);
+            SubDomainModel subDomainModel = _SubDomainMapper.Map<SubDomain, SubDomainModel>(subDomainEntity);
 
-            return subdomainModel;
+            return subDomainModel;
         }
 
 
-        public void PostSubDomain(SubDomainModel subdomainModel)
+        public SubDomainModel PostSubDomain(SubDomainModel subDomainModel)
         {
-            SubDomain subdomainEntity = _SubDomainMapper.Map<SubDomainModel, SubDomain>(subdomainModel);
-            _DAL.postSubDomain(subdomainEntity);
+            SubDomain subDomainEntity = _SubDomainMapper.Map<SubDomainModel, SubDomain>(subDomainModel);
+            var subDomain = _DAL.PostSubDomain(subDomainEntity);
+            SubDomainModel subDomainModelReturn = _SubDomainMapper.Map<SubDomain, SubDomainModel>(subDomain);
+            return subDomainModelReturn;
         }
 
+
+        public SubDomainModel PatchSubDomain(int id, JsonPatchDocument<SubDomain> subDomainModelJSON)
+        {
+            var subDomainEntity = _DAL.PatchSubDomain(id, subDomainModelJSON);
+
+            SubDomainModel subDomainModel = _SubDomainMapper.Map<SubDomain, SubDomainModel>(subDomainEntity);
+
+            return subDomainModel;
+        }
+
+        public SubDomainModel PutSubDomain(SubDomainModel subDomainModel)
+        {
+            SubDomain subDomainEntity = _SubDomainMapper.Map<SubDomainModel, SubDomain>(subDomainModel);
+            var subDomain = _DAL.PutSubDomain(subDomainEntity);
+            SubDomainModel subDomainModelReturn = _SubDomainMapper.Map<SubDomain, SubDomainModel>(subDomain);
+            return subDomainModelReturn;
+        }
+        public void DeleteSubDomain(int id)
+        {
+            _DAL.DeleteSubDomain(id);
+        }
     }
 }
 

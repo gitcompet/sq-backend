@@ -5,6 +5,7 @@ using Business_Logic_Layer.Models;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Business_Logic_Layer
 {
@@ -24,28 +25,51 @@ namespace Business_Logic_Layer
 
         public List<TestComposeModel> GetAllTestCompose()
         {
-            List<TestCompose> testcomposeFromDB = _DAL.GetAllTestCompose();
-            List<TestComposeModel> testcomposeModel = _TestComposeMapper.Map<List<TestCompose>, List<TestComposeModel>>(testcomposeFromDB);
+            List<TestCompose> testComposeFromDB = _DAL.GetAllTestCompose();
+            List<TestComposeModel> testComposeModel = _TestComposeMapper.Map<List<TestCompose>, List<TestComposeModel>>(testComposeFromDB);
 
-            return testcomposeModel;
+            return testComposeModel;
         }
 
         public TestComposeModel GetTestComposeById(int id)
         {
-            var testcomposeEntity = _DAL.GetTestComposeById(id);
+            var testComposeEntity = _DAL.GetTestComposeById(id);
 
-            TestComposeModel testcomposeModel = _TestComposeMapper.Map<TestCompose, TestComposeModel>(testcomposeEntity);
+            TestComposeModel testComposeModel = _TestComposeMapper.Map<TestCompose, TestComposeModel>(testComposeEntity);
 
-            return testcomposeModel;
+            return testComposeModel;
         }
 
 
-        public void PostTestCompose(TestComposeModel testcomposeModel)
+        public TestComposeModel PostTestCompose(TestComposeModel testComposeModel)
         {
-            TestCompose testcomposeEntity = _TestComposeMapper.Map<TestComposeModel, TestCompose>(testcomposeModel);
-            _DAL.postTestCompose(testcomposeEntity);
+            TestCompose testComposeEntity = _TestComposeMapper.Map<TestComposeModel, TestCompose>(testComposeModel);
+            var testCompose = _DAL.PostTestCompose(testComposeEntity);
+            TestComposeModel testComposeModelReturn = _TestComposeMapper.Map<TestCompose, TestComposeModel>(testCompose);
+            return testComposeModelReturn;
         }
 
+
+        public TestComposeModel PatchTestCompose(int id, JsonPatchDocument<TestCompose> testComposeModelJSON)
+        {
+            var testComposeEntity = _DAL.PatchTestCompose(id, testComposeModelJSON);
+
+            TestComposeModel testComposeModel = _TestComposeMapper.Map<TestCompose, TestComposeModel>(testComposeEntity);
+
+            return testComposeModel;
+        }
+
+        public TestComposeModel PutTestCompose(TestComposeModel testComposeModel)
+        {
+            TestCompose testComposeEntity = _TestComposeMapper.Map<TestComposeModel, TestCompose>(testComposeModel);
+            var testCompose = _DAL.PutTestCompose(testComposeEntity);
+            TestComposeModel testComposeModelReturn = _TestComposeMapper.Map<TestCompose, TestComposeModel>(testCompose);
+            return testComposeModelReturn;
+        }
+        public void DeleteTestCompose(int id)
+        {
+            _DAL.DeleteTestCompose(id);
+        }
     }
 }
 

@@ -1,4 +1,6 @@
 ﻿using Business_Logic_Layer.Models;
+using Data_Access_Layer.Repository.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +12,10 @@ namespace Business_Logic_Layer.Interface
     {
 
         List<DomainComposeModel> GetAllDomainCompose();
-
-
         DomainComposeModel GetDomainComposeById(int id);
-        void PostDomainCompose(DomainComposeModel domaincomposeModel);
+        DomainComposeModel PostDomainCompose(DomainComposeModel domainComposeModel);
+        DomainComposeModel PatchDomainCompose(int id, JsonPatchDocument<DomainCompose> domainComposeModelJSON);
+        DomainComposeModel PutDomainCompose(DomainComposeModel domainComposeModel);
+        void DeleteDomainCompose(int id);
     }
 }

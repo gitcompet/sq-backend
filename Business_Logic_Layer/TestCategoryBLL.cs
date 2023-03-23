@@ -5,6 +5,7 @@ using Business_Logic_Layer.Models;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Business_Logic_Layer
 {
@@ -24,28 +25,51 @@ namespace Business_Logic_Layer
 
         public List<TestCategoryModel> GetAllTestCategory()
         {
-            List<TestCategory> testcategoryFromDB = _DAL.GetAllTestCategory();
-            List<TestCategoryModel> testcategoryModel = _TestCategoryMapper.Map<List<TestCategory>, List<TestCategoryModel>>(testcategoryFromDB);
+            List<TestCategory> testCategoryFromDB = _DAL.GetAllTestCategory();
+            List<TestCategoryModel> testCategoryModel = _TestCategoryMapper.Map<List<TestCategory>, List<TestCategoryModel>>(testCategoryFromDB);
 
-            return testcategoryModel;
+            return testCategoryModel;
         }
 
         public TestCategoryModel GetTestCategoryById(int id)
         {
-            var testcategoryEntity = _DAL.GetTestCategoryById(id);
+            var testCategoryEntity = _DAL.GetTestCategoryById(id);
 
-            TestCategoryModel testcategoryModel = _TestCategoryMapper.Map<TestCategory, TestCategoryModel>(testcategoryEntity);
+            TestCategoryModel testCategoryModel = _TestCategoryMapper.Map<TestCategory, TestCategoryModel>(testCategoryEntity);
 
-            return testcategoryModel;
+            return testCategoryModel;
         }
 
 
-        public void PostTestCategory(TestCategoryModel testcategoryModel)
+        public TestCategoryModel PostTestCategory(TestCategoryModel testCategoryModel)
         {
-            TestCategory testcategoryEntity = _TestCategoryMapper.Map<TestCategoryModel, TestCategory>(testcategoryModel);
-            _DAL.postTestCategory(testcategoryEntity);
+            TestCategory testCategoryEntity = _TestCategoryMapper.Map<TestCategoryModel, TestCategory>(testCategoryModel);
+            var testCategory = _DAL.PostTestCategory(testCategoryEntity);
+            TestCategoryModel testCategoryModelReturn = _TestCategoryMapper.Map<TestCategory, TestCategoryModel>(testCategory);
+            return testCategoryModelReturn;
         }
 
+
+        public TestCategoryModel PatchTestCategory(int id, JsonPatchDocument<TestCategory> testCategoryModelJSON)
+        {
+            var testCategoryEntity = _DAL.PatchTestCategory(id, testCategoryModelJSON);
+
+            TestCategoryModel testCategoryModel = _TestCategoryMapper.Map<TestCategory, TestCategoryModel>(testCategoryEntity);
+
+            return testCategoryModel;
+        }
+
+        public TestCategoryModel PutTestCategory(TestCategoryModel testCategoryModel)
+        {
+            TestCategory testCategoryEntity = _TestCategoryMapper.Map<TestCategoryModel, TestCategory>(testCategoryModel);
+            var testCategory = _DAL.PutTestCategory(testCategoryEntity);
+            TestCategoryModel testCategoryModelReturn = _TestCategoryMapper.Map<TestCategory, TestCategoryModel>(testCategory);
+            return testCategoryModelReturn;
+        }
+        public void DeleteTestCategory(int id)
+        {
+            _DAL.DeleteTestCategory(id);
+        }
     }
 }
 

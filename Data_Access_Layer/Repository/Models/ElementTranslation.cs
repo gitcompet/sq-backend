@@ -11,8 +11,8 @@ namespace Data_Access_Layer.Repository.Models
     {
         public int ElementTranslationId { get; set; }
         public int ElementId { get; set; }
-        public String ElementType { get; set; }
+        public string ElementType { get; set; }
         public int LanguagesId { get; set; }
-        public String Description { get; set; }
+        public string Description { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using Business_Logic_Layer;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer;
 using Data_Access_Layer.Repository.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SkillQuizWebApi.ExceptionDealer;
@@ -17,6 +19,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,7 +54,8 @@ namespace SkillQuizzWebApi
                       .AllowAnyMethod()
                       .AllowAnyHeader();
             }));
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddNewtonsoftJson();
             builder.Services.Configure<JsonOptions>(options =>
              {
                  options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
@@ -70,7 +74,30 @@ namespace SkillQuizzWebApi
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
-
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(o =>
+            {
+                o.RequireHttpsMetadata = false;
+                o.SaveToken = true;
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                    ValidAudience = builder.Configuration["JWT:ValidAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey
+                    (Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"])),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    RoleClaimType = ClaimTypes.Role,
+                    ClockSkew = TimeSpan.Zero //this test to avoid waiting a long time for the token to be considered actually expired.
+                };                
+            });
+            builder.Services.AddAuthorization();
             builder.Services.AddScoped<InterfaceDomain, DomainBLL>();
             builder.Services.AddScoped<InterfaceUserType, UserTypeBLL>();
             builder.Services.AddScoped<InterfaceElementTranslation, ElementTranslationBLL>();
@@ -79,34 +106,18 @@ namespace SkillQuizzWebApi
             builder.Services.AddScoped<InterfaceTestStatus, TestStatusBLL>();
             builder.Services.AddScoped<InterfaceAnswer, AnswerBLL>();
             builder.Services.AddScoped<InterfaceQuestion, QuestionBLL>();
+            builder.Services.AddScoped<InterfaceQuiz, QuizBLL>();
             builder.Services.AddScoped< InterfaceTestCategory, TestCategoryBLL>();
             builder.Services.AddScoped<InterfaceTest, TestBLL>();
+            builder.Services.AddScoped<InterfaceTestCompose, TestComposeBLL>();
             builder.Services.AddScoped<InterfaceAnswerQuestion, AnswerQuestionBLL>();
             builder.Services.AddScoped<InterfaceLanguages, LanguagesBLL>();
             builder.Services.AddScoped<InterfaceUser, UserBLL>();
             builder.Services.AddScoped<InterfaceQuizCompose, QuizComposeBLL>();
-            builder.Services.AddScoped<InterfaceAnswerCandidateTest, AnswerCandidateTestBLL>();
-            builder.Services.AddScoped<InterfaceTestAttribution, TestAttributionBLL>();
-
-
-            //builder.Services.AddAuthentication().AddJwtBearer(options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        ValidateAudience = false,
-            //        ValidateIssuer = false,
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            //                builder.Configuration.GetSection("AppSettings:Token").Value!))
-            //    };
-            //});
-
-            //builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>();         
-
-            //test
-
-            //builder.Services.AddDbContext<FullStackDbContext>(options =>
-            //    options.UseSqlServer(builder.Configuration.GetConnectionString("FullStackConnectionString")));
+            builder.Services.AddScoped<InterfaceTestUser, TestUserBLL>();
+            builder.Services.AddScoped<InterfaceQuizUser, QuizUserBLL>();
+            builder.Services.AddScoped<InterfaceQuestionUser, QuestionUserBLL>();
+            builder.Services.AddScoped<InterfaceAnswerUser, AnswerUserBLL>();
 
             var app = builder.Build();
 
@@ -122,8 +133,7 @@ namespace SkillQuizzWebApi
 
             // Shows UseCors with CorsPolicyBuilder.
             app.UseCors("CorsPolicy");
-
-            //app.UseAuthentication(); // This need to be added	
+            app.UseAuthentication(); // This need to be added	
             app.UseAuthorization();
             app.MapControllers();
             app.Run();

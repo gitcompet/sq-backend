@@ -5,11 +5,12 @@ using Business_Logic_Layer.Models;
 using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Business_Logic_Layer
 {
-    public class DomainBLL : InterfaceDomain 
-        {
+    public class DomainBLL : InterfaceDomain
+    {
 
         private DomainDAL _DAL;
         private Mapper _DomainMapper;
@@ -40,12 +41,35 @@ namespace Business_Logic_Layer
         }
 
 
-        public void PostDomain(DomainModel domainModel)
+        public DomainModel PostDomain(DomainModel domainModel)
         {
             Domain domainEntity = _DomainMapper.Map<DomainModel, Domain>(domainModel);
-            _DAL.postDomain(domainEntity);
+            var domain = _DAL.PostDomain(domainEntity);
+            DomainModel domainModelReturn = _DomainMapper.Map<Domain, DomainModel>(domain);
+            return domainModelReturn;
         }
 
+
+        public DomainModel PatchDomain(int id, JsonPatchDocument<Domain> domainModelJSON)
+        {
+            var domainEntity = _DAL.PatchDomain(id, domainModelJSON);
+
+            DomainModel domainModel = _DomainMapper.Map<Domain, DomainModel>(domainEntity);
+
+            return domainModel;
+        }
+
+        public DomainModel PutDomain(DomainModel domainModel)
+        {
+            Domain domainEntity = _DomainMapper.Map<DomainModel, Domain>(domainModel);
+            var domain = _DAL.PutDomain(domainEntity);
+            DomainModel domainModelReturn = _DomainMapper.Map<Domain, DomainModel>(domain);
+            return domainModelReturn;
+        }
+        public void DeleteDomain(int id)
+        {
+            _DAL.DeleteDomain(id);
+        }
     }
 }
 
