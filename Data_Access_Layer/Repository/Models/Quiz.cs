@@ -12,7 +12,7 @@ namespace Data_Access_Layer.Repository.Models
         public int DomainId { get; set; }
         public int SubDomainId { get; set; }
         public decimal Weight { get; set; }
-        public String Comment { get; set; }
+        public string Comment { get; set; }
         public Boolean isActive { get; set; }
         public Boolean isDeleted { get; set; }
     }

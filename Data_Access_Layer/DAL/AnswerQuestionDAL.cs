@@ -39,10 +39,10 @@ namespace Data_Access_Layer
 
             return result.ToArray();
         }
-        public IEnumerable<String> GetAnswerByListId(int id)
+        public IEnumerable<string> GetAnswerByListId(int id)
         {
 
-            var result = new List<String>();
+            var result = new List<string>();
 
             var db = new CompetenceDbContext();
             //var d = new List<AnswerQuestion>();

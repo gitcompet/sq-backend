@@ -47,8 +47,8 @@ namespace JwtWebApiDotNet7.Controllers
             {
                 return BadRequest("Wrong password.");
             }   
-            String token = CreateToken(userModel);
-            String refreshToken = GenerateRefreshToken();
+            string token = CreateToken(userModel);
+            string refreshToken = GenerateRefreshToken();
 
             return Ok(new TokenResponse(token,refreshToken));
         }
@@ -91,7 +91,7 @@ namespace JwtWebApiDotNet7.Controllers
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        private String GenerateRefreshToken()
+        private string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
             using (var rng = RandomNumberGenerator.Create())

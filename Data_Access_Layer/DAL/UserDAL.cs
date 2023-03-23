@@ -27,7 +27,7 @@ namespace Data_Access_Layer.DAL
             return d;
         }
 
-        public User GetUserByUsername(String username)
+        public User GetUserByUsername(string username)
         {   //LOOKUP WITH NON PRIMARY KEY COLUMNS
             var db = new CompetenceDbContext();
             User user = db.User.FirstOrDefault(x => x.Login == username);

@@ -25,7 +25,7 @@ namespace Business_Logic_Layer.Models
             this.isActive = true;
             this.isDeleted = false;
         }
-        public String LoginId { get; set; }
+        public string LoginId { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public string LastName { get; set; }

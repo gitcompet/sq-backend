@@ -16,7 +16,7 @@ namespace Business_Logic_Layer.Models
             this.QuestionLevel = quizComposeModelPostDTO.QuestionLevel;
             this.QuestionWeight = quizComposeModelPostDTO.QuestionWeight;
         }
-        public String QuizComposeId { get; set; }
+        public string QuizComposeId { get; set; }
         public string QuizId { get; set; }
         public string QuestionId { get; set; }
         public int QuestionLevel { get; set; }

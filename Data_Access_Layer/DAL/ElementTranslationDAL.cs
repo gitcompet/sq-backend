@@ -79,9 +79,9 @@ namespace Data_Access_Layer.DAL
         }
 
         //Get a list of libelle from a list of ID with the type looking for
-        public IEnumerable<String> GetAnswerByListId(IEnumerable<String> ids, string elementType, int languageId)
+        public IEnumerable<string> GetAnswerByListId(IEnumerable<string> ids, string elementType, int languageId)
         {
-            var result = new List<String>();
+            var result = new List<string>();
             foreach (var id in ids)
             {
                 var db = new CompetenceDbContext();

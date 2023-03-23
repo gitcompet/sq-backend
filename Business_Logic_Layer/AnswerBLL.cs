@@ -43,7 +43,7 @@ namespace Business_Logic_Layer
             return answerModel;
         }
 
-        public IEnumerable<String> GetAnswerByListId(IEnumerable<String> ids, string elementType, int languageId)
+        public IEnumerable<string> GetAnswerByListId(IEnumerable<string> ids, string elementType, int languageId)
         {
             var answerList = _DALLibelle.GetAnswerByListId(ids, elementType, languageId);
 

@@ -19,7 +19,7 @@ namespace Business_Logic_Layer.Models
             this.isTestRelated = false;
         }
         public LanguagesModel() { }
-        public String LanguagesId { get; set; }
+        public string LanguagesId { get; set; }
         public string title { get; set; }
         public string shortCode { get; set; }
         public Boolean isActive { get; set; }

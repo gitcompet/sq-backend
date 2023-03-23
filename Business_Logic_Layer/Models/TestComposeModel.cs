@@ -14,8 +14,8 @@ namespace Business_Logic_Layer.Models
             this.QuizId = testComposeModelPostDTO.QuizId;
             this.TestId = testComposeModelPostDTO.TestId;
         }
-        public String TestComposeId { get; set; }
-        public String TestId { get; set; }
-        public String QuizId { get; set; }
+        public string TestComposeId { get; set; }
+        public string TestId { get; set; }
+        public string QuizId { get; set; }
     }
 }

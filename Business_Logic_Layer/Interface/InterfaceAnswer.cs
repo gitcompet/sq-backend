@@ -13,7 +13,7 @@ namespace Business_Logic_Layer.Interface
 
         List<AnswerModel> GetAllAnswer();
         AnswerModel GetAnswerById(int id);
-        IEnumerable<String> GetAnswerByListId(IEnumerable<String> ids, string elementType, int languageId);
+        IEnumerable<string> GetAnswerByListId(IEnumerable<string> ids, string elementType, int languageId);
         void PostAnswer(int id);
         AnswerModel PatchAnswer(int id, JsonPatchDocument<Answer> answerModelJSON);
         AnswerModel PutAnswer(AnswerModel answerModel);
