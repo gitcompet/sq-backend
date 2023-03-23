@@ -48,7 +48,7 @@ namespace SkillQuizzWebApi.Controllers
         //POST api/v1/Question
         [HttpPost]
         [Route("")]
-        public void PostQuestion([FromBody] QuestionModelPostDTO questionModel)
+        public void PostQuestion([FromBody] QuestionModel questionModel)
         {
             _IQuestion.PostQuestion(questionModel);
         }
@@ -56,17 +56,17 @@ namespace SkillQuizzWebApi.Controllers
         //PATCH api/v1/Question/{id}
         [HttpPatch]
         [Route("{id:int}")]
-        public void PatchQuestion([FromBody] QuestionModelPatchDTO questionModel)
+        public void PatchQuestion([FromBody] QuestionModel questionModel)
         {
-            _IQuestion.PatchQuestion(questionModel);
+            //_IQuestion.PatchQuestion(questionModel);
         }
 
         //DELETE api/v1/Question/{id}
-        [HttpPatch]
+        [HttpDelete]
         [Route("{id:int}")]
         public void DeleteQuestion(int id)
         {
-            _IQuestion.DeleteQuestion(id);
+           // _IQuestion.DeleteQuestion(id);
         }
 
 

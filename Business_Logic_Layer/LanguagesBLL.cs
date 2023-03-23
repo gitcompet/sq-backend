@@ -29,7 +29,6 @@ namespace Business_Logic_Layer
 
             return personsModel;
         }
-
         public LanguagesModel GetLanguagesById(int id)
         {
             var languagesEntity = _DAL.GetLanguagesById(id);
@@ -38,7 +37,6 @@ namespace Business_Logic_Layer
 
             return languagesModel;
         }
-
 
         public int RemoveLanguage(int id)
         {

@@ -23,70 +23,21 @@ namespace SkillQuizzWebApi.Controllers
             _ILanguages = interfaceLanguages;
         }
 
+        //DEBUT DE TON CODE//
 
+        //GET ONE
+        //GET api/Languages/{id}
         [HttpGet]
-        [Route("getLanguagess")]
-
-
-        public List<LanguagesModel> GetAllLanguages()
-        {
-            return _ILanguages.GetAllLanguages();
-        }
-
-
-
-        [HttpGet]
-        [Route("getLanguages")]
+        [Route("{id:int}")]
         public ActionResult<LanguagesModel> GetLanguagesById(int id)
         {
-            var languages = _ILanguages.GetLanguagesById(id);
-
-            if (languages == null)
-            {
-                return NotFound("Invalid ID");
-            }
-
-            return Ok(languages);
+            //VOTRE CODE A METTRE
+            return Ok(ModelState);
         }
-
-        [Route("removeLanguage")]
-        [HttpPost]
-        public ActionResult<int> RemoveLanguage([FromBody] ResponseIdDTO responseIdDTO)
-        {
-            var result = _ILanguages.RemoveLanguage(Int32.Parse(responseIdDTO.GenericId));
-
-            if (result == 0)
-            {
-                return NotFound("Invalid ID");
-            }
-            return Ok(result);
-        }
-
-        [Route("postLanguages")]
-        [HttpPost]
-        public int postLanguages([FromBody] LanguagesModelDTO languagesModelDTO)
-        {
-            return _ILanguages.PostLanguages(languagesModelDTO);
-        }
-
-
-
-        //(This is the bad practise!) = > this should instead also call the BLL 
-        //[Route("deletePerson")]
-        //[HttpDelete]
-        //public void deletePerson(int id)
-        //{
-        //    var db = new PersonDbContext();
-        //    Person p = new Person();
-        //    p = db.Person.FirstOrDefault(x => x.Id == id);
-
-        //    if (p == null)
-        //        throw new Exception("Not found");
-
-        //    db.Person.Remove(p);
-        //    db.SaveChanges();
-        //}
-
+        
+        //GET ALL
+        //GET api/Languages
+        
 
     }
 }

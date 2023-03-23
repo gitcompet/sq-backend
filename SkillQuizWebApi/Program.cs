@@ -71,42 +71,8 @@ namespace SkillQuizzWebApi
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
-            builder.Services.AddScoped<InterfaceDomain, DomainBLL>();
-            builder.Services.AddScoped<InterfaceUserType, UserTypeBLL>();
-            builder.Services.AddScoped<InterfaceElementTranslation, ElementTranslationBLL>();
-            builder.Services.AddScoped<InterfaceDomainCompose, DomainComposeBLL>();
-            builder.Services.AddScoped<InterfaceSubDomain, SubDomainBLL>();
-            builder.Services.AddScoped<InterfaceTestStatus, TestStatusBLL>();
-            builder.Services.AddScoped<InterfaceAnswer, AnswerBLL>();
             builder.Services.AddScoped<InterfaceQuestion, QuestionBLL>();
-            builder.Services.AddScoped< InterfaceTestCategory, TestCategoryBLL>();
-            builder.Services.AddScoped<InterfaceTest, TestBLL>();
-            builder.Services.AddScoped<InterfaceAnswerQuestion, AnswerQuestionBLL>();
             builder.Services.AddScoped<InterfaceLanguages, LanguagesBLL>();
-            builder.Services.AddScoped<InterfaceUser, UserBLL>();
-            builder.Services.AddScoped<InterfaceQuizCompose, QuizComposeBLL>();
-            builder.Services.AddScoped<InterfaceAnswerCandidateTest, AnswerCandidateTestBLL>();
-            builder.Services.AddScoped<InterfaceTestAttribution, TestAttributionBLL>();
-
-
-            //builder.Services.AddAuthentication().AddJwtBearer(options =>
-            //{
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        ValidateAudience = false,
-            //        ValidateIssuer = false,
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-            //                builder.Configuration.GetSection("AppSettings:Token").Value!))
-            //    };
-            //});
-
-            //builder.Services.AddScoped<IJWTManagerRepository, JWTManagerRepository>();         
-
-            //test
-
-            //builder.Services.AddDbContext<FullStackDbContext>(options =>
-            //    options.UseSqlServer(builder.Configuration.GetConnectionString("FullStackConnectionString")));
 
             var app = builder.Build();
 
