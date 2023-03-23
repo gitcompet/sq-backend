@@ -37,6 +37,22 @@ namespace SkillQuizzWebApi.Controllers
         }
 
 
+        //GET api/v1/Quiz/{id}
+        [HttpGet]
+        [Route("{id:int}")]
+        public ActionResult<QuestionModel> GetQuestionById(int id)
+        {
+            var quiz = _IQuestion.GetQuestionById(id);
+
+            if (quiz == null)
+            {
+                return NotFound("Invalid ID");
+            }
+
+            return Ok(quiz);
+        }
+
+        /*
         //GET api/v1/Question/{id}
         [HttpGet]
         [Route("{id:int}")]
@@ -61,7 +77,7 @@ namespace SkillQuizzWebApi.Controllers
 
             return Ok(encapsulation);
         }
-
+        */
         //POST api/v1/Question
         [HttpPost]
         [Route("")]

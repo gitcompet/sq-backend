@@ -20,7 +20,7 @@ namespace SkillQuizzWebApi.Controllers
             _IAnswerQuestion = interfaceAnswerQuestion;
         }
 
-        /*
+        
         [HttpGet]
         [Route("getAnswerQuestions")]
 
@@ -73,7 +73,7 @@ namespace SkillQuizzWebApi.Controllers
         //    db.Person.Remove(p);
         //    db.SaveChanges();
         //}
-        */
+        
 
     }
 }

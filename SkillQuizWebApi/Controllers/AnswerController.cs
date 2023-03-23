@@ -22,7 +22,7 @@ namespace SkillQuizzWebApi.Controllers
         {
             _IAnswer = interfaceAnswer;
         }
-        /*
+        
         //GET api/v1/Answer
         [HttpGet]
         [Route("")]
@@ -103,7 +103,7 @@ namespace SkillQuizzWebApi.Controllers
 
             //_IAnswer.DeleteAnswer(id);
         }
-        */
+        
 
         //(This is the bad practise!) = > this should instead also call the BLL 
         //[Route("deletePerson")]
