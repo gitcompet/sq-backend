@@ -9,10 +9,6 @@ namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize(
-        AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "ADMIN"
-     )]
     public class TestStatusController : ControllerBase
     {
         private readonly InterfaceTestStatus _ITestStatus;
@@ -24,6 +20,8 @@ namespace SkillQuizzWebApi.Controllers
 
         [HttpGet]
         [Route("getTestStatuss")]
+
+
         public List<TestStatusModel> GetAllTestStatus()
         {
             return _ITestStatus.GetAllTestStatus();
