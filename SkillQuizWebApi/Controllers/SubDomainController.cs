@@ -23,33 +23,47 @@ namespace SkillQuizzWebApi.Controllers
     public class SubDomainController : ControllerBase
     {
         private readonly InterfaceSubDomain _ISubDomain;
-        public SubDomainController(InterfaceSubDomain interfaceSubDomain)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
         {
+            public const string TITLE = "TEST_CATEGORY_TITLE";
+        }
+        public SubDomainController(InterfaceSubDomain interfaceSubDomain, InterfaceElementTranslation interfaceElementTranslation)
+        {
+            _IElementTranslation = interfaceElementTranslation;
             _ISubDomain = interfaceSubDomain;
         }
 
         //GET api/v1/SubDomain
         [HttpGet]
         [Route("")]
-        public List<SubDomainModel> GetAllSubDomain()
+        public List<SubDomainModelLabel> GetAllSubDomain()
         {
-            return _ISubDomain.GetAllSubDomain();
+            var language = 2;
+            var collection = _ISubDomain.GetAllSubDomain();
+            List<SubDomainModelLabel> result = new List<SubDomainModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new SubDomainModelLabel(item, _IElementTranslation.GetElementLabelById(item.SubDomainId.ToString(), TYPE_LABEL.TITLE, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/SubDomain/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<SubDomainModel> GetSubDomainById(int id)
+        public ActionResult<SubDomainModelLabel> GetSubDomainById(int id)
         {
-            var subDomain = _ISubDomain.GetSubDomainById(id);
-
-            if (subDomain == null)
+            var language = 2;
+            var test = _ISubDomain.GetSubDomainById(id);
+            if (test == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new SubDomainModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language));
 
-            return Ok(subDomain);
+            return Ok(result);
         }
 
         //POST api/v1/SubDomain

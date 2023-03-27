@@ -24,33 +24,47 @@ namespace SkillQuizzWebApi.Controllers
     public class DomainController : ControllerBase
     {
         private readonly InterfaceDomain _IDomain;
-        public DomainController(InterfaceDomain interfaceDomain)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
         {
+            public const string TITLE = "TEST_CATEGORY_TITLE";
+        }
+        public DomainController(InterfaceDomain interfaceDomain, InterfaceElementTranslation interfaceElementTranslation)
+        {
+            _IElementTranslation = interfaceElementTranslation; 
             _IDomain = interfaceDomain;
         }
 
         //GET api/v1/Domain
         [HttpGet]
         [Route("")]
-        public List<DomainModel> GetAllDomain()
+        public List<DomainModelLabel> GetAllDomain()
         {
-            return _IDomain.GetAllDomain();
+            var language = 2;
+            var collection = _IDomain.GetAllDomain();
+            List<DomainModelLabel> result = new List<DomainModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new DomainModelLabel(item, _IElementTranslation.GetElementLabelById(item.DomainId.ToString(), TYPE_LABEL.TITLE, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/Domain/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<DomainModel> GetDomainById(int id)
+        public ActionResult<DomainModelLabel> GetDomainById(int id)
         {
-            var domain = _IDomain.GetDomainById(id);
-
-            if (domain == null)
+            var language = 2;
+            var test = _IDomain.GetDomainById(id);
+            if (test == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new DomainModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language));
 
-            return Ok(domain);
+            return Ok(result);
         }
 
         //POST api/v1/Domain

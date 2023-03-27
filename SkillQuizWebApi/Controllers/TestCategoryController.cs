@@ -23,33 +23,47 @@ namespace SkillQuizzWebApi.Controllers
     public class TestCategoryController : ControllerBase
     {
         private readonly InterfaceTestCategory _ITestCategory;
-        public TestCategoryController(InterfaceTestCategory interfaceTestCategory)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
         {
+            public const string TITLE = "TEST_CATEGORY_TITLE";
+        }
+        public TestCategoryController(InterfaceTestCategory interfaceTestCategory, InterfaceElementTranslation interfaceElementTranslation)
+        {
+            _IElementTranslation = interfaceElementTranslation;
             _ITestCategory = interfaceTestCategory;
         }
 
         //GET api/v1/TestCategory
         [HttpGet]
         [Route("")]
-        public List<TestCategoryModel> GetAllTestCategory()
+        public List<TestCategoryModelLabel> GetAllTestCategory()
         {
-            return _ITestCategory.GetAllTestCategory();
+            var language = 2;
+            var collection = _ITestCategory.GetAllTestCategory();
+            List<TestCategoryModelLabel> result = new List<TestCategoryModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new TestCategoryModelLabel(item, _IElementTranslation.GetElementLabelById(item.TestCategoryId.ToString(), TYPE_LABEL.TITLE, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/TestCategory/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<TestCategoryModel> GetTestCategoryById(int id)
+        public ActionResult<TestCategoryModelLabel> GetTestCategoryById(int id)
         {
-            var testCategory = _ITestCategory.GetTestCategoryById(id);
-
-            if (testCategory == null)
+            var language = 2;
+            var test = _ITestCategory.GetTestCategoryById(id);
+            if (test == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new TestCategoryModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language));
 
-            return Ok(testCategory);
+            return Ok(result);
         }
 
         //POST api/v1/TestCategory

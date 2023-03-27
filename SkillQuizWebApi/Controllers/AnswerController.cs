@@ -23,33 +23,48 @@ namespace SkillAnswerzWebApi.Controllers
     public class AnswerController : ControllerBase
     {
         private readonly InterfaceAnswer _IAnswer;
-        public AnswerController(InterfaceAnswer interfaceAnswer)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
+        {
+            public const string TITLE = "ANSWER_TITLE";
+            public const string LABEL = "ANSWER_LABEL";
+        }
+        public AnswerController(InterfaceAnswer interfaceAnswer, InterfaceElementTranslation iElementTranslation)
         {
             _IAnswer = interfaceAnswer;
+            _IElementTranslation = iElementTranslation;
         }
         
         //GET api/v1/Answer
         [HttpGet]
         [Route("")]
-        public List<AnswerModel> GetAllAnswer()
+        public List<AnswerModelLabel> GetAllAnswer()
         {
-            return _IAnswer.GetAllAnswer();
+            var language = 2;
+            var collection = _IAnswer.GetAllAnswer();
+            List<AnswerModelLabel> result = new List<AnswerModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new AnswerModelLabel(item, _IElementTranslation.GetElementLabelById(item.AnswerId.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(item.AnswerId.ToString(), TYPE_LABEL.LABEL, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/Answer/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<AnswerModel> GetAnswerById(int id)
+        public ActionResult<AnswerModelLabel> GetAnswerById(int id)
         {
+            var language = 2;
             var answer = _IAnswer.GetAnswerById(id);
-
             if (answer == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new AnswerModelLabel(answer, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.LABEL, language));
 
-            return Ok(answer);
+            return Ok(result);
         }
 
         //POST api/v1/Answer
