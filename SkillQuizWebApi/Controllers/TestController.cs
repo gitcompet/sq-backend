@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
 using static System.Net.Mime.MediaTypeNames;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SkillQuizzWebApi.Controllers
 {

@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SkillAnswerzWebApi.Controllers
 {
