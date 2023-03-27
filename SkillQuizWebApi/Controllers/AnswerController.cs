@@ -12,11 +12,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
 
-namespace SkillQuizzWebApi.Controllers
+namespace SkillAnswerzWebApi.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Route("[controller]")]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "USER"
@@ -52,7 +51,24 @@ namespace SkillQuizzWebApi.Controllers
 
             return Ok(answer);
         }
-        
+
+        //POST api/v1/Answer
+        [HttpPost]
+        [Route("")]
+        public ActionResult<AnswerModel> PostAnswer([FromBody] AnswerModelPostDTO answerModelPostDTO)
+        {
+            if (answerModelPostDTO != null)
+            {
+                var answerModel = new AnswerModel(answerModelPostDTO);
+                var answerResult = _IAnswer.PostAnswer(answerModel);
+                if (answerResult != null)
+                {
+                    return Created("/api/v1/Answer/" + answerModel.AnswerId, answerResult);
+                }
+            }
+            return BadRequest(ModelState);
+        }
+
         //PATCH api/v1/Answer/{id}
         [HttpPatch]
         [Route("{id:int}")]

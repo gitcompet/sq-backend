@@ -16,7 +16,6 @@ namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [Route("[controller]")]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "ADMIN"

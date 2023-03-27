@@ -12,7 +12,6 @@ using System.Collections.Generic;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "RH,ADMIN"

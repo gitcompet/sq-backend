@@ -15,7 +15,6 @@ using System.Text.Json.Nodes;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "ADMIN"
