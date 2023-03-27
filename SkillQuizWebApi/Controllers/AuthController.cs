@@ -141,6 +141,10 @@ namespace JwtWebApiDotNet7.Controllers
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
+            //Languages claim
+            claims.Add(new Claim(ClaimTypes.Country, user.LanguageId));
+            //lg claim
+
             var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],
                     audience: _configuration["JWT:ValidAudience"],
