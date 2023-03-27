@@ -123,17 +123,6 @@ namespace SkillQuizzWebApi.Controllers
                 _ITest.DeleteTest(id);
                 return Ok(test);
             }
-        [Route("postTest")]
-        [Authorize(
-             AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-             Roles = "ADMIN"
-        )]
-        [HttpPost]
-
-        public void postTest([FromBody] TestModel testModel)
-        {
-            _ITest.PostTest(testModel);
-        }
 
             //_ITest.DeleteTest(id);
         }

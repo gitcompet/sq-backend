@@ -144,17 +144,6 @@ namespace SkillQuizzWebApi.Controllers
         public ActionResult<QuestionModel> DeleteQuestion([FromRoute] int id)
         {
             var question = _IQuestion.GetQuestionById(id);
-
-        [Route("postQuestion")]
-        [HttpPost]
-        [Authorize(
-            AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-            Roles = "ADMIN,RH"
-        )]
-        public void postQuestion([FromBody] QuestionModel questionModel)
-        {
-            _IQuestion.PostQuestion(questionModel);
-        }
             if (question == null)
             {
                 return NotFound("Invalid ID");
