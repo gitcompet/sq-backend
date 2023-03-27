@@ -23,35 +23,48 @@ namespace SkillLanguagezWebApi.Controllers
     public class LanguageController : ControllerBase
     {
         private readonly InterfaceLanguage _ILanguage;
-        public LanguageController(InterfaceLanguage interfaceLanguage)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
         {
+            public const string LABEL = "LANGUAGE_LABEL";
+        }
+        public LanguageController(InterfaceLanguage interfaceLanguage, InterfaceElementTranslation interfaceElementTranslation)
+        {
+            _IElementTranslation = interfaceElementTranslation;
             _ILanguage = interfaceLanguage;
         }
 
         //GET api/v1/Language
         [HttpGet]
         [Route("")]
-        public List<LanguageModel> GetAllLanguage()
+        public List<LanguageModelLabel> GetAllLanguage()
         {
-            return _ILanguage.GetAllLanguage();
+            var language = 2;
+            var collection = _ILanguage.GetAllLanguage();
+            List<LanguageModelLabel> result = new List<LanguageModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new LanguageModelLabel(item, _IElementTranslation.GetElementLabelById(item.LanguageId.ToString(), TYPE_LABEL.LABEL, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/Language/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<LanguageModel> GetLanguageById(int id)
+        public ActionResult<LanguageModelLabel> GetLanguageById(int id)
         {
-            var language = _ILanguage.GetLanguageById(id);
-
-            if (language == null)
+            var language = 2;
+            var test = _ILanguage.GetLanguageById(id);
+            if (test == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new LanguageModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.LABEL, language));
 
-            return Ok(language);
+            return Ok(result);
         }
-
         //POST api/v1/Language
         [HttpPost]
         [Route("")]

@@ -27,7 +27,7 @@ namespace SkillQuizzWebApi.Controllers
         private readonly InterfaceElementTranslation _IElementTranslation;
         private static class TYPE_LABEL
         {
-            public const string TITLE = "TEST_CATEGORY_TITLE";
+            public const string TITLE = "DOMAIN_TITLE";
         }
         public DomainController(InterfaceDomain interfaceDomain, InterfaceElementTranslation interfaceElementTranslation)
         {
