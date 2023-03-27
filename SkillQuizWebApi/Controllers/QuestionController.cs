@@ -40,7 +40,7 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public List<QuestionModelLabel> GetAllQuestion()
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var collection = _IQuestion.GetAllQuestion();
             List<QuestionModelLabel> result = new List<QuestionModelLabel>();
             foreach (var item in collection)
@@ -56,7 +56,7 @@ namespace SkillQuizzWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<QuestionModelLabel> GetQuestionById(int id)
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var question = _IQuestion.GetQuestionById(id);
             if (question == null)
             {
@@ -98,7 +98,7 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public ActionResult<QuestionModel> PostQuestion([FromBody] QuestionModelPostDTO questionModelPostDTO)
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             if (questionModelPostDTO != null)
             {
                 var questionModel = new QuestionModel(questionModelPostDTO);

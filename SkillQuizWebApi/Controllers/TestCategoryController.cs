@@ -39,7 +39,7 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public List<TestCategoryModelLabel> GetAllTestCategory()
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var collection = _ITestCategory.GetAllTestCategory();
             List<TestCategoryModelLabel> result = new List<TestCategoryModelLabel>();
             foreach (var item in collection)
@@ -55,7 +55,7 @@ namespace SkillQuizzWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<TestCategoryModelLabel> GetTestCategoryById(int id)
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var test = _ITestCategory.GetTestCategoryById(id);
             if (test == null)
             {

@@ -33,12 +33,7 @@ namespace Data_Access_Layer.DAL
 
             foreach (var id in ids)
             {
-                var db = new CompetenceDbContext();
-                ElementTranslation d = new ElementTranslation();
-
-                d = db.ElementTranslation.FirstOrDefault(x => x.ElementType == elementType.ToString() && x.LanguagesId == languageId && x.ElementId == int.Parse(id));
-
-                result.Add(d.Description);
+                result.Add(GetElementLabelById(id, elementType, languageId));
             }
             return result;
         }

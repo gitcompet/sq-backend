@@ -39,7 +39,7 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public List<SubDomainModelLabel> GetAllSubDomain()
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var collection = _ISubDomain.GetAllSubDomain();
             List<SubDomainModelLabel> result = new List<SubDomainModelLabel>();
             foreach (var item in collection)
@@ -55,7 +55,7 @@ namespace SkillQuizzWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<SubDomainModelLabel> GetSubDomainById(int id)
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var test = _ISubDomain.GetSubDomainById(id);
             if (test == null)
             {

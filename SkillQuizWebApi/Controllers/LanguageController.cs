@@ -3,22 +3,23 @@ using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
-
-
-
-
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SkillLanguagezWebApi.Controllers
 {
     [ApiController]
-    /*[Authorize(
+    [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "ADMIN"
-     )]*/
+     )]
     [Route("api/v1/[controller]")]
     public class LanguageController : ControllerBase
     {
@@ -39,7 +40,7 @@ namespace SkillLanguagezWebApi.Controllers
         [Route("")]
         public List<LanguageModelLabel> GetAllLanguage()
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var collection = _ILanguage.GetAllLanguage();
             List<LanguageModelLabel> result = new List<LanguageModelLabel>();
             foreach (var item in collection)
@@ -55,7 +56,7 @@ namespace SkillLanguagezWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<LanguageModelLabel> GetLanguageById(int id)
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var test = _ILanguage.GetLanguageById(id);
             if (test == null)
             {

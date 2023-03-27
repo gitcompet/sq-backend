@@ -40,7 +40,7 @@ namespace SkillAnswerzWebApi.Controllers
         [Route("")]
         public List<AnswerModelLabel> GetAllAnswer()
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var collection = _IAnswer.GetAllAnswer();
             List<AnswerModelLabel> result = new List<AnswerModelLabel>();
             foreach (var item in collection)
@@ -56,7 +56,7 @@ namespace SkillAnswerzWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<AnswerModelLabel> GetAnswerById(int id)
         {
-            var language = 2;
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var answer = _IAnswer.GetAnswerById(id);
             if (answer == null)
             {
