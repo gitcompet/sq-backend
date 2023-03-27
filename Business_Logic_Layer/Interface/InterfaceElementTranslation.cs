@@ -11,6 +11,8 @@ namespace Business_Logic_Layer.Interface
     public interface InterfaceElementTranslation
     {
 
+        string GetElementLabelById(string id, string elementType, int languageId);
+        IEnumerable<string> GetElementsLabelById(IEnumerable<string> id, string elementType, int languageId);
         List<ElementTranslationModel> GetAllElementTranslation();
         ElementTranslationModel GetElementTranslationById(int id);
         ElementTranslationModel PostElementTranslation(ElementTranslationModel elementTranslationModel);

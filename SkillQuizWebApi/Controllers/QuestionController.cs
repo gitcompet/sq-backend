@@ -23,38 +23,48 @@ namespace SkillQuizzWebApi.Controllers
     public class QuestionController : ControllerBase
     {
         private readonly InterfaceQuestion _IQuestion;
-        private readonly InterfaceAnswer _IAnswer;
-        private readonly InterfaceAnswerQuestion _IAnswerQuestion;
-        private readonly string TYPE_LIBELLE = "ANSWER_LIBELLE";
-        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceAnswer interfaceAnswer, InterfaceAnswerQuestion interfaceAnswerQuestion)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
+        {
+            public const string TITLE = "QUESTION_TITLE";
+            public const string LABEL = "QUESTION_LABEL";
+        }
+        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceElementTranslation iElementTranslation)
         {
             _IQuestion = interfaceQuestion;
-            _IAnswer = interfaceAnswer;
-            _IAnswerQuestion = interfaceAnswerQuestion;
+            _IElementTranslation = iElementTranslation;
         }
 
         //GET api/v1/Question
         [HttpGet]
         [Route("")]
-        public List<QuestionModel> GetAllQuestion()
+        public List<QuestionModelLabel> GetAllQuestion()
         {
-            return _IQuestion.GetAllQuestion();
+            var language = 2;
+            var collection = _IQuestion.GetAllQuestion();
+            List<QuestionModelLabel> result = new List<QuestionModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new QuestionModelLabel(item, _IElementTranslation.GetElementLabelById(item.QuestionId.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(item.QuestionId.ToString(), TYPE_LABEL.LABEL, language)));
+            }
+            return result;
         }
 
 
-        //GET api/v1/Quiz/{id}
+        //GET api/v1/Question/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<QuestionModel> GetQuestionById(int id)
+        public ActionResult<QuestionModelLabel> GetQuestionById(int id)
         {
-            var quiz = _IQuestion.GetQuestionById(id);
-
-            if (quiz == null)
+            var language = 2;
+            var question = _IQuestion.GetQuestionById(id);
+            if (question == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new QuestionModelLabel(question, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.LABEL, language));
 
-            return Ok(quiz);
+            return Ok(result);
         }
 
         /*
@@ -66,7 +76,7 @@ namespace SkillQuizzWebApi.Controllers
             var question = _IQuestion.GetQuestionById(id);
             var answerQuestion = _IAnswerQuestion.GetAnswerQuestionByQuestionId(id);//list[true, false, ...]
             var answerList = _IAnswerQuestion.GetAnswerByListId(id);//list[ID, ID, ...]
-            var answer = _IAnswer.GetAnswerByListId(answerList, TYPE_LIBELLE, 2); //DEFAULT ENGLISH = 2
+            var answer = _IAnswer.GetAnswerByListId(answerList, TYPE_LABEL, 2); //DEFAULT ENGLISH = 2
             System.Diagnostics.Debug.WriteLine("============================================================");
             System.Diagnostics.Debug.WriteLine(question.QuestionId);
             System.Diagnostics.Debug.WriteLine("============================================================");
@@ -88,12 +98,26 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public ActionResult<QuestionModel> PostQuestion([FromBody] QuestionModelPostDTO questionModelPostDTO)
         {
+            var language = 2;
             if (questionModelPostDTO != null)
             {
                 var questionModel = new QuestionModel(questionModelPostDTO);
                 var questionResult = _IQuestion.PostQuestion(questionModel);
                 if (questionResult != null)
                 {
+                    var labels = new ElementTranslationModel();
+
+                    labels.Description = questionModelPostDTO.Title;
+                    labels.ElementId = int.Parse(questionResult.QuestionId);
+                    labels.ElementType = TYPE_LABEL.TITLE;
+                    labels.LanguagesId = language;
+
+                    _IElementTranslation.PostElementTranslation(labels);
+
+                    labels.Description = questionModelPostDTO.Label;
+                    labels.ElementType = TYPE_LABEL.LABEL;
+
+                    _IElementTranslation.PostElementTranslation(labels);
                     return Created("/api/v1/Question/" + questionModel.QuestionId, questionResult);
                 }
             }

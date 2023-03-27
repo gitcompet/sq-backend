@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -23,33 +24,49 @@ namespace SkillQuizzWebApi.Controllers
     public class TestController : ControllerBase
     {
         private readonly InterfaceTest _ITest;
-        public TestController(InterfaceTest interfaceTest)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
         {
+            public const string TITLE = "TEST_TITLE";
+            public const string LABEL = "TEST_LABEL";
+            public const string CATEGORY = "TEST_CATEGORY_TITLE";
+        }
+        public TestController(InterfaceTest interfaceTest, InterfaceElementTranslation interfaceElementTranslation)
+        {
+            _IElementTranslation = interfaceElementTranslation;
             _ITest = interfaceTest;
         }
 
         //GET api/v1/Test
         [HttpGet]
         [Route("")]
-        public List<TestModel> GetAllTest()
+        public List<TestModelLabel> GetAllTest()
         {
-            return _ITest.GetAllTest();
+            var language = 2;
+            var collection = _ITest.GetAllTest();
+            List<TestModelLabel> result = new List<TestModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new TestModelLabel(item, _IElementTranslation.GetElementLabelById(item.TestId.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(item.TestCategoryId.ToString(), TYPE_LABEL.CATEGORY, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/Test/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<TestModel> GetTestById(int id)
+        public ActionResult<TestModelLabel> GetTestById(int id)
         {
+            var language = 2;
             var test = _ITest.GetTestById(id);
-
             if (test == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new TestModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(test.TestCategoryId.ToString(), TYPE_LABEL.CATEGORY, language));
 
-            return Ok(test);
+            return Ok(result);
         }
 
         //POST api/v1/Test
@@ -57,12 +74,21 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public ActionResult<TestModel> PostTest([FromBody] TestModelPostDTO testModelPostDTO)
         {
+            var language = 2;
             if (testModelPostDTO != null)
             {
                 var testModel = new TestModel(testModelPostDTO);
                 var testResult = _ITest.PostTest(testModel);
                 if (testResult != null)
                 {
+                    var labels = new ElementTranslationModel();
+
+                    labels.Description = testModelPostDTO.Title;
+                    labels.ElementId = int.Parse(testResult.TestId);
+                    labels.ElementType = TYPE_LABEL.TITLE;
+                    labels.LanguagesId = language;
+
+                    _IElementTranslation.PostElementTranslation(labels);
                     return Created("/api/v1/Test/" + testModel.TestId, testResult);
                 }
             }

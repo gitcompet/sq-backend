@@ -13,11 +13,13 @@ namespace Business_Logic_Layer
     {
 
         private AnswerDAL _DAL;
+        private ElementTranslationDAL _DALLabel;
         private Mapper _AnswerMapper;
 
         public AnswerBLL()
         {
-            _DAL = new Data_Access_Layer.DAL.AnswerDAL();
+            _DAL = new AnswerDAL();
+            _DALLabel = new ElementTranslationDAL();
             var _configAnswer = new MapperConfiguration(cfg => cfg.CreateMap<Answer, AnswerModel>().ReverseMap());
 
             _AnswerMapper = new Mapper(_configAnswer);
@@ -40,6 +42,14 @@ namespace Business_Logic_Layer
             return answerModel;
         }
 
+        public IEnumerable<string> GetAnswerByListId(IEnumerable<string> ids, string elementType, int languageId)
+        {
+            var answerList = _DALLabel.GetAnswerByListId(ids, elementType, languageId);
+
+
+
+            return answerList;
+        }
 
         public AnswerModel PostAnswer(AnswerModel answerModel)
         {
