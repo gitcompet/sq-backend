@@ -73,13 +73,22 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public ActionResult<TestCategoryModel> PostTestCategory([FromBody] TestCategoryModelPostDTO testCategoryModelPostDTO)
         {
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             if (testCategoryModelPostDTO != null)
             {
-                var testCategoryModel = new TestCategoryModel(testCategoryModelPostDTO);
-                var testCategoryResult = _ITestCategory.PostTestCategory(testCategoryModel);
-                if (testCategoryResult != null)
+                var questionModel = new TestCategoryModel(testCategoryModelPostDTO);
+                var questionResult = _ITestCategory.PostTestCategory(questionModel);
+                if (questionResult != null)
                 {
-                    return Created("/api/v1/TestCategory/" + testCategoryModel.TestCategoryId, testCategoryResult);
+                    var labels = new ElementTranslationModel();
+
+                    labels.Description = testCategoryModelPostDTO.Description;
+                    labels.ElementId = int.Parse(questionResult.TestCategoryId);
+                    labels.ElementType = TYPE_LABEL.TITLE;
+                    labels.LanguagesId = language;
+
+                    _IElementTranslation.PostElementTranslation(labels);
+                    return Created("/api/v1/TestCategory/" + questionModel.TestCategoryId, questionResult);
                 }
             }
             return BadRequest(ModelState);

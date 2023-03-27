@@ -71,13 +71,22 @@ namespace SkillLanguagezWebApi.Controllers
         [Route("")]
         public ActionResult<LanguageModel> PostLanguage([FromBody] LanguageModelPostDTO languageModelPostDTO)
         {
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             if (languageModelPostDTO != null)
             {
-                var languageModel = new LanguageModel(languageModelPostDTO);
-                var languageResult = _ILanguage.PostLanguage(languageModel);
-                if (languageResult != null)
+                var questionModel = new LanguageModel(languageModelPostDTO);
+                var questionResult = _ILanguage.PostLanguage(questionModel);
+                if (questionResult != null)
                 {
-                    return Created("/api/v1/Language/" + languageModel.LanguageId, languageResult);
+                    var labels = new ElementTranslationModel();
+
+                    labels.Description = languageModelPostDTO.title;
+                    labels.ElementId = int.Parse(questionResult.LanguageId);
+                    labels.ElementType = TYPE_LABEL.LABEL;
+                    labels.LanguagesId = language;
+
+                    _IElementTranslation.PostElementTranslation(labels);
+                    return Created("/api/v1/Language/" + questionModel.LanguageId, questionResult);
                 }
             }
             return BadRequest(ModelState);

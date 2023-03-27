@@ -73,13 +73,22 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public ActionResult<SubDomainModel> PostSubDomain([FromBody] SubDomainModelPostDTO subDomainModelPostDTO)
         {
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             if (subDomainModelPostDTO != null)
             {
-                var subDomainModel = new SubDomainModel(subDomainModelPostDTO);
-                var subDomainResult = _ISubDomain.PostSubDomain(subDomainModel);
-                if (subDomainResult != null)
+                var questionModel = new SubDomainModel(subDomainModelPostDTO);
+                var questionResult = _ISubDomain.PostSubDomain(questionModel);
+                if (questionResult != null)
                 {
-                    return Created("/api/v1/SubDomain/" + subDomainModel.SubDomainId, subDomainResult);
+                    var labels = new ElementTranslationModel();
+
+                    labels.Description = subDomainModelPostDTO.Name;
+                    labels.ElementId = int.Parse(questionResult.SubDomainId);
+                    labels.ElementType = TYPE_LABEL.TITLE;
+                    labels.LanguagesId = language;
+
+                    _IElementTranslation.PostElementTranslation(labels);
+                    return Created("/api/v1/SubDomain/" + questionModel.SubDomainId, questionResult);
                 }
             }
             return BadRequest(ModelState);
