@@ -83,7 +83,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/TestCompose
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<TestComposeModel> PatchTestCompose([FromRoute] int id, [FromBody] TestComposeModel testComposeModel)
+        public ActionResult<TestComposeModel> PutTestCompose([FromRoute] int id, [FromBody] TestComposeModel testComposeModel)
         {
             if (testComposeModel.TestComposeId != id.ToString())
             {

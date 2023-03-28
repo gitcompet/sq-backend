@@ -113,7 +113,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/TestCategory
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<TestCategoryModel> PatchTestCategory([FromRoute] int id, [FromBody] TestCategoryModel testCategoryModel)
+        public ActionResult<TestCategoryModel> PutTestCategory([FromRoute] int id, [FromBody] TestCategoryModel testCategoryModel)
         {
             if (testCategoryModel.TestCategoryId != id.ToString())
             {

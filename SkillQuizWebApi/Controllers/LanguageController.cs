@@ -111,7 +111,7 @@ namespace SkillLanguagezWebApi.Controllers
         //PUT api/v1/Language
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<LanguageModel> PatchLanguage([FromRoute] int id, [FromBody] LanguageModel languageModel)
+        public ActionResult<LanguageModel> PutLanguage([FromRoute] int id, [FromBody] LanguageModel languageModel)
         {
             if (languageModel.LanguageId != id.ToString())
             {

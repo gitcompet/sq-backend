@@ -88,7 +88,7 @@ namespace SkillUserTypezWebApi.Controllers
         //PUT api/v1/UserType
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<UserTypeModel> PatchUserType([FromRoute] int id, [FromBody] UserTypeModel userTypeModel)
+        public ActionResult<UserTypeModel> PutUserType([FromRoute] int id, [FromBody] UserTypeModel userTypeModel)
         {
             if (userTypeModel.UserTypeId != id.ToString())
             {

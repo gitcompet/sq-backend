@@ -105,7 +105,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/Domain
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<DomainModel> PatchDomain([FromRoute] int id, [FromBody] DomainModel domainModel)
+        public ActionResult<DomainModel> PutDomain([FromRoute] int id, [FromBody] DomainModel domainModel)
         {
             if (domainModel.DomainId != id.ToString())
             {
