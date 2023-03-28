@@ -12,8 +12,6 @@ namespace Business_Logic_Layer.Models
         public QuestionModelLabel(QuestionModel questionModel, string title, string label)
         {
             this.QuestionId = questionModel.QuestionId;
-            this.DomainId = questionModel.DomainId;
-            this.SubDomainId = questionModel.SubDomainId;
             this.Level = questionModel.Level;
             this.Weight = questionModel.Weight;
             this.Duration = questionModel.Duration;
@@ -24,8 +22,6 @@ namespace Business_Logic_Layer.Models
             this.isDeleted = questionModel.isDeleted;
         }
         public string QuestionId { get; set; }
-        public string DomainId { get; set; }
-        public string SubDomainId { get; set; }
         public int Level  { get; set; }
         public decimal Weight { get; set; }
         public int Duration { get; set; }

@@ -12,8 +12,6 @@ namespace Business_Logic_Layer.Models
         public QuestionMoreModelGetDTO(QuestionModel question, IEnumerable<string> answer, Boolean[] answerQuestion)
         {
             this.QuestionId = question.QuestionId;
-            this.DomainId = question.DomainId;
-            this.SubDomainId = question.SubDomainId;
             this.Level = question.Level;
             this.Weight = question.Weight;
             this.Duration = question.Duration;
@@ -24,8 +22,6 @@ namespace Business_Logic_Layer.Models
             this.AnswerCheckList = answerQuestion;
         }
         public string QuestionId { get; set; }
-        public string DomainId { get; set; }
-        public string SubDomainId { get; set; }
         public int Level  { get; set; }
         public decimal Weight { get; set; }
         public int Duration { get; set; }

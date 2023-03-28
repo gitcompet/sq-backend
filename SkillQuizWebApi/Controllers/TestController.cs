@@ -31,7 +31,6 @@ namespace SkillQuizzWebApi.Controllers
         {
             public const string TITLE = "TEST_TITLE";
             public const string LABEL = "TEST_LABEL";
-            public const string CATEGORY = "TEST_CATEGORY_TITLE";
         }
         public TestController(InterfaceTest interfaceTest, InterfaceElementTranslation interfaceElementTranslation)
         {
@@ -49,7 +48,7 @@ namespace SkillQuizzWebApi.Controllers
             List<TestModelLabel> result = new List<TestModelLabel>();
             foreach (var item in collection)
             {
-                result.Add(new TestModelLabel(item, _IElementTranslation.GetElementLabelById(item.TestId.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(item.TestCategoryId.ToString(), TYPE_LABEL.CATEGORY, language)));
+                result.Add(new TestModelLabel(item, _IElementTranslation.GetElementLabelById(item.TestId.ToString(), TYPE_LABEL.TITLE, language)));
             }
             return result;
         }
@@ -66,7 +65,7 @@ namespace SkillQuizzWebApi.Controllers
             {
                 return NotFound("Invalid ID");
             }
-            var result = new TestModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(test.TestCategoryId.ToString(), TYPE_LABEL.CATEGORY, language));
+            var result = new TestModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language));
 
             return Ok(result);
         }

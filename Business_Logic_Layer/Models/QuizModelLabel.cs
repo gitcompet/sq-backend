@@ -12,8 +12,6 @@ namespace Business_Logic_Layer.Models
         public QuizModelLabel(QuizModel quizModel, string title)
         {
             this.QuizId = quizModel.QuizId;
-            this.DomainId = quizModel.DomainId;
-            this.SubDomainId = quizModel.SubDomainId;
             this.Weight = quizModel.Weight;
             this.Comment = quizModel.Comment;
             this.isActive = quizModel.isActive;
@@ -21,8 +19,6 @@ namespace Business_Logic_Layer.Models
             this.Title = title;
         }
         public string QuizId { get; set; }
-        public string DomainId { get; set; }
-        public string SubDomainId { get; set; }
         public decimal Weight { get; set; }
         public string Comment { get; set; }
         public Boolean isActive { get; set; }
