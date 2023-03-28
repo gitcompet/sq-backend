@@ -60,11 +60,6 @@ namespace SkillQuizzWebApi.Controllers
                 listOfLabels.Add(_IElementTranslation.GetElementLabelById(item.TestCategoryId, TYPE_LABEL.TITLE, language));
             }
             TestCategoryComposeModelLabel result = new TestCategoryComposeModelLabel(id.ToString(), listOfCategories, listOfLabels);
-            /*if (testCategoryCompose == null)
-            {
-                return NotFound("Invalid ID");
-            }*/
-
             return Ok(result);
         }
 
