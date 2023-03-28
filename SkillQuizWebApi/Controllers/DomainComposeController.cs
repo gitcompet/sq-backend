@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -23,8 +25,14 @@ namespace SkillQuizzWebApi.Controllers
     public class DomainComposeController : ControllerBase
     {
         private readonly InterfaceDomainCompose _IDomainCompose;
-        public DomainComposeController(InterfaceDomainCompose interfaceDomainCompose)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
         {
+            public const string TITLE = "TEST_CATEGORY_TITLE";
+        }
+        public DomainComposeController(InterfaceDomainCompose interfaceDomainCompose, InterfaceElementTranslation interfaceElementTranslation)
+        {
+            _IElementTranslation = interfaceElementTranslation;
             _IDomainCompose = interfaceDomainCompose;
         }
 
@@ -39,17 +47,20 @@ namespace SkillQuizzWebApi.Controllers
 
         //GET api/v1/DomainCompose/{id}
         [HttpGet]
-        [Route("{id:int}")]
-        public ActionResult<DomainComposeModel> GetDomainComposeById(int id)
+        [Route("{type}/{id:int}")]
+        public ActionResult<DomainComposeModelLabel> GetDomainComposeByElementId(string type,int id)
         {
-            var domainCompose = _IDomainCompose.GetDomainComposeById(id);
-
-            if (domainCompose == null)
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            var listOfCompose = _IDomainCompose.GetDomainComposeByElementId(type, id);
+            var listOfCategories = new List<string>();
+            var listOfLabels = new List<string>();
+            foreach (DomainComposeModel item in listOfCompose)
             {
-                return NotFound("Invalid ID");
+                listOfCategories.Add(item.DomainId);
+                listOfLabels.Add(_IElementTranslation.GetElementLabelById(item.DomainId, TYPE_LABEL.TITLE, language));
             }
-
-            return Ok(domainCompose);
+            DomainComposeModelLabel result = new DomainComposeModelLabel(id.ToString(), listOfCategories, listOfLabels);
+            return Ok(result);
         }
 
         //POST api/v1/DomainCompose

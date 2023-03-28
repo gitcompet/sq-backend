@@ -25,6 +25,13 @@ namespace Data_Access_Layer.DAL
 
             return d;
         }
+        public IEnumerable<DomainCompose> GetDomainComposeByElementId(string type, int id)
+        {
+            var db = new CompetenceDbContext();
+            var d = db.DomainCompose.Where(x => x.ElementType == type && x.ElementId == id);
+
+            return d;
+        }
 
 
         public DomainCompose PostDomainCompose(DomainCompose domainCompose)

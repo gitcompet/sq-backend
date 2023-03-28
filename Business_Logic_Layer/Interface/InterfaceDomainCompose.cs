@@ -16,6 +16,7 @@ namespace Business_Logic_Layer.Interface
         DomainComposeModel PostDomainCompose(DomainComposeModel domainComposeModel);
         DomainComposeModel PatchDomainCompose(int id, JsonPatchDocument<DomainCompose> domainComposeModelJSON);
         DomainComposeModel PutDomainCompose(DomainComposeModel domainComposeModel);
+        IEnumerable<DomainComposeModel> GetDomainComposeByElementId(string type, int id);
         void DeleteDomainCompose(int id);
     }
 }

@@ -40,6 +40,18 @@ namespace Business_Logic_Layer
             return domainComposeModel;
         }
 
+        public IEnumerable<DomainComposeModel> GetDomainComposeByElementId(string type, int id)
+        {
+            var testUserEntity = _DAL.GetDomainComposeByElementId(type, id);
+            var result = new List<DomainComposeModel>();
+
+            foreach (var item in testUserEntity)
+            {
+                result.Add(_DomainComposeMapper.Map<DomainCompose, DomainComposeModel>(item));
+            }
+
+            return result;
+        }
 
         public DomainComposeModel PostDomainCompose(DomainComposeModel domainComposeModel)
         {
