@@ -102,6 +102,7 @@ namespace SkillQuizzWebApi
             builder.Services.AddScoped<InterfaceUserType, UserTypeBLL>();
             builder.Services.AddScoped<InterfaceElementTranslation, ElementTranslationBLL>();
             builder.Services.AddScoped<InterfaceDomainCompose, DomainComposeBLL>();
+            builder.Services.AddScoped<InterfaceSubDomainCompose, SubDomainComposeBLL>();
             builder.Services.AddScoped<InterfaceSubDomain, SubDomainBLL>();
             builder.Services.AddScoped<InterfaceTestStatus, TestStatusBLL>();
             builder.Services.AddScoped<InterfaceAnswer, AnswerBLL>();

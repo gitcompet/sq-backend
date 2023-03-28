@@ -36,6 +36,7 @@ namespace Data_Access_Layer.Repository
         public virtual DbSet<ElementTranslation> ElementTranslation { get; set; }
 
         public virtual DbSet<DomainCompose> DomainCompose { get; set; }
+        public virtual DbSet<SubDomainCompose> SubDomainCompose { get; set; }
 
         public virtual DbSet<SubDomain> SubDomain { get; set; }
 
