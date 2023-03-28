@@ -143,6 +143,7 @@ namespace JwtWebApiDotNet7.Controllers
 
             //Languages claim
             claims.Add(new Claim(ClaimTypes.Country, user.LanguageId));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.LoginId));
             //lg claim
 
             var token = new JwtSecurityToken(
