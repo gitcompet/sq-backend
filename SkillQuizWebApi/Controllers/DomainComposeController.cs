@@ -88,7 +88,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/DomainCompose
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<DomainComposeModel> PatchDomainCompose([FromRoute] int id, [FromBody] DomainComposeModel domainComposeModel)
+        public ActionResult<DomainComposeModel> PutDomainCompose([FromRoute] int id, [FromBody] DomainComposeModel domainComposeModel)
         {
             if (domainComposeModel.DomainComposeId != id.ToString())
             {

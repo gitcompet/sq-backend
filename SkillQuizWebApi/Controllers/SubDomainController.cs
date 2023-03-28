@@ -113,7 +113,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/SubDomain
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<SubDomainModel> PatchSubDomain([FromRoute] int id, [FromBody] SubDomainModel subDomainModel)
+        public ActionResult<SubDomainModel> PutSubDomain([FromRoute] int id, [FromBody] SubDomainModel subDomainModel)
         {
             if (subDomainModel.SubDomainId != id.ToString())
             {

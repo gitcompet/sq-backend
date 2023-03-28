@@ -83,7 +83,7 @@ namespace SkillElementTranslationzWebApi.Controllers
         //PUT api/v1/ElementTranslation
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<ElementTranslationModel> PatchElementTranslation([FromRoute] int id, [FromBody] ElementTranslationModel elementTranslationModel)
+        public ActionResult<ElementTranslationModel> PutElementTranslation([FromRoute] int id, [FromBody] ElementTranslationModel elementTranslationModel)
         {
             if (elementTranslationModel.ElementTranslationId != id.ToString())
             {

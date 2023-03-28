@@ -88,7 +88,7 @@ namespace SkillUserzWebApi.Controllers
         //PUT api/v1/User
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<UserModel> PatchUser([FromRoute] int id, [FromBody] UserModel userModel)
+        public ActionResult<UserModel> PutUser([FromRoute] int id, [FromBody] UserModel userModel)
         {
             if (userModel.LoginId != id.ToString())
             {

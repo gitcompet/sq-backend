@@ -116,7 +116,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/Test
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<TestModel> PatchTest([FromRoute] int id, [FromBody] TestModel testModel)
+        public ActionResult<TestModel> PutTest([FromRoute] int id, [FromBody] TestModel testModel)
         {
             if (testModel.TestId != id.ToString())
             {

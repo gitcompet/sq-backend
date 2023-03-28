@@ -109,7 +109,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/Quiz
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<QuizModel> PatchQuiz([FromRoute] int id, [FromBody] QuizModel quizModel)
+        public ActionResult<QuizModel> PutQuiz([FromRoute] int id, [FromBody] QuizModel quizModel)
         {
             if (quizModel.QuizId != id.ToString())
             {
