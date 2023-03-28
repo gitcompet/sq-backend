@@ -47,7 +47,7 @@ namespace SkillQuizzWebApi.Controllers
 
         //GET api/v1/DomainCompose/{id}
         [HttpGet]
-        [Route("{type}/{id:int}")]
+        [Route("{id:int}")]
         public ActionResult<DomainComposeModelLabel> GetDomainComposeByElementId(string type,int id)
         {
             var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
