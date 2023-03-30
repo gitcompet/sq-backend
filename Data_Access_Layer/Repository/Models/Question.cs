@@ -9,8 +9,6 @@ namespace Data_Access_Layer.Repository.Models
     public class Question
     {
         public int QuestionId { get; set; }
-        public int DomainId { get; set; }
-        public int SubDomainId { get; set; }
         public int Level { get; set; }
         public decimal Weight { get; set; }
         public int Duration { get; set; }

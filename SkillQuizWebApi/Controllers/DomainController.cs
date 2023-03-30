@@ -3,6 +3,7 @@ using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
@@ -10,41 +11,62 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using System.Data;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize(
+        AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        Roles = "ADMIN"
+     )]
     public class DomainController : ControllerBase
     {
         private readonly InterfaceDomain _IDomain;
-        public DomainController(InterfaceDomain interfaceDomain)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
         {
+            public const string TITLE = "DOMAIN_TITLE";
+        }
+        public DomainController(InterfaceDomain interfaceDomain, InterfaceElementTranslation interfaceElementTranslation)
+        {
+            _IElementTranslation = interfaceElementTranslation; 
             _IDomain = interfaceDomain;
         }
 
         //GET api/v1/Domain
         [HttpGet]
         [Route("")]
-        public List<DomainModel> GetAllDomain()
+        public List<DomainModelLabel> GetAllDomain()
         {
-            return _IDomain.GetAllDomain();
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            var collection = _IDomain.GetAllDomain();
+            List<DomainModelLabel> result = new List<DomainModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new DomainModelLabel(item, _IElementTranslation.GetElementLabelById(item.DomainId.ToString(), TYPE_LABEL.TITLE, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/Domain/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<DomainModel> GetDomainById(int id)
+        public ActionResult<DomainModelLabel> GetDomainById(int id)
         {
-            var domain = _IDomain.GetDomainById(id);
-
-            if (domain == null)
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            var test = _IDomain.GetDomainById(id);
+            if (test == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new DomainModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language));
 
-            return Ok(domain);
+            return Ok(result);
         }
 
         //POST api/v1/Domain
@@ -83,7 +105,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/Domain
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<DomainModel> PatchDomain([FromRoute] int id, [FromBody] DomainModel domainModel)
+        public ActionResult<DomainModel> PutDomain([FromRoute] int id, [FromBody] DomainModel domainModel)
         {
             if (domainModel.DomainId != id.ToString())
             {

@@ -102,6 +102,7 @@ namespace SkillQuizzWebApi
             builder.Services.AddScoped<InterfaceUserType, UserTypeBLL>();
             builder.Services.AddScoped<InterfaceElementTranslation, ElementTranslationBLL>();
             builder.Services.AddScoped<InterfaceDomainCompose, DomainComposeBLL>();
+            builder.Services.AddScoped<InterfaceSubDomainCompose, SubDomainComposeBLL>();
             builder.Services.AddScoped<InterfaceSubDomain, SubDomainBLL>();
             builder.Services.AddScoped<InterfaceTestStatus, TestStatusBLL>();
             builder.Services.AddScoped<InterfaceAnswer, AnswerBLL>();
@@ -111,13 +112,14 @@ namespace SkillQuizzWebApi
             builder.Services.AddScoped<InterfaceTest, TestBLL>();
             builder.Services.AddScoped<InterfaceTestCompose, TestComposeBLL>();
             builder.Services.AddScoped<InterfaceAnswerQuestion, AnswerQuestionBLL>();
-            builder.Services.AddScoped<InterfaceLanguages, LanguagesBLL>();
+            builder.Services.AddScoped<InterfaceLanguage, LanguageBLL>();
             builder.Services.AddScoped<InterfaceUser, UserBLL>();
             builder.Services.AddScoped<InterfaceQuizCompose, QuizComposeBLL>();
             builder.Services.AddScoped<InterfaceTestUser, TestUserBLL>();
             builder.Services.AddScoped<InterfaceQuizUser, QuizUserBLL>();
             builder.Services.AddScoped<InterfaceQuestionUser, QuestionUserBLL>();
             builder.Services.AddScoped<InterfaceAnswerUser, AnswerUserBLL>();
+            builder.Services.AddScoped<InterfaceTestCategoryCompose, TestCategoryComposeBLL>();
 
             var app = builder.Build();
 

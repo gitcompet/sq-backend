@@ -1,6 +1,7 @@
 ﻿using Data_Access_Layer.Repository;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,46 @@ namespace Data_Access_Layer.DAL
             return d;
         }
 
+        public IEnumerable<string> GetElementsLabelById(IEnumerable<string> ids, string elementType, int languageId)
+        {
+            var result = new List<string>();
 
-        public ElementTranslation PostElementTranslation(ElementTranslation elementTranslation)
+            foreach (var id in ids)
+            {
+                result.Add(GetElementLabelById(id, elementType, languageId));
+            }
+            return result;
+        }
+        public string GetElementLabelById(string id, string elementType, int languageId)
+        {
+            string result;
+            var db = new CompetenceDbContext();
+            ElementTranslation d = new ElementTranslation();
+
+            d = db.ElementTranslation.FirstOrDefault(x => x.ElementType == elementType && x.LanguagesId == languageId && x.ElementId == int.Parse(id));
+
+            if (d == null)
+            {
+                //IF not found a label, we use english by default
+                d = db.ElementTranslation.FirstOrDefault(x => x.ElementType == elementType && x.LanguagesId == 2 && x.ElementId == int.Parse(id));
+                if (d == null)
+                {
+
+                    result = "Please contact an admin. Please give him these informations : " + elementType + " " + id;
+                }
+                else
+                {
+                    result = d.Description;
+                }
+            }
+            else
+            {
+                result = d.Description;
+            }
+            return result;
+        }
+
+    public ElementTranslation PostElementTranslation(ElementTranslation elementTranslation)
         {
             var db = new CompetenceDbContext();
             db.Add(elementTranslation);
@@ -78,7 +117,7 @@ namespace Data_Access_Layer.DAL
             db.SaveChanges();
         }
 
-        //Get a list of libelle from a list of ID with the type looking for
+        //Get a list of label from a list of ID with the type looking for
         public IEnumerable<string> GetAnswerByListId(IEnumerable<string> ids, string elementType, int languageId)
         {
             var result = new List<string>();

@@ -40,6 +40,15 @@ namespace Business_Logic_Layer
             return elementTranslationModel;
         }
 
+        public string GetElementLabelById(string id, string elementType, int languageId)
+        {
+            return _DAL.GetElementLabelById(id, elementType, languageId);
+        }
+        public IEnumerable<string> GetElementsLabelById(IEnumerable<string> id, string elementType, int languageId)
+        {
+            return _DAL.GetElementsLabelById(id, elementType, languageId);
+        }
+
 
         public ElementTranslationModel PostElementTranslation(ElementTranslationModel elementTranslationModel)
         {

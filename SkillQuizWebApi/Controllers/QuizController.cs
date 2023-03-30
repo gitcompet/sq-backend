@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -18,33 +20,48 @@ namespace SkillQuizzWebApi.Controllers
     public class QuizController : ControllerBase
     {
         private readonly InterfaceQuiz _IQuiz;
-        public QuizController(InterfaceQuiz interfaceQuiz)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
+        {
+            public const string TITLE = "QUIZ_TITLE";
+            public const string LABEL = "QUIZ_LABEL";
+        }
+        public QuizController(InterfaceQuiz interfaceQuiz, InterfaceElementTranslation iElementTranslation)
         {
             _IQuiz = interfaceQuiz;
+            _IElementTranslation = iElementTranslation;
         }
 
         //GET api/v1/Quiz
         [HttpGet]
         [Route("")]
-        public List<QuizModel> GetAllQuiz()
+        public List<QuizModelLabel> GetAllQuiz()
         {
-            return _IQuiz.GetAllQuiz();
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            var collection = _IQuiz.GetAllQuiz();
+            List<QuizModelLabel> result = new List<QuizModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new QuizModelLabel(item, _IElementTranslation.GetElementLabelById(item.QuizId.ToString(), TYPE_LABEL.TITLE, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/Quiz/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<QuizModel> GetQuizById(int id)
+        public ActionResult<QuizModelLabel> GetQuizById(int id)
         {
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             var quiz = _IQuiz.GetQuizById(id);
-
             if (quiz == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new QuizModelLabel(quiz, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language));
 
-            return Ok(quiz);
+            return Ok(result);
         }
 
         //POST api/v1/Quiz
@@ -52,12 +69,21 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public ActionResult<QuizModel> PostQuiz([FromBody] QuizModelPostDTO quizModelPostDTO)
         {
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             if (quizModelPostDTO != null)
             {
                 var quizModel = new QuizModel(quizModelPostDTO);
                 var quizResult = _IQuiz.PostQuiz(quizModel);
                 if (quizResult != null)
                 {
+                    var labels = new ElementTranslationModel();
+
+                    labels.Description = quizModelPostDTO.Title;
+                    labels.ElementId = int.Parse(quizResult.QuizId);
+                    labels.ElementType = TYPE_LABEL.TITLE;
+                    labels.LanguagesId = language;
+
+                    _IElementTranslation.PostElementTranslation(labels);
                     return Created("/api/v1/Quiz/" + quizModel.QuizId, quizResult);
                 }
             }
@@ -83,7 +109,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/Quiz
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<QuizModel> PatchQuiz([FromRoute] int id, [FromBody] QuizModel quizModel)
+        public ActionResult<QuizModel> PutQuiz([FromRoute] int id, [FromBody] QuizModel quizModel)
         {
             if (quizModel.QuizId != id.ToString())
             {

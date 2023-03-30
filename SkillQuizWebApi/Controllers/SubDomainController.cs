@@ -3,6 +3,7 @@ using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
@@ -10,41 +11,61 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json.Nodes;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
+    [Authorize(
+        AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        Roles = "ADMIN"
+     )]
     [Route("api/v1/[controller]")]
     public class SubDomainController : ControllerBase
     {
         private readonly InterfaceSubDomain _ISubDomain;
-        public SubDomainController(InterfaceSubDomain interfaceSubDomain)
+        private readonly InterfaceElementTranslation _IElementTranslation;
+        private static class TYPE_LABEL
         {
+            public const string TITLE = "SUBDOMAIN_TITLE";
+        }
+        public SubDomainController(InterfaceSubDomain interfaceSubDomain, InterfaceElementTranslation interfaceElementTranslation)
+        {
+            _IElementTranslation = interfaceElementTranslation;
             _ISubDomain = interfaceSubDomain;
         }
 
         //GET api/v1/SubDomain
         [HttpGet]
         [Route("")]
-        public List<SubDomainModel> GetAllSubDomain()
+        public List<SubDomainModelLabel> GetAllSubDomain()
         {
-            return _ISubDomain.GetAllSubDomain();
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            var collection = _ISubDomain.GetAllSubDomain();
+            List<SubDomainModelLabel> result = new List<SubDomainModelLabel>();
+            foreach (var item in collection)
+            {
+                result.Add(new SubDomainModelLabel(item, _IElementTranslation.GetElementLabelById(item.SubDomainId.ToString(), TYPE_LABEL.TITLE, language)));
+            }
+            return result;
         }
 
 
         //GET api/v1/SubDomain/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<SubDomainModel> GetSubDomainById(int id)
+        public ActionResult<SubDomainModelLabel> GetSubDomainById(int id)
         {
-            var subDomain = _ISubDomain.GetSubDomainById(id);
-
-            if (subDomain == null)
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            var test = _ISubDomain.GetSubDomainById(id);
+            if (test == null)
             {
                 return NotFound("Invalid ID");
             }
+            var result = new SubDomainModelLabel(test, _IElementTranslation.GetElementLabelById(id.ToString(), TYPE_LABEL.TITLE, language));
 
-            return Ok(subDomain);
+            return Ok(result);
         }
 
         //POST api/v1/SubDomain
@@ -52,13 +73,22 @@ namespace SkillQuizzWebApi.Controllers
         [Route("")]
         public ActionResult<SubDomainModel> PostSubDomain([FromBody] SubDomainModelPostDTO subDomainModelPostDTO)
         {
+            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
             if (subDomainModelPostDTO != null)
             {
-                var subDomainModel = new SubDomainModel(subDomainModelPostDTO);
-                var subDomainResult = _ISubDomain.PostSubDomain(subDomainModel);
-                if (subDomainResult != null)
+                var questionModel = new SubDomainModel(subDomainModelPostDTO);
+                var questionResult = _ISubDomain.PostSubDomain(questionModel);
+                if (questionResult != null)
                 {
-                    return Created("/api/v1/SubDomain/" + subDomainModel.SubDomainId, subDomainResult);
+                    var labels = new ElementTranslationModel();
+
+                    labels.Description = subDomainModelPostDTO.Name;
+                    labels.ElementId = int.Parse(questionResult.SubDomainId);
+                    labels.ElementType = TYPE_LABEL.TITLE;
+                    labels.LanguagesId = language;
+
+                    _IElementTranslation.PostElementTranslation(labels);
+                    return Created("/api/v1/SubDomain/" + questionModel.SubDomainId, questionResult);
                 }
             }
             return BadRequest(ModelState);
@@ -83,7 +113,7 @@ namespace SkillQuizzWebApi.Controllers
         //PUT api/v1/SubDomain
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<SubDomainModel> PatchSubDomain([FromRoute] int id, [FromBody] SubDomainModel subDomainModel)
+        public ActionResult<SubDomainModel> PutSubDomain([FromRoute] int id, [FromBody] SubDomainModel subDomainModel)
         {
             if (subDomainModel.SubDomainId != id.ToString())
             {

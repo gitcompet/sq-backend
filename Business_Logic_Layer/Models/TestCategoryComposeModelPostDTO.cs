@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Business_Logic_Layer.Models
 {
-    public class LanguagesModelDTO
+    public class TestCategoryComposeModelPostDTO
     {
-        public LanguagesModelDTO() { }
-        public string title { get; set; }
-        public string shortCode { get; set; }
+        public string TestId { get; set; }
+        public string TestCategoryId { get; set; }
     }
 }

@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace Business_Logic_Layer.Models
 {
-    public class LanguagesModel
+    public class LanguageModel
     {
-        public LanguagesModel(LanguagesModelDTO languagesModelDTO)
+        public LanguageModel(LanguageModelPostDTO languageModelPostDTO)
         {
 
-            this.title = languagesModelDTO.title;
-            this.shortCode = languagesModelDTO.shortCode;
+            this.title = languageModelPostDTO.title;
+            this.shortCode = languageModelPostDTO.shortCode;
             this.isActive = true;
             this.isDeleted = false;
-            this.isAppRelated = false;
-            this.isTestRelated = false;
+            this.isAppRelated = languageModelPostDTO.isAppRelated;
+            this.isTestRelated = languageModelPostDTO.isTestRelated;
         }
-        public LanguagesModel() { }
-        public string LanguagesId { get; set; }
+        public LanguageModel() { }
+        public string LanguageId { get; set; }
         public string title { get; set; }
         public string shortCode { get; set; }
         public Boolean isActive { get; set; }

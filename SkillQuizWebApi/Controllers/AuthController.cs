@@ -110,7 +110,6 @@ namespace JwtWebApiDotNet7.Controllers
                 throw new SecurityTokenException("Invalid token");
             return false;
         }
-
         private string CreateToken(UserModel user)
         {
 
@@ -141,6 +140,11 @@ namespace JwtWebApiDotNet7.Controllers
                _configuration["JWT:Secret"]));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            //Languages claim
+            claims.Add(new Claim(ClaimTypes.Country, user.LanguageId));
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.LoginId));
+            //lg claim
 
             var token = new JwtSecurityToken(
                     issuer: _configuration["JWT:ValidIssuer"],

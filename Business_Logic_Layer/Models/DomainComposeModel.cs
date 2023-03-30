@@ -12,10 +12,12 @@ namespace Business_Logic_Layer.Models
         public DomainComposeModel(DomainComposeModelPostDTO domainComposeModelPostDTO)
         {
             this.DomainId = domainComposeModelPostDTO.DomainId;
-            this.SubDomainid = domainComposeModelPostDTO.SubDomainid;
+            this.ElementType = domainComposeModelPostDTO.ElementType;
+            this.ElementId = domainComposeModelPostDTO.ElementId;
         }
         public string DomainComposeId { get; set; }
+        public string ElementId { get; set; }
         public string DomainId { get; set; }
-        public string SubDomainid { get; set; }
+        public string ElementType { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
 using Microsoft.AspNetCore.JsonPatch;
+using BCrypt.Net;
 
 namespace Business_Logic_Layer
 {
@@ -52,6 +53,7 @@ namespace Business_Logic_Layer
         public UserModel PostUser(UserModel userModel)
         {
             User userEntity = _UserMapper.Map<UserModel, User>(userModel);
+            userEntity.Password = BCrypt.Net.BCrypt.HashPassword(userModel.Password);
             var user = _DAL.PostUser(userEntity);
             UserModel userModelReturn = _UserMapper.Map<User, UserModel>(user);
             return userModelReturn;

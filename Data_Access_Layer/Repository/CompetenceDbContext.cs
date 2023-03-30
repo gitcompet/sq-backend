@@ -28,7 +28,7 @@ namespace Data_Access_Layer.Repository
 
 
         public virtual DbSet<Domain> Domain { get; set; }
-        public virtual DbSet<Languages> Languages { get; set; }
+        public virtual DbSet<Language> Language { get; set; }
         public virtual DbSet<User> User { get; set; }
 
         public virtual DbSet<UserType> UserType { get; set; }
@@ -36,6 +36,7 @@ namespace Data_Access_Layer.Repository
         public virtual DbSet<ElementTranslation> ElementTranslation { get; set; }
 
         public virtual DbSet<DomainCompose> DomainCompose { get; set; }
+        public virtual DbSet<SubDomainCompose> SubDomainCompose { get; set; }
 
         public virtual DbSet<SubDomain> SubDomain { get; set; }
 
@@ -63,6 +64,7 @@ namespace Data_Access_Layer.Repository
         public virtual DbSet<QuestionUser> QuestionUser { get; set; }
 
         public virtual DbSet<AnswerUser> AnswerUser { get; set; }
+        public virtual DbSet<TestCategoryCompose> TestCategoryCompose { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string connectionString = "server=145.239.0.38;user id=skillquizusr;Pwd=SkillQuiz5!;;port=3310; database=skillquizdb;";

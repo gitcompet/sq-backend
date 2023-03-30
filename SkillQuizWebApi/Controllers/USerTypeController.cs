@@ -3,6 +3,7 @@ using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
@@ -15,6 +16,10 @@ namespace SkillUserTypezWebApi.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
+    [Authorize(
+        AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+        Roles = "ADMIN"
+     )]
     public class UserTypeController : ControllerBase
     {
         private readonly InterfaceUserType _IUserType;
@@ -83,7 +88,7 @@ namespace SkillUserTypezWebApi.Controllers
         //PUT api/v1/UserType
         [HttpPut]
         [Route("{id:int}")]
-        public ActionResult<UserTypeModel> PatchUserType([FromRoute] int id, [FromBody] UserTypeModel userTypeModel)
+        public ActionResult<UserTypeModel> PutUserType([FromRoute] int id, [FromBody] UserTypeModel userTypeModel)
         {
             if (userTypeModel.UserTypeId != id.ToString())
             {

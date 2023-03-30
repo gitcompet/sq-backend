@@ -11,8 +11,6 @@ namespace Business_Logic_Layer.Models
         public QuestionModel() { }
         public QuestionModel(QuestionModelPostDTO questionModelDTO)
         {
-            this.DomainId = questionModelDTO.DomainId;
-            this.SubDomainId = questionModelDTO.SubDomainId;
             this.Level = questionModelDTO.Level;
             this.Weight = questionModelDTO.Weight;
             if (questionModelDTO.Duration != null)
@@ -35,8 +33,6 @@ namespace Business_Logic_Layer.Models
             this.isDeleted = false;
         }
         public string QuestionId { get; set; }
-        public string DomainId { get; set; }
-        public string SubDomainId { get; set; }
         public int Level  { get; set; }
         public decimal Weight { get; set; }
         public int Duration { get; set; }

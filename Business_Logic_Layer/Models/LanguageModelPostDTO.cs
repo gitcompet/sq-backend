@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data_Access_Layer.Repository.Models
+namespace Business_Logic_Layer.Models
 {
-    public class Languages
+    public class LanguageModelPostDTO
     {
-        public int LanguagesID { get; set; }
+        public LanguageModelPostDTO(){}
         public string title { get; set; }
         public string shortCode { get; set; }
-        public Boolean isActive { get; set; }
         public Boolean isAppRelated { get; set; }
         public Boolean isTestRelated { get; set; }
-        public Boolean isDeleted { get; set; }
     }
 }

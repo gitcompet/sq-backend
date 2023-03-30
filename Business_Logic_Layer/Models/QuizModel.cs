@@ -11,8 +11,6 @@ namespace Business_Logic_Layer.Models
         public QuizModel() { }
         public QuizModel(QuizModelPostDTO quizModelDTO)
         {
-            this.DomainId = quizModelDTO.DomainId;
-            this.SubDomainId = quizModelDTO.SubDomainId;
             this.Weight = quizModelDTO.Weight;
             if (quizModelDTO.Comment != null)
             {
@@ -26,8 +24,6 @@ namespace Business_Logic_Layer.Models
             this.isDeleted = false;
         }
         public string QuizId { get; set; }
-        public string DomainId { get; set; }
-        public string SubDomainId { get; set; }
         public decimal Weight { get; set; }
         public string Comment { get; set; }
         public Boolean isActive { get; set; }
