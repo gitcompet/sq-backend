@@ -18,7 +18,7 @@ namespace SkillLanguagezWebApi.Controllers
     [ApiController]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "ADMIN"
+        Roles = "USER,RH,ADMIN"
      )]
     [Route("api/v1/[controller]")]
     public class LanguageController : ControllerBase

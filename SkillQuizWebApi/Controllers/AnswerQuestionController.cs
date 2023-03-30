@@ -12,10 +12,6 @@ using System.Collections.Generic;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Authorize(
-        AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "RH,ADMIN"
-     )]
     [Route("/api[controller]")]
     public class AnswerQuestionController : ControllerBase
     {
