@@ -7,6 +7,7 @@ using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Data_Access_Layer;
 
 namespace Business_Logic_Layer
 {
@@ -14,6 +15,9 @@ namespace Business_Logic_Layer
     {
 
         private QuizUserDAL _DAL;
+        private QuestionUserDAL _DALQuestionUser;
+        private AnswerQuestionDAL _DALAnswerQuestion;
+        private QuizComposeDAL _DALQuizCompose;
         private Mapper _QuizUserMapper;
 
         public QuizUserBLL()
@@ -22,6 +26,17 @@ namespace Business_Logic_Layer
             var _configQuizUser = new MapperConfiguration(cfg => cfg.CreateMap<QuizUser, QuizUserModel>().ReverseMap());
 
             _QuizUserMapper = new Mapper(_configQuizUser);
+        }
+
+        private QuizUserModel GetScoredQuizUserByQuizId(int id)
+        {
+            QuizUserModel result = new QuizUserModel();
+            //for all question, get the answer made and the actual answers
+            /*foreach()
+            {
+
+            }*/
+            return result;
         }
 
         public List<QuizUserModel> GetAllQuizUser()
