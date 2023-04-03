@@ -1,11 +1,13 @@
 ﻿using Data_Access_Layer.Repository;
 using Data_Access_Layer.Repository.Models;
+using Microsoft.AspNetCore.JsonPatch;
+using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
-
-namespace Data_Access_Layer
+namespace Data_Access_Layer.DAL
 {
     public class AnswerQuestionDAL
     {
@@ -24,44 +26,64 @@ namespace Data_Access_Layer
 
             return d;
         }
-        public Boolean[] GetAnswerQuestionByQuestionId(int id)
+        public IEnumerable<AnswerQuestion> GetAnswerQuestionByQuestionId(int id)
         {
-
-            var result = new List<Boolean>();
-
             var db = new CompetenceDbContext();
-            //var d = new List<AnswerQuestion>();
-            var d = db.AnswerQuestion.Where(x => x.QuestionId == id).ToList();
-            foreach (AnswerQuestion e in d)
-            {
-                result.Add(e.isAnswerOK);
-            }
+            var d = db.AnswerQuestion.Where(x => x.QuestionId == id);
 
-            return result.ToArray();
-        }
-        public IEnumerable<string> GetAnswerByListId(int id)
-        {
-
-            var result = new List<string>();
-
-            var db = new CompetenceDbContext();
-            //var d = new List<AnswerQuestion>();
-            var d = db.AnswerQuestion.Where(x => x.QuestionId == id).ToList();
-            foreach (AnswerQuestion e in d)
-            {
-                result.Add(e.AnswerId.ToString());
-            }
-
-            return result;
+            return d;
         }
 
-        public void postAnswerQuestion(AnswerQuestion answerquestion)
+        public AnswerQuestion PostAnswerQuestion(AnswerQuestion answerQuestion)
         {
             var db = new CompetenceDbContext();
-            db.Add(answerquestion);
+            db.Add(answerQuestion);
+            db.SaveChanges();
+            return (answerQuestion);
+        }
+
+        public AnswerQuestion PatchAnswerQuestion(int id, JsonPatchDocument<AnswerQuestion> answerQuestionModelJSON)
+        {
+            var db = new CompetenceDbContext();
+            AnswerQuestion d = new AnswerQuestion();
+
+            d = db.AnswerQuestion.FirstOrDefault(x => x.AnswerQuestionId == id);
+            answerQuestionModelJSON.ApplyTo(d);
+            db.Update(d);
+            db.SaveChanges();
+            return d;
+        }
+
+        public AnswerQuestion PutAnswerQuestion(AnswerQuestion answerQuestion)
+        {
+            var db = new CompetenceDbContext();
+            AnswerQuestion d = new AnswerQuestion();
+            try
+            {
+                d = db.AnswerQuestion.First(x => x.AnswerQuestionId == answerQuestion.AnswerQuestionId);
+                foreach (PropertyInfo property in d.GetType().GetProperties())
+                {
+                    d.GetType().GetProperty(property.Name).SetValue(d, answerQuestion.GetType().GetProperty(property.Name).GetValue(answerQuestion));
+                }
+                db.SaveChanges();
+            }
+            catch
+            {
+                db.Add(answerQuestion);
+                db.SaveChanges();
+                d = answerQuestion;
+            }
+            return d;
+        }
+
+        public void DeleteAnswerQuestion(int id)
+        {
+            var db = new CompetenceDbContext();
+            AnswerQuestion d = new AnswerQuestion();
+            d = this.GetAnswerQuestionById(id);
+            db.AnswerQuestion.Remove(d);
             db.SaveChanges();
         }
-
     }
 }
 
