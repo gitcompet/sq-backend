@@ -16,27 +16,47 @@ namespace Business_Logic_Layer
 
         private QuizUserDAL _DAL;
         private QuestionUserDAL _DALQuestionUser;
+        private AnswerUserDAL _DALAnswerUser;
         private AnswerQuestionDAL _DALAnswerQuestion;
-        private QuizComposeDAL _DALQuizCompose;
+        private QuizComposeBLL _BLLQuizCompose;
         private Mapper _QuizUserMapper;
 
         public QuizUserBLL()
         {
             _DAL = new Data_Access_Layer.DAL.QuizUserDAL();
             var _configQuizUser = new MapperConfiguration(cfg => cfg.CreateMap<QuizUser, QuizUserModel>().ReverseMap());
-
+            _BLLQuizCompose = new QuizComposeBLL();
+            _DALAnswerQuestion = new AnswerQuestionDAL();
+            _DALQuestionUser = new QuestionUserDAL();
+            _DALAnswerUser = new AnswerUserDAL();
             _QuizUserMapper = new Mapper(_configQuizUser);
         }
 
-        private QuizUserModel GetScoredQuizUserByQuizId(int id)
+        private QuizUserModel GetScoredQuizUserByLinkId(QuizUserModel quizUserModel)
         {
-            QuizUserModel result = new QuizUserModel();
-            //for all question, get the answer made and the actual answers
-            /*foreach()
-            {
 
-            }*/
-            return result;
+            if (quizUserModel.IsClosed)
+            {
+                List<int> answers = new List<int>();
+                List<int> expectedAnswer = new List<int>();
+                int score = 0;
+                //for all question, get the answer made and the actual answers
+                var questionList = _BLLQuizCompose.GetQuizComposeByQuizId(int.Parse(quizUserModel.QuizId));
+                List<QuestionUser> questionUserIds = _DALQuestionUser.GetQuestionUserByLinkId(int.Parse(quizUserModel.QuizUserId)).ToList();
+                int questionUserId;
+                foreach (var question in questionList)
+                {
+                    expectedAnswer = _DALAnswerQuestion.GetGoodAnswerList(int.Parse(question.QuestionId)); //validé
+                    questionUserId = questionUserIds.FirstOrDefault(x => x.QuestionId == int.Parse(question.QuestionId)).QuestionUserId;
+                    answers = _DALAnswerUser.GetAnswerUserByLinkId(questionUserId).Select(x => x.AnswerId).ToList();
+                    if (answers.SequenceEqual(expectedAnswer))
+                    {
+                        score = score + 1;
+                    }
+                }
+                quizUserModel.Score = score;
+            }
+            return quizUserModel;
         }
 
         public List<QuizUserModel> GetAllQuizUser()
@@ -63,7 +83,8 @@ namespace Business_Logic_Layer
 
             foreach (var item in quizUserEntity)
             {
-                result.Add(_QuizUserMapper.Map<QuizUser, QuizUserModel>(item));
+                QuizUserModel model = _QuizUserMapper.Map<QuizUser, QuizUserModel>(item);
+                result.Add(GetScoredQuizUserByLinkId(model));
             }
 
             return result;

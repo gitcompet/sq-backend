@@ -16,6 +16,17 @@ namespace Data_Access_Layer.DAL
             var db = new CompetenceDbContext();
             return db.AnswerQuestion.ToList();
         }
+        public List<int> GetGoodAnswerList(int questionId)
+        {
+            var db = new CompetenceDbContext();
+            var result = new List<int>();
+            var temp = db.AnswerQuestion.Where(x => x.QuestionId == questionId && x.isAnswerOK == true).ToList();
+            foreach (var answer in  temp)
+            {
+                result.Add(answer.AnswerId);
+            }
+            return result;
+        }
 
         public AnswerQuestion GetAnswerQuestionById(int id)
         {

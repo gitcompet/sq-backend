@@ -13,10 +13,12 @@ namespace Business_Logic_Layer.Models
         {
             this.QuizId = quizUserModelPostDTO.QuizId;
             this.TestUserId = quizUserModelPostDTO.TestUserId;
+            this.IsClosed = false;
         }
         public string QuizUserId { get; set; }
         public string QuizId { get; set; }
         public string TestUserId { get; set; }
         public int Score { get; set; }
+        public Boolean IsClosed { get; set; }
     }
 }
