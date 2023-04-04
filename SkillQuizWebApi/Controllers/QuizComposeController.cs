@@ -35,9 +35,9 @@ namespace SkillQuizzWebApi.Controllers
         //GET api/v1/QuizCompose/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<IEnumerable<QuizComposeModel>> GetQuizComposeByQuizId(int id)
+        public ActionResult<QuizComposeModel> GetQuizComposeById(int id)
         {
-            var quizCompose = _IQuizCompose.GetQuizComposeByQuizId(id);
+            var quizCompose = _IQuizCompose.GetQuizComposeById(id);
 
             if (quizCompose == null)
             {

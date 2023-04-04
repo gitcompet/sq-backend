@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json.Nodes;
 
@@ -19,17 +18,9 @@ namespace SkillTestUserzWebApi.Controllers
     public class TestUserController : ControllerBase
     {
         private readonly InterfaceTestUser _ITestUser;
-        private readonly InterfaceQuizUser _IQuizUser;
-        private readonly InterfaceQuestionUser _IQuestionUser;
-        private readonly InterfaceQuizCompose _IQuizCompose;
-        private readonly InterfaceTestCompose _ITestCompose;
-        public TestUserController(InterfaceTestUser interfaceTestUser, InterfaceQuizUser interfaceQuizUser, InterfaceQuestionUser interfaceQuestionUser, InterfaceQuizCompose interfaceQuizCompose, InterfaceTestCompose interfaceTestCompose)
+        public TestUserController(InterfaceTestUser interfaceTestUser)
         {
             _ITestUser = interfaceTestUser;
-            _IQuestionUser = interfaceQuestionUser;
-            _ITestCompose = interfaceTestCompose;
-            _IQuizCompose = interfaceQuizCompose;
-            _IQuizUser = interfaceQuizUser;
         }
 
         //GET api/v1/TestUser
@@ -67,35 +58,7 @@ namespace SkillTestUserzWebApi.Controllers
                 var testUserResult = _ITestUser.PostTestUser(testUserModel);
                 if (testUserResult != null)
                 {
-                    //Trouver les Quizs concernés
-                    var testList = _ITestCompose.GetTestComposeByTestId(int.Parse(testUserModelPostDTO.TestId)).ToList();
-                    //ajouter les liens dans QuizUser
-                    System.Diagnostics.Debug.WriteLine("===========================");
-                    System.Diagnostics.Debug.WriteLine(String.Join("; ", testList));
-                    System.Diagnostics.Debug.WriteLine(testList[0].QuizId);
-                    System.Diagnostics.Debug.WriteLine(testList[1].QuizId);
-
-                    foreach (var quiz in testList)
-                    {
-                        System.Diagnostics.Debug.WriteLine("-------------------------");
-                        System.Diagnostics.Debug.WriteLine(quiz.QuizId);
-                        QuizUserModel quizUserModel = new QuizUserModel();
-                        quizUserModel.QuizId = quiz.QuizId;
-                        quizUserModel.TestUserId = testUserResult.TestUserId;
-                        quizUserModel.IsClosed = false;
-                        var quizUserResult = _IQuizUser.PostQuizUser(quizUserModel);
-                        //Trouver les Questions concernées
-                        var quizList = _IQuizCompose.GetQuizComposeByQuizId(int.Parse(quiz.QuizId));
-                        foreach (var question in quizList)
-                        {
-                            QuestionUserModel questionUserModel = new QuestionUserModel();
-                            questionUserModel.QuestionId = question.QuestionId;
-                            questionUserModel.QuizUserId = quizUserResult.QuizUserId;
-                            _IQuestionUser.PostQuestionUser(questionUserModel);
-                            //ajouter les liens dans QuestionUser
-                        }
-                    }
-                        return Created("/api/v1/TestUser/" + testUserModel.TestUserId, testUserResult);
+                    return Created("/api/v1/TestUser/" + testUserModel.TestUserId, testUserResult);
                 }
             }
             return BadRequest(ModelState);

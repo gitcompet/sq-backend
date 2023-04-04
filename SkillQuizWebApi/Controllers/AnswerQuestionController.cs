@@ -1,20 +1,18 @@
 ﻿using Business_Logic_Layer.Interface;
 using Business_Logic_Layer.Models;
 using Data_Access_Layer.Repository.Models;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Text.Json.Nodes;
+
+
+
+
 
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
+    [Route("/api[controller]")]
     public class AnswerQuestionController : ControllerBase
     {
         private readonly InterfaceAnswerQuestion _IAnswerQuestion;
@@ -23,116 +21,42 @@ namespace SkillQuizzWebApi.Controllers
             _IAnswerQuestion = interfaceAnswerQuestion;
         }
 
-        //GET api/v1/AnswerQuestion
-        /*[HttpGet]
-        [Route("")]
+        
+        [HttpGet]
+        [Route("getAnswerQuestions")]
+
+
         public List<AnswerQuestionModel> GetAllAnswerQuestion()
         {
             return _IAnswerQuestion.GetAllAnswerQuestion();
         }
-        */
 
-        //GET api/v1/AnswerQuestion/{id}
-        /*[HttpGet]
-        [Route("{id:int}")]
+
+
+        [HttpGet]
+        [Route("getAnswerQuestion")]
         public ActionResult<AnswerQuestionModel> GetAnswerQuestionById(int id)
         {
-            var answerQuestion = _IAnswerQuestion.GetAnswerQuestionById(id);
+            var answerquestion = _IAnswerQuestion.GetAnswerQuestionById(id);
 
-            if (answerQuestion == null)
+            if (answerquestion == null)
             {
                 return NotFound("Invalid ID");
             }
 
-            return Ok(answerQuestion);
-        }*/
-        [HttpGet]
-        [Route("{id:int}")]
-        public ActionResult<AnswerQuestionModel> GetAnswerQuestionByQuestionId(int id)
-        {
-            var answerQuestion = _IAnswerQuestion.GetAnswerQuestionByQuestionId(id);
-
-            if (answerQuestion == null)
-            {
-                return NotFound("Invalid ID");
-            }
-
-            return Ok(answerQuestion);
+            return Ok(answerquestion);
         }
 
-        //POST api/v1/AnswerQuestion
+
+
+
+        [Route("postAnswerQuestion")]
         [HttpPost]
-        [Route("")]
-        public ActionResult<AnswerQuestionModel> PostAnswerQuestion([FromBody] AnswerQuestionModelPostDTO answerQuestionModelPostDTO)
+        public void postAnswerQuestion([FromBody] AnswerQuestionModel answerquestionModel)
         {
-            if (answerQuestionModelPostDTO != null)
-            {
-                var answerQuestionModel = new AnswerQuestionModel(answerQuestionModelPostDTO);
-                var answerQuestionResult = _IAnswerQuestion.PostAnswerQuestion(answerQuestionModel);
-                if (answerQuestionResult != null)
-                {
-                    return Created("/api/v1/AnswerQuestion/" + answerQuestionModel.AnswerQuestionId, answerQuestionResult);
-                }
-            }
-            return BadRequest(ModelState);
+            _IAnswerQuestion.PostAnswerQuestion(answerquestionModel);
         }
 
-        //PATCH api/v1/AnswerQuestion/{id}
-        [HttpPatch]
-        [Route("{id:int}")]
-        public ActionResult<AnswerQuestionModel> PatchAnswerQuestion([FromRoute] int id, [FromBody] JsonPatchDocument<AnswerQuestion> answerQuestionModelJSON)
-        {
-            if (answerQuestionModelJSON != null)
-            {
-                var answerQuestion = _IAnswerQuestion.PatchAnswerQuestion(id, answerQuestionModelJSON);
-                return Ok(answerQuestion);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
-
-        //PUT api/v1/AnswerQuestion
-        [HttpPut]
-        [Route("{id:int}")]
-        public ActionResult<AnswerQuestionModel> PutAnswerQuestion([FromRoute] int id, [FromBody] AnswerQuestionModel answerQuestionModel)
-        {
-            if (answerQuestionModel.AnswerQuestionId != id.ToString())
-            {
-                return BadRequest("ID mismatch");
-            }
-            else
-                if (answerQuestionModel != null)
-            {
-                var answerQuestion = _IAnswerQuestion.PutAnswerQuestion(answerQuestionModel);
-                return Ok(answerQuestion);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
-
-        //DELETE api/v1/AnswerQuestion/{id}
-        [HttpDelete]
-        [Route("{id:int}")]
-        public ActionResult<AnswerQuestionModel> DeleteAnswerQuestion([FromRoute] int id)
-        {
-            var answerQuestion = _IAnswerQuestion.GetAnswerQuestionById(id);
-
-            if (answerQuestion == null)
-            {
-                return NotFound("Invalid ID");
-            }
-            else
-            {
-                _IAnswerQuestion.DeleteAnswerQuestion(id);
-                return Ok(answerQuestion);
-            }
-
-            //_IAnswerQuestion.DeleteAnswerQuestion(id);
-        }
 
 
         //(This is the bad practise!) = > this should instead also call the BLL 
@@ -150,7 +74,7 @@ namespace SkillQuizzWebApi.Controllers
         //    db.Person.Remove(p);
         //    db.SaveChanges();
         //}
-
+        
 
     }
 }
