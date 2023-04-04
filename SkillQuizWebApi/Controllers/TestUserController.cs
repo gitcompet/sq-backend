@@ -70,15 +70,9 @@ namespace SkillTestUserzWebApi.Controllers
                     //Trouver les Quizs concernés
                     var testList = _ITestCompose.GetTestComposeByTestId(int.Parse(testUserModelPostDTO.TestId)).ToList();
                     //ajouter les liens dans QuizUser
-                    System.Diagnostics.Debug.WriteLine("===========================");
-                    System.Diagnostics.Debug.WriteLine(String.Join("; ", testList));
-                    System.Diagnostics.Debug.WriteLine(testList[0].QuizId);
-                    System.Diagnostics.Debug.WriteLine(testList[1].QuizId);
 
                     foreach (var quiz in testList)
                     {
-                        System.Diagnostics.Debug.WriteLine("-------------------------");
-                        System.Diagnostics.Debug.WriteLine(quiz.QuizId);
                         QuizUserModel quizUserModel = new QuizUserModel();
                         quizUserModel.QuizId = quiz.QuizId;
                         quizUserModel.TestUserId = testUserResult.TestUserId;
