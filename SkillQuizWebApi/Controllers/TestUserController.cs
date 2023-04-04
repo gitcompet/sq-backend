@@ -145,6 +145,22 @@ namespace SkillTestUserzWebApi.Controllers
             }
             else
             {
+                var toBeDeletedTestUser = _ITestUser.GetTestUserById(id);
+                //Trouver les QuizsUser concernés
+                var testList = _IQuizUser.GetQuizUserByLinkId(int.Parse(toBeDeletedTestUser.TestUserId)).Value.ToList();
+                //supprimer les liens dans QuizUser
+
+                foreach (var quiz in testList)
+                {
+                    //Trouver les Questions concernées
+                    var quizList = _IQuestionUser.GetQuestionUserByLinkId(int.Parse(quiz.QuizUserId)).Value.ToList();
+                    //supprimer les liens dans QuestionUser
+                    foreach (var question in quizList)
+                    {
+                        _IQuestionUser.DeleteQuestionUser(int.Parse(question.QuestionUserId));
+                    }
+                    _IQuizUser.DeleteQuizUser(int.Parse(quiz.QuizUserId));
+                }
                 _ITestUser.DeleteTestUser(id);
                 return Ok(testUser);
             }
