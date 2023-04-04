@@ -6,7 +6,6 @@ using Business_Logic_Layer.Interface;
 using Data_Access_Layer.Repository.Models;
 using Data_Access_Layer.DAL;
 using Microsoft.AspNetCore.JsonPatch;
-using MySqlX.XDevAPI.Common;
 
 namespace Business_Logic_Layer
 {
@@ -39,19 +38,6 @@ namespace Business_Logic_Layer
             QuizComposeModel quizComposeModel = _QuizComposeMapper.Map<QuizCompose, QuizComposeModel>(quizComposeEntity);
 
             return quizComposeModel;
-        }
-
-        public IEnumerable<QuizComposeModel> GetQuizComposeByQuizId(int id)
-        {
-            var quizComposeEntity = _DAL.GetQuizComposeByQuizId(id);
-            var result = new List<QuizComposeModel>();
-
-            foreach (var item in quizComposeEntity)
-            {
-                result.Add(_QuizComposeMapper.Map<QuizCompose, QuizComposeModel>(item));
-            }
-
-            return result;
         }
 
 

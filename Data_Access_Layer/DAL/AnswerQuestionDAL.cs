@@ -1,13 +1,11 @@
 ﻿using Data_Access_Layer.Repository;
 using Data_Access_Layer.Repository.Models;
-using Microsoft.AspNetCore.JsonPatch;
-using Org.BouncyCastle.Crypto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
-namespace Data_Access_Layer.DAL
+
+namespace Data_Access_Layer
 {
     public class AnswerQuestionDAL
     {
@@ -15,17 +13,6 @@ namespace Data_Access_Layer.DAL
         {
             var db = new CompetenceDbContext();
             return db.AnswerQuestion.ToList();
-        }
-        public List<int> GetGoodAnswerList(int questionId)
-        {
-            var db = new CompetenceDbContext();
-            var result = new List<int>();
-            var temp = db.AnswerQuestion.Where(x => x.QuestionId == questionId && x.isAnswerOK == true).ToList();
-            foreach (var answer in  temp)
-            {
-                result.Add(answer.AnswerId);
-            }
-            return result;
         }
 
         public AnswerQuestion GetAnswerQuestionById(int id)
@@ -37,64 +24,44 @@ namespace Data_Access_Layer.DAL
 
             return d;
         }
-        public IEnumerable<AnswerQuestion> GetAnswerQuestionByQuestionId(int id)
+        public Boolean[] GetAnswerQuestionByQuestionId(int id)
         {
+
+            var result = new List<Boolean>();
+
             var db = new CompetenceDbContext();
-            var d = db.AnswerQuestion.Where(x => x.QuestionId == id);
-
-            return d;
-        }
-
-        public AnswerQuestion PostAnswerQuestion(AnswerQuestion answerQuestion)
-        {
-            var db = new CompetenceDbContext();
-            db.Add(answerQuestion);
-            db.SaveChanges();
-            return (answerQuestion);
-        }
-
-        public AnswerQuestion PatchAnswerQuestion(int id, JsonPatchDocument<AnswerQuestion> answerQuestionModelJSON)
-        {
-            var db = new CompetenceDbContext();
-            AnswerQuestion d = new AnswerQuestion();
-
-            d = db.AnswerQuestion.FirstOrDefault(x => x.AnswerQuestionId == id);
-            answerQuestionModelJSON.ApplyTo(d);
-            db.Update(d);
-            db.SaveChanges();
-            return d;
-        }
-
-        public AnswerQuestion PutAnswerQuestion(AnswerQuestion answerQuestion)
-        {
-            var db = new CompetenceDbContext();
-            AnswerQuestion d = new AnswerQuestion();
-            try
+            //var d = new List<AnswerQuestion>();
+            var d = db.AnswerQuestion.Where(x => x.QuestionId == id).ToList();
+            foreach (AnswerQuestion e in d)
             {
-                d = db.AnswerQuestion.First(x => x.AnswerQuestionId == answerQuestion.AnswerQuestionId);
-                foreach (PropertyInfo property in d.GetType().GetProperties())
-                {
-                    d.GetType().GetProperty(property.Name).SetValue(d, answerQuestion.GetType().GetProperty(property.Name).GetValue(answerQuestion));
-                }
-                db.SaveChanges();
+                result.Add(e.isAnswerOK);
             }
-            catch
+
+            return result.ToArray();
+        }
+        public IEnumerable<string> GetAnswerByListId(int id)
+        {
+
+            var result = new List<string>();
+
+            var db = new CompetenceDbContext();
+            //var d = new List<AnswerQuestion>();
+            var d = db.AnswerQuestion.Where(x => x.QuestionId == id).ToList();
+            foreach (AnswerQuestion e in d)
             {
-                db.Add(answerQuestion);
-                db.SaveChanges();
-                d = answerQuestion;
+                result.Add(e.AnswerId.ToString());
             }
-            return d;
+
+            return result;
         }
 
-        public void DeleteAnswerQuestion(int id)
+        public void postAnswerQuestion(AnswerQuestion answerquestion)
         {
             var db = new CompetenceDbContext();
-            AnswerQuestion d = new AnswerQuestion();
-            d = this.GetAnswerQuestionById(id);
-            db.AnswerQuestion.Remove(d);
+            db.Add(answerquestion);
             db.SaveChanges();
         }
+
     }
 }
 

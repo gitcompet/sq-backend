@@ -27,17 +27,6 @@ namespace Data_Access_Layer.DAL
         }
 
 
-        public IEnumerable<TestCompose> GetTestComposeByTestId(int id)
-        {
-            var db = new CompetenceDbContext();
-            List<TestCompose> d = new List<TestCompose>();
-
-            d = db.TestCompose.Where(x => x.TestId == id).ToList();
-
-            return d;
-        }
-
-
         public TestCompose PostTestCompose(TestCompose testCompose)
         {
             var db = new CompetenceDbContext();

@@ -40,18 +40,6 @@ namespace Business_Logic_Layer
             return testComposeModel;
         }
 
-        public IEnumerable<TestComposeModel> GetTestComposeByTestId(int id)
-        {
-            var testComposeEntity = _DAL.GetTestComposeByTestId(id);
-            var result = new List<TestComposeModel>();
-            foreach (TestCompose item in testComposeEntity)
-            {
-                result.Add(_TestComposeMapper.Map<TestCompose, TestComposeModel>(item));
-            }
-
-            return result;
-        }
-
 
         public TestComposeModel PostTestCompose(TestComposeModel testComposeModel)
         {

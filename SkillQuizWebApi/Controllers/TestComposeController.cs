@@ -33,26 +33,11 @@ namespace SkillQuizzWebApi.Controllers
 
 
         //GET api/v1/TestCompose/{id}
-        /*[HttpGet]
+        [HttpGet]
         [Route("{id:int}")]
         public ActionResult<TestComposeModel> GetTestComposeById(int id)
         {
             var testCompose = _ITestCompose.GetTestComposeById(id);
-
-            if (testCompose == null)
-            {
-                return NotFound("Invalid ID");
-            }
-
-            return Ok(testCompose);
-        }*/
-
-        //GET api/v1/TestCompose/{id}
-        [HttpGet]
-        [Route("{id:int}")]
-        public ActionResult<IEnumerable<TestComposeModel>> GetTestComposeByTestId(int id)
-        {
-            var testCompose = _ITestCompose.GetTestComposeByTestId(id);
 
             if (testCompose == null)
             {
