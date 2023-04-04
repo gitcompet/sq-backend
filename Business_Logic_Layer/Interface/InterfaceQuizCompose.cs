@@ -13,6 +13,7 @@ namespace Business_Logic_Layer.Interface
 
         List<QuizComposeModel> GetAllQuizCompose();
         QuizComposeModel GetQuizComposeById(int id);
+        IEnumerable<QuizComposeModel> GetQuizComposeByQuizId(int id);
         QuizComposeModel PostQuizCompose(QuizComposeModel quizComposeModel);
         QuizComposeModel PatchQuizCompose(int id, JsonPatchDocument<QuizCompose> quizComposeModelJSON);
         QuizComposeModel PutQuizCompose(QuizComposeModel quizComposeModel);
