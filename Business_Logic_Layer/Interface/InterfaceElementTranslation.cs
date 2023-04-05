@@ -19,5 +19,6 @@ namespace Business_Logic_Layer.Interface
         ElementTranslationModel PatchElementTranslation(int id, JsonPatchDocument<ElementTranslation> elementTranslationModelJSON);
         ElementTranslationModel PutElementTranslation(ElementTranslationModel elementTranslationModel);
         void DeleteElementTranslation(int id);
+        void DeleteElementTranslationByItem(int id, string type);
     }
 }

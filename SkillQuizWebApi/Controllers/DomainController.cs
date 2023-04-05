@@ -136,6 +136,7 @@ namespace SkillQuizzWebApi.Controllers
             }
             else
             {
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(domain.DomainId), TYPE_LABEL.TITLE);
                 _IDomain.DeleteDomain(id);
                 return Ok(domain);
             }
