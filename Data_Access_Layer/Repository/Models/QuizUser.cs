@@ -12,5 +12,6 @@ namespace Data_Access_Layer.Repository.Models
         public int QuizId { get; set; }
         public int TestUserId { get; set; }
         public Boolean IsClosed { get; set; }
+        public int LanguageId { get; set; }
     }
 }

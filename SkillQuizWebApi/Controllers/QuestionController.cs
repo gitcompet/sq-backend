@@ -17,32 +17,42 @@ using System.Security.Claims;
 namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
-    [Authorize(
+    /*[Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
         Roles = "USER"
-     )]
+     )]*/
     [Route("api/v1/[controller]")]
     public class QuestionController : ControllerBase
     {
         private readonly InterfaceQuestion _IQuestion;
         private readonly InterfaceElementTranslation _IElementTranslation;
+        private readonly InterfaceQuizUser _IQuizUser;
         private static class TYPE_LABEL
         {
             public const string TITLE = "QUESTION_TITLE";
             public const string LABEL = "QUESTION_LABEL";
         }
-        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceElementTranslation iElementTranslation)
+        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceQuizUser interfaceQuizUser, InterfaceElementTranslation iElementTranslation)
         {
             _IQuestion = interfaceQuestion;
             _IElementTranslation = iElementTranslation;
+            _IQuizUser = interfaceQuizUser;
         }
 
         //GET api/v1/Question
         [HttpGet]
         [Route("")]
-        public List<QuestionModelLabel> GetAllQuestion()
+        public List<QuestionModelLabel> GetAllQuestion(int? QuizUserId)
         {
-            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            int language = 2;
+            if (QuizUserId.HasValue)
+            {
+                language = _IQuizUser.GetQuizUserById(QuizUserId.Value).LanguageId;
+            }
+            else
+            {
+                language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            }
             var collection = _IQuestion.GetAllQuestion();
             List<QuestionModelLabel> result = new List<QuestionModelLabel>();
             foreach (var item in collection)
@@ -56,9 +66,17 @@ namespace SkillQuizzWebApi.Controllers
         //GET api/v1/Question/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<QuestionModelLabel> GetQuestionById(int id)
+        public ActionResult<QuestionModelLabel> GetQuestionById(int id, int? QuizUserId)
         {
-            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            int language = 2;
+            if (QuizUserId.HasValue)
+            {
+                language = _IQuizUser.GetQuizUserById(QuizUserId.Value).LanguageId;
+            }
+            else
+            {
+                language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            }
             var question = _IQuestion.GetQuestionById(id);
             if (question == null)
             {
