@@ -32,7 +32,7 @@ namespace Business_Logic_Layer
             _QuizUserMapper = new Mapper(_configQuizUser);
         }
 
-        private QuizUserModel GetScoredQuizUserByLinkId(QuizUserModel quizUserModel)
+        private QuizUserModel GetScoredByQuizUser(QuizUserModel quizUserModel)
         {
 
             if (quizUserModel.IsClosed)
@@ -72,6 +72,7 @@ namespace Business_Logic_Layer
             var quizUserEntity = _DAL.GetQuizUserById(id);
 
             QuizUserModel quizUserModel = _QuizUserMapper.Map<QuizUser, QuizUserModel>(quizUserEntity);
+            quizUserModel = GetScoredByQuizUser(quizUserModel);
 
             return quizUserModel;
         }
@@ -81,10 +82,12 @@ namespace Business_Logic_Layer
             var quizUserEntity = _DAL.GetQuizUserByLinkId(id);
             var result = new List<QuizUserModel>();
 
+            System.Diagnostics.Debug.WriteLine("======================================");
             foreach (var item in quizUserEntity)
             {
                 QuizUserModel model = _QuizUserMapper.Map<QuizUser, QuizUserModel>(item);
-                result.Add(GetScoredQuizUserByLinkId(model));
+                System.Diagnostics.Debug.WriteLine(GetScoredByQuizUser(model));
+                result.Add(GetScoredByQuizUser(model));
             }
 
             return result;
