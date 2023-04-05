@@ -37,6 +37,10 @@ namespace SkillQuizUserzWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<IEnumerable<QuizUserModel>> GetQuizUserByLinkId(string isParent, int id)
         {
+            if (isParent == null)
+            {
+                isParent = "true";
+            }
             if (Boolean.Parse(isParent))
             {
                 var quizUser = _IQuizUser.GetQuizUserByLinkId(id);
