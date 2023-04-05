@@ -44,16 +44,30 @@ namespace SkillTestUserzWebApi.Controllers
         //GET api/v1/TestUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<IEnumerable<TestUserModel>> GetTestUserByUserId(int id) 
+        public ActionResult<IEnumerable<TestUserModel>> GetTestUserByUserId(bool? isParentURL, int id)
         {
-            var testUser = _ITestUser.GetTestUserByUserId(id);
-
-            if (testUser == null)
+            if (isParentURL.HasValue && isParentURL.Value)
             {
-                return NotFound("Invalid ID");
-            }
+                var testUser = _ITestUser.GetTestUserByUserId(id);
 
-            return Ok(testUser);
+                if (testUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(testUser);
+            }
+            else
+            {
+                var testUser = _ITestUser.GetTestUserById(id);
+
+                if (testUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(testUser);
+            }
         }
 
         //POST api/v1/TestUser

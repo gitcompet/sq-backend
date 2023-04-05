@@ -35,13 +35,9 @@ namespace SkillQuizUserzWebApi.Controllers
         //GET api/v1/QuizUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<IEnumerable<QuizUserModel>> GetQuizUserByLinkId(string isParent, int id)
+        public ActionResult<IEnumerable<QuizUserModel>> GetQuizUserByLinkId(bool? isParentURL, int id)
         {
-            if (isParent == null)
-            {
-                isParent = "true";
-            }
-            if (Boolean.Parse(isParent))
+            if (isParentURL.HasValue && isParentURL.Value)
             {
                 var quizUser = _IQuizUser.GetQuizUserByLinkId(id);
 
