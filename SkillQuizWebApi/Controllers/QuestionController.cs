@@ -175,6 +175,8 @@ namespace SkillQuizzWebApi.Controllers
             }
             else
             {
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(question.QuestionId), TYPE_LABEL.TITLE);
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(question.QuestionId), TYPE_LABEL.LABEL);
                 _IQuestion.DeleteQuestion(id);
                 return Ok(question);
             }

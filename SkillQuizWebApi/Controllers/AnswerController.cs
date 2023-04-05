@@ -136,6 +136,8 @@ namespace SkillAnswerzWebApi.Controllers
             }
             else
             {
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(answer.AnswerId), TYPE_LABEL.TITLE);
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(answer.AnswerId), TYPE_LABEL.LABEL);
                 _IAnswer.DeleteAnswer(id);
                 return Ok(answer);
             }

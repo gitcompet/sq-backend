@@ -144,6 +144,7 @@ namespace SkillQuizzWebApi.Controllers
             }
             else
             {
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(testCategory.TestCategoryId), TYPE_LABEL.TITLE);
                 _ITestCategory.DeleteTestCategory(id);
                 return Ok(testCategory);
             }
