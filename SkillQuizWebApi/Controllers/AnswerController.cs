@@ -26,39 +26,57 @@ namespace SkillAnswerzWebApi.Controllers
     {
         private readonly InterfaceAnswer _IAnswer;
         private readonly InterfaceElementTranslation _IElementTranslation;
+        private readonly InterfaceQuizUser _IQuizUser;
         private static class TYPE_LABEL
         {
             public const string TITLE = "ANSWER_TITLE";
             public const string LABEL = "ANSWER_LABEL";
         }
-        public AnswerController(InterfaceAnswer interfaceAnswer, InterfaceElementTranslation iElementTranslation)
+        public AnswerController(InterfaceAnswer interfaceAnswer, InterfaceQuizUser interfaceQuizUser, InterfaceElementTranslation iElementTranslation)
         {
             _IAnswer = interfaceAnswer;
             _IElementTranslation = iElementTranslation;
+            _IQuizUser = interfaceQuizUser;
         }
         
         //GET api/v1/Answer
         [HttpGet]
         [Route("")]
-        public List<AnswerModelLabel> GetAllAnswer()
+        public List<AnswerModelLabel> GetAllAnswer(int? QuizUserId)
         {
-            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
-            var collection = _IAnswer.GetAllAnswer();
-            List<AnswerModelLabel> result = new List<AnswerModelLabel>();
-            foreach (var item in collection)
+            int language = 2;
+            if (QuizUserId.HasValue)
             {
-                result.Add(new AnswerModelLabel(item, _IElementTranslation.GetElementLabelById(item.AnswerId.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(item.AnswerId.ToString(), TYPE_LABEL.LABEL, language)));
+                language = _IQuizUser.GetQuizUserById(QuizUserId.Value).LanguageId;
             }
-            return result;
+            else
+            {
+                language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            }
+                var collection = _IAnswer.GetAllAnswer();
+                List<AnswerModelLabel> result = new List<AnswerModelLabel>();
+                foreach (var item in collection)
+                {
+                    result.Add(new AnswerModelLabel(item, _IElementTranslation.GetElementLabelById(item.AnswerId.ToString(), TYPE_LABEL.TITLE, language), _IElementTranslation.GetElementLabelById(item.AnswerId.ToString(), TYPE_LABEL.LABEL, language)));
+                }
+                return result;
         }
 
 
         //GET api/v1/Answer/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<AnswerModelLabel> GetAnswerById(int id)
+        public ActionResult<AnswerModelLabel> GetAnswerById(int id, int? QuizUserId)
         {
-            var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            int language = 2;
+            if (QuizUserId.HasValue)
+            {
+                language = _IQuizUser.GetQuizUserById(QuizUserId.Value).LanguageId;
+            }
+            else
+            {
+                language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+            }
             var answer = _IAnswer.GetAnswerById(id);
             if (answer == null)
             {
@@ -136,6 +154,8 @@ namespace SkillAnswerzWebApi.Controllers
             }
             else
             {
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(answer.AnswerId), TYPE_LABEL.TITLE);
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(answer.AnswerId), TYPE_LABEL.LABEL);
                 _IAnswer.DeleteAnswer(id);
                 return Ok(answer);
             }

@@ -35,16 +35,30 @@ namespace SkillQuestionUserzWebApi.Controllers
         //GET api/v1/QuestionUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<IEnumerable<QuestionUserModel>> GetQuestionUserByLinkId(int id)
+        public ActionResult<IEnumerable<QuestionUserModel>> GetQuestionUserByLinkId(bool? isParentURL, int id)
         {
-            var questionUser = _IQuestionUser.GetQuestionUserByLinkId(id);
-
-            if (questionUser == null)
+            if (isParentURL.HasValue && isParentURL.Value)
             {
-                return NotFound("Invalid ID");
-            }
+                var questionUser = _IQuestionUser.GetQuestionUserByLinkId(id);
 
-            return Ok(questionUser);
+                if (questionUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(questionUser);
+            }
+            else
+            {
+                var questionUser = _IQuestionUser.GetQuestionUserById(id);
+
+                if (questionUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(questionUser);
+            }
         }
 
         //POST api/v1/QuestionUser

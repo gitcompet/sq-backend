@@ -17,7 +17,7 @@ namespace SkillUserzWebApi.Controllers
     [ApiController]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles ="ADMIN"
+        Roles ="USER,ADMIN"
      )]
     [Route("api/v1/[controller]")]
     public class UserController : ControllerBase

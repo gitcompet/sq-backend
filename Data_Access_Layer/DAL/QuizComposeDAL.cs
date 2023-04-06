@@ -26,6 +26,14 @@ namespace Data_Access_Layer.DAL
             return d;
         }
 
+        public IEnumerable<QuizCompose> GetQuizComposeByQuizId(int id)
+        {
+            var db = new CompetenceDbContext();
+            var d = db.QuizCompose.Where(x => x.QuizId == id);
+
+            return d;
+        }
+
 
         public QuizCompose PostQuizCompose(QuizCompose quizCompose)
         {

@@ -117,6 +117,19 @@ namespace Data_Access_Layer.DAL
             db.SaveChanges();
         }
 
+        public void DeleteElementTranslationByItem(int id, string type)
+        {
+            var db = new CompetenceDbContext();
+            List<ElementTranslation> d = new List<ElementTranslation>();
+
+            d = db.ElementTranslation.Where(x => x.ElementId == id && x.ElementType == type).ToList();
+            foreach (var item in d)
+            {
+                db.ElementTranslation.Remove(item);
+            }
+            db.SaveChanges();
+        }
+
         //Get a list of label from a list of ID with the type looking for
         public IEnumerable<string> GetAnswerByListId(IEnumerable<string> ids, string elementType, int languageId)
         {
