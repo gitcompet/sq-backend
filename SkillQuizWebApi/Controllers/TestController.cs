@@ -147,6 +147,7 @@ namespace SkillQuizzWebApi.Controllers
             else
             {
                 _ITest.DeleteTest(id);
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(test.TestId), TYPE_LABEL.TITLE);
                 return Ok(test);
             }
 

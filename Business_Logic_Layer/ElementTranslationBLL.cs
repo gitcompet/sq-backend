@@ -79,6 +79,10 @@ namespace Business_Logic_Layer
         {
             _DAL.DeleteElementTranslation(id);
         }
+        public void DeleteElementTranslationByItem(int id, string type)
+        {
+            _DAL.DeleteElementTranslationByItem(id, type);
+        }
     }
 }
 

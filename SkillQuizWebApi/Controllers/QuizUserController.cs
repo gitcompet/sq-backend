@@ -35,16 +35,30 @@ namespace SkillQuizUserzWebApi.Controllers
         //GET api/v1/QuizUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<IEnumerable<QuizUserModel>> GetQuizUserByLinkId(int id)
+        public ActionResult<IEnumerable<QuizUserModel>> GetQuizUserByLinkId(bool? isParentURL, int id)
         {
-            var quizUser = _IQuizUser.GetQuizUserByLinkId(id);
-
-            if (quizUser == null)
+            if (isParentURL.HasValue && isParentURL.Value)
             {
-                return NotFound("Invalid ID");
-            }
+                var quizUser = _IQuizUser.GetQuizUserByLinkId(id);
 
-            return Ok(quizUser);
+                if (quizUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(quizUser);
+            }
+            else
+            {
+                var quizUser = _IQuizUser.GetQuizUserById(id);
+
+                if (quizUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(quizUser);
+            }
         }
 
         //POST api/v1/QuizUser

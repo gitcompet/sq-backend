@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text.Json.Nodes;
 
@@ -18,9 +19,17 @@ namespace SkillTestUserzWebApi.Controllers
     public class TestUserController : ControllerBase
     {
         private readonly InterfaceTestUser _ITestUser;
-        public TestUserController(InterfaceTestUser interfaceTestUser)
+        private readonly InterfaceQuizUser _IQuizUser;
+        private readonly InterfaceQuestionUser _IQuestionUser;
+        private readonly InterfaceQuizCompose _IQuizCompose;
+        private readonly InterfaceTestCompose _ITestCompose;
+        public TestUserController(InterfaceTestUser interfaceTestUser, InterfaceQuizUser interfaceQuizUser, InterfaceQuestionUser interfaceQuestionUser, InterfaceQuizCompose interfaceQuizCompose, InterfaceTestCompose interfaceTestCompose)
         {
             _ITestUser = interfaceTestUser;
+            _IQuestionUser = interfaceQuestionUser;
+            _ITestCompose = interfaceTestCompose;
+            _IQuizCompose = interfaceQuizCompose;
+            _IQuizUser = interfaceQuizUser;
         }
 
         //GET api/v1/TestUser
@@ -35,16 +44,30 @@ namespace SkillTestUserzWebApi.Controllers
         //GET api/v1/TestUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<IEnumerable<TestUserModel>> GetTestUserByUserId(int id) 
+        public ActionResult<IEnumerable<TestUserModel>> GetTestUserByUserId(bool? isParentURL, int id)
         {
-            var testUser = _ITestUser.GetTestUserByUserId(id);
-
-            if (testUser == null)
+            if (isParentURL.HasValue && isParentURL.Value)
             {
-                return NotFound("Invalid ID");
-            }
+                var testUser = _ITestUser.GetTestUserByUserId(id);
 
-            return Ok(testUser);
+                if (testUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(testUser);
+            }
+            else
+            {
+                var testUser = _ITestUser.GetTestUserById(id);
+
+                if (testUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(testUser);
+            }
         }
 
         //POST api/v1/TestUser
@@ -58,7 +81,29 @@ namespace SkillTestUserzWebApi.Controllers
                 var testUserResult = _ITestUser.PostTestUser(testUserModel);
                 if (testUserResult != null)
                 {
-                    return Created("/api/v1/TestUser/" + testUserModel.TestUserId, testUserResult);
+                    //Trouver les Quizs concernés
+                    var testList = _ITestCompose.GetTestComposeByTestId(int.Parse(testUserModelPostDTO.TestId)).ToList();
+                    //ajouter les liens dans QuizUser
+
+                    foreach (var quiz in testList)
+                    {
+                        QuizUserModel quizUserModel = new QuizUserModel();
+                        quizUserModel.QuizId = quiz.QuizId;
+                        quizUserModel.TestUserId = testUserResult.TestUserId;
+                        quizUserModel.IsClosed = false;
+                        var quizUserResult = _IQuizUser.PostQuizUser(quizUserModel);
+                        //Trouver les Questions concernées
+                        var quizList = _IQuizCompose.GetQuizComposeByQuizId(int.Parse(quiz.QuizId));
+                        foreach (var question in quizList)
+                        {
+                            QuestionUserModel questionUserModel = new QuestionUserModel();
+                            questionUserModel.QuestionId = question.QuestionId;
+                            questionUserModel.QuizUserId = quizUserResult.QuizUserId;
+                            _IQuestionUser.PostQuestionUser(questionUserModel);
+                            //ajouter les liens dans QuestionUser
+                        }
+                    }
+                        return Created("/api/v1/TestUser/" + testUserModel.TestUserId, testUserResult);
                 }
             }
             return BadRequest(ModelState);
@@ -114,6 +159,22 @@ namespace SkillTestUserzWebApi.Controllers
             }
             else
             {
+                var toBeDeletedTestUser = _ITestUser.GetTestUserById(id);
+                //Trouver les QuizsUser concernés
+                var testList = _IQuizUser.GetQuizUserByLinkId(int.Parse(toBeDeletedTestUser.TestUserId)).Value.ToList();
+                //supprimer les liens dans QuizUser
+
+                foreach (var quiz in testList)
+                {
+                    //Trouver les Questions concernées
+                    var quizList = _IQuestionUser.GetQuestionUserByLinkId(int.Parse(quiz.QuizUserId)).Value.ToList();
+                    //supprimer les liens dans QuestionUser
+                    foreach (var question in quizList)
+                    {
+                        _IQuestionUser.DeleteQuestionUser(int.Parse(question.QuestionUserId));
+                    }
+                    _IQuizUser.DeleteQuizUser(int.Parse(quiz.QuizUserId));
+                }
                 _ITestUser.DeleteTestUser(id);
                 return Ok(testUser);
             }

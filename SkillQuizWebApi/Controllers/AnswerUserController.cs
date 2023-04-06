@@ -35,16 +35,30 @@ namespace SkillAnswerUserzWebApi.Controllers
         //GET api/v1/AnswerUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<AnswerUserModel> GetAnswerUserByLinkId(int id)
+        public ActionResult<AnswerUserModel> GetAnswerUserByLinkId(bool? isParentURL, int id)
         {
-            var answerUser = _IAnswerUser.GetAnswerUserByLinkId(id);
-
-            if (answerUser == null)
+            if (isParentURL.HasValue && isParentURL.Value)
             {
-                return NotFound("Invalid ID");
-            }
+                var answerUser = _IAnswerUser.GetAnswerUserByLinkId(id);
 
-            return Ok(answerUser);
+                if (answerUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(answerUser);
+            }
+            else
+            {
+                var answerUser = _IAnswerUser.GetAnswerUserById(id);
+
+                if (answerUser == null)
+                {
+                    return NotFound("Invalid ID");
+                }
+
+                return Ok(answerUser);
+            }
         }
 
         //POST api/v1/AnswerUser

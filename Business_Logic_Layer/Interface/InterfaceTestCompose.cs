@@ -13,6 +13,7 @@ namespace Business_Logic_Layer.Interface
 
         List<TestComposeModel> GetAllTestCompose();
         TestComposeModel GetTestComposeById(int id);
+        IEnumerable<TestComposeModel> GetTestComposeByTestId(int id);
         TestComposeModel PostTestCompose(TestComposeModel testComposeModel);
         TestComposeModel PatchTestCompose(int id, JsonPatchDocument<TestCompose> testComposeModelJSON);
         TestComposeModel PutTestCompose(TestComposeModel testComposeModel);

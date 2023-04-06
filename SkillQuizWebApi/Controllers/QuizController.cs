@@ -140,6 +140,7 @@ namespace SkillQuizzWebApi.Controllers
             }
             else
             {
+                _IElementTranslation.DeleteElementTranslationByItem(int.Parse(quiz.QuizId), TYPE_LABEL.TITLE);
                 _IQuiz.DeleteQuiz(id);
                 return Ok(quiz);
             }
