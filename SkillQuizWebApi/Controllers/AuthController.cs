@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Extensions;
+using Org.BouncyCastle.Asn1.Ocsp;
 using SkillQuizWebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -56,15 +57,14 @@ namespace JwtWebApiDotNet7.Controllers
 
             return Ok(new TokenResponse(token, refreshToken));
         }
-        [HttpPost("refresh")]
-        [Consumes("application/x-www-form-urlencoded")]
+        [HttpPost("refresh")]       
         [Authorize(
              AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
              Roles = "USER"
         )]
-        public ActionResult<TokenResponse> RefreshToken([FromForm] string token, [FromForm] string refreshToken)
+        public ActionResult<TokenResponse> RefreshToken([FromBody] TokenResponse payload)
         {
-            var principal = GetPrincipalFromExpiredToken(token);
+            var principal = GetPrincipalFromExpiredToken(payload.AccessToken);
             var username = (principal.Identity as ClaimsIdentity)
                 .Claims
                 .Where(c => c.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault();
@@ -75,16 +75,18 @@ namespace JwtWebApiDotNet7.Controllers
                 .Claims
                 .Where(c => c.Type == JwtRegisteredClaimNames.Email).FirstOrDefault();
 
-            if (!IsRefreshInvalid(refreshToken))
+            if (!IsRefreshInvalid(payload.RefreshToken))
             {
                 UserModel userModel = new UserModel();
+
                 userModel.Login = username.Value;
                 userModel.TypeUserId = roles.Value;
                 userModel.Email = email.Value;
-                String newToken = CreateToken(userModel);
+                var user = _IUser.GetUserByUsername(userModel.Login);
+                String newToken = CreateToken(user);
                 String newRefreshToken = GenerateRefreshToken();
 
-                return Ok(new TokenResponse(token, refreshToken));
+                return Ok(new TokenResponse(newToken, newRefreshToken));
             }
             return BadRequest();
 
