@@ -27,16 +27,20 @@ namespace SkillQuizzWebApi.Controllers
         private readonly InterfaceQuestion _IQuestion;
         private readonly InterfaceElementTranslation _IElementTranslation;
         private readonly InterfaceQuizUser _IQuizUser;
+        private readonly InterfaceQuestionUser _IQuestionUser;
+        private readonly InterfaceAnswerUser _IAnswerUser;
         private static class TYPE_LABEL
         {
             public const string TITLE = "QUESTION_TITLE";
             public const string LABEL = "QUESTION_LABEL";
         }
-        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceQuizUser interfaceQuizUser, InterfaceElementTranslation iElementTranslation)
+        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceAnswerUser interfaceAnswerUser, InterfaceQuestionUser interfaceQuestionUser, InterfaceQuizUser interfaceQuizUser, InterfaceElementTranslation iElementTranslation)
         {
             _IQuestion = interfaceQuestion;
             _IElementTranslation = iElementTranslation;
             _IQuizUser = interfaceQuizUser;
+            _IQuestionUser = interfaceQuestionUser;
+            _IAnswerUser = interfaceAnswerUser;
         }
 
         //GET api/v1/Question
@@ -66,12 +70,45 @@ namespace SkillQuizzWebApi.Controllers
         //GET api/v1/Question/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<QuestionModelLabel> GetQuestionById(int id, int? QuizUserId)
+        public ActionResult<QuestionModelLabel> GetQuestionById(int id, int? quizUserId)
         {
-            int language = 2;
-            if (QuizUserId.HasValue)
+            var role = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+            if (role == "USER")
             {
-                language = _IQuizUser.GetQuizUserById(QuizUserId.Value).LanguageId;
+                if (quizUserId.HasValue)
+                {
+                    //User is accessing, we need to check if quiz is open
+                    var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                    var isClosed = _IQuizUser.GetQuizUserById(quizUserId.Value).IsClosed;
+                    if (isClosed)
+                    {
+                        return StatusCode(403, "The Quiz is closed");
+                    }
+                    //need to check if answer has already been submited
+                    var questionUserId = _IQuestionUser.GetQuestionUserByLinkId(quizUserId.Value).Value.FirstOrDefault(q => q.QuestionId == id.ToString()).QuestionUserId;
+                    var answersUser = _IAnswerUser.GetAnswerUserByLinkId(int.Parse(questionUserId)).Value.ToList();
+                    if (answersUser.Any())
+                    {
+                        return StatusCode(403, "You already answered this Question");
+                    }
+                    //must start the "timmer" thing IF it is on
+                    if (_IQuizUser.GetQuizUserById(quizUserId.Value).Timer)
+                    {
+                        int span = _IQuestion.GetQuestionById(int.Parse(questionUserId)).Duration + 1;
+                        TimeSpan timmer = new TimeSpan(0, span, 0);
+                        DateTime endTimmer = DateTime.Now + timmer;
+                        _IQuestionUser.PatchQuestionUserHidden(int.Parse(questionUserId), endTimmer);
+                    }
+                }
+                else
+                {
+                    return StatusCode(403, "You aren't allowed to perform this action");
+                }
+            }
+            int language = 2;
+            if (quizUserId.HasValue)
+            {
+                language = _IQuizUser.GetQuizUserById(quizUserId.Value).LanguageId;
             }
             else
             {

@@ -25,6 +25,15 @@ namespace Data_Access_Layer.DAL
 
             return d;
         }
+        public QuestionUser GetQuestionUserHiddenById(int id)
+        {
+            var db = new CompetenceDbContext();
+            QuestionUser d = new QuestionUser();
+
+            d = db.QuestionUser.FirstOrDefault(x => x.QuestionUserId == id);
+
+            return d;
+        }
 
         public IEnumerable<QuestionUser> GetQuestionUserByLinkId(int id)
         {
@@ -54,6 +63,24 @@ namespace Data_Access_Layer.DAL
             db.Update(d);
             db.SaveChanges();
             return d;
+        }
+        public bool PatchQuestionUserHidden(int id, DateTime maxValidationDate)
+        {
+            var db = new CompetenceDbContext();
+            QuestionUser d = new QuestionUser();
+
+            d = db.QuestionUser.FirstOrDefault(x => x.QuestionUserId == id);
+            if (d != null)
+            {
+                d.MaxValidationDate = maxValidationDate;
+                db.Update(d);
+                db.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public QuestionUser PutQuestionUser(QuestionUser questionUser)

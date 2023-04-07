@@ -15,13 +15,16 @@ namespace Business_Logic_Layer
 
         private QuestionUserDAL _DAL;
         private Mapper _QuestionUserMapper;
+        private Mapper _QuestionUserHiddenMapper;
 
         public QuestionUserBLL()
         {
             _DAL = new Data_Access_Layer.DAL.QuestionUserDAL();
             var _configQuestionUser = new MapperConfiguration(cfg => cfg.CreateMap<QuestionUser, QuestionUserModel>().ReverseMap());
+            var _configQuestionUserHidden = new MapperConfiguration(cfg => cfg.CreateMap<QuestionUser, QuestionUserModelHidden>().ReverseMap());
 
             _QuestionUserMapper = new Mapper(_configQuestionUser);
+            _QuestionUserHiddenMapper = new Mapper(_configQuestionUserHidden);
         }
 
         public List<QuestionUserModel> GetAllQuestionUser()
@@ -39,6 +42,14 @@ namespace Business_Logic_Layer
             QuestionUserModel questionUserModel = _QuestionUserMapper.Map<QuestionUser, QuestionUserModel>(questionUserEntity);
 
             return questionUserModel;
+        }
+        public QuestionUserModelHidden GetQuestionUserHiddenById(int id)
+        {
+            var questionUserHiddenEntity = _DAL.GetQuestionUserHiddenById(id);
+
+            QuestionUserModelHidden questionUserModelHidden = _QuestionUserHiddenMapper.Map<QuestionUser, QuestionUserModelHidden>(questionUserHiddenEntity);
+
+            return questionUserModelHidden;
         }
 
         public ActionResult<IEnumerable<QuestionUserModel>> GetQuestionUserByLinkId(int id)
@@ -71,6 +82,10 @@ namespace Business_Logic_Layer
             QuestionUserModel questionUserModel = _QuestionUserMapper.Map<QuestionUser, QuestionUserModel>(questionUserEntity);
 
             return questionUserModel;
+        }
+        public bool PatchQuestionUserHidden(int id, DateTime maxValidationDate)
+        {
+            return _DAL.PatchQuestionUserHidden(id, maxValidationDate);
         }
 
         public QuestionUserModel PutQuestionUser(QuestionUserModel questionUserModel)
