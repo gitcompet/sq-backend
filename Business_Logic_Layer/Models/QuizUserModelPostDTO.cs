@@ -10,5 +10,6 @@ namespace Business_Logic_Layer.Models
     {
         public string QuizId { get; set; }
         public string TestUserId { get; set; }
+        public Boolean Timer { get; set; }
     }
 }

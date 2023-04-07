@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text.Json.Nodes;
 
@@ -18,9 +19,11 @@ namespace SkillAnswerUserzWebApi.Controllers
     public class AnswerUserController : ControllerBase
     {
         private readonly InterfaceAnswerUser _IAnswerUser;
-        public AnswerUserController(InterfaceAnswerUser interfaceAnswerUser)
+        private readonly InterfaceQuestionUser _IQuestionUser;
+        public AnswerUserController(InterfaceAnswerUser interfaceAnswerUser, InterfaceQuestionUser interfaceQuestionUser)
         {
             _IAnswerUser = interfaceAnswerUser;
+            _IQuestionUser = interfaceQuestionUser;
         }
 
         //GET api/v1/AnswerUser
@@ -69,6 +72,17 @@ namespace SkillAnswerUserzWebApi.Controllers
             if (answerUserModelPostDTO != null)
             {
                 var answerUserModel = new AnswerUserModel(answerUserModelPostDTO);
+                //Déjà répondu?
+                var isEmpty = _IAnswerUser.GetAnswerUserByLinkId(int.Parse(answerUserModel.QuestionUserId)).Value.ToList();
+                if (isEmpty.Any())
+                {
+                    return StatusCode(403, "You already answered this Question");
+                }
+                //Timer dépassé
+                if (_IQuestionUser.GetQuestionUserHiddenById(int.Parse(answerUserModel.QuestionUserId)).MaxValidationDate < DateTime.Now)
+                {
+                    return StatusCode(403, "You were out of time for this submition");
+                }
                 var answerUserResult = _IAnswerUser.PostAnswerUser(answerUserModel);
                 if (answerUserResult != null)
                 {
