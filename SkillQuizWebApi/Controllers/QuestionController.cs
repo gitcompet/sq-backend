@@ -27,6 +27,7 @@ namespace SkillQuizzWebApi.Controllers
         private readonly InterfaceQuestion _IQuestion;
         private readonly InterfaceElementTranslation _IElementTranslation;
         private readonly InterfaceQuizUser _IQuizUser;
+        private readonly InterfaceTestUser _ITestUser;
         private readonly InterfaceQuestionUser _IQuestionUser;
         private readonly InterfaceAnswerUser _IAnswerUser;
         private static class TYPE_LABEL
@@ -34,10 +35,11 @@ namespace SkillQuizzWebApi.Controllers
             public const string TITLE = "QUESTION_TITLE";
             public const string LABEL = "QUESTION_LABEL";
         }
-        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceAnswerUser interfaceAnswerUser, InterfaceQuestionUser interfaceQuestionUser, InterfaceQuizUser interfaceQuizUser, InterfaceElementTranslation iElementTranslation)
+        public QuestionController(InterfaceQuestion interfaceQuestion, InterfaceTestUser interfaceTestUser, InterfaceAnswerUser interfaceAnswerUser, InterfaceQuestionUser interfaceQuestionUser, InterfaceQuizUser interfaceQuizUser, InterfaceElementTranslation iElementTranslation)
         {
             _IQuestion = interfaceQuestion;
             _IElementTranslation = iElementTranslation;
+            _ITestUser = interfaceTestUser;
             _IQuizUser = interfaceQuizUser;
             _IQuestionUser = interfaceQuestionUser;
             _IAnswerUser = interfaceAnswerUser;
@@ -77,8 +79,16 @@ namespace SkillQuizzWebApi.Controllers
             {
                 if (quizUserId.HasValue)
                 {
-                    //User is accessing, we need to check if quiz is open
+                    //check first if the user accessing it is legitimate
                     var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                    var testUserId = _IQuizUser.GetQuizUserById(quizUserId.Value).TestUserId; 
+                    var legitimateUser = _ITestUser.GetTestUserById(int.Parse(testUserId)).LoginId;
+
+                    if (legitimateUser != userId)
+                    {
+                        return StatusCode(403, "You aren't the user allowed to access this Quiz");
+                    }
+                    //User is accessing, we need to check if quiz is open
                     var isClosed = _IQuizUser.GetQuizUserById(quizUserId.Value).IsClosed;
                     if (isClosed)
                     {
