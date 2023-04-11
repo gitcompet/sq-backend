@@ -19,5 +19,7 @@ namespace Business_Logic_Layer.Interface
         QuizUserModel PatchQuizUser(int id, JsonPatchDocument<QuizUser> quizUserModelJSON);
         QuizUserModel PutQuizUser(QuizUserModel quizUserModel);
         void DeleteQuizUser(int id);
+        List<QuizUserModel> GetLastQuizValidates(int qty);
+        List<QuizUserModel> GetPendingQuizes(int qty);
     }
 }
