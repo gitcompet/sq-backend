@@ -2,6 +2,7 @@
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,6 +87,17 @@ namespace Data_Access_Layer.DAL
             d = this.GetQuizUserById(id);
             db.QuizUser.Remove(d);
             db.SaveChanges();
+        }
+        
+        public List<QuizUser> GetLastQuizValidates(int qty)
+        {
+            var db = new CompetenceDbContext();
+            return db.QuizUser.OrderByDescending(x => x.AuditTrailClosingTime).Take(qty).ToList();
+        }
+        public List<QuizUser> GetPendingQuizes(int qty)
+        {
+            var db = new CompetenceDbContext();
+            return db.QuizUser.OrderByDescending(x => x.QuizUserId).Where(x => x.IsClosed == false).Take(qty).ToList();
         }
     }
 }

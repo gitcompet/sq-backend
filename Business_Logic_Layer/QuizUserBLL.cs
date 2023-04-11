@@ -123,6 +123,20 @@ namespace Business_Logic_Layer
         {
             _DAL.DeleteQuizUser(id);
         }
+        public List<QuizUserModel> GetLastQuizValidates(int qty)
+        {
+            var temp = _DAL.GetLastQuizValidates(qty);
+            List<QuizUserModel> result = _QuizUserMapper.Map<List<QuizUser>, List<QuizUserModel>>(temp);
+
+            return result;
+        }
+        public List<QuizUserModel> GetPendingQuizes(int qty)
+        {
+            var temp = _DAL.GetPendingQuizes(qty);
+            List<QuizUserModel> result = _QuizUserMapper.Map<List<QuizUser>, List<QuizUserModel>>(temp);
+
+            return result;
+        }
     }
 }
 
