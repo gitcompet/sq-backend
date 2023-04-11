@@ -4,6 +4,7 @@ using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using System;
@@ -33,7 +34,24 @@ namespace SkillAnswerUserzWebApi.Controllers
         {
             return _IAnswerUser.GetAllAnswerUser();
         }
-
+        //GET api/v1/AnswerUser/Empty{quizId}
+        [HttpGet]
+        [Route("Remaining/{quizId:int}")]
+        public List<int> GetAllAnswerUser(int quizId)
+        {
+            var result = new List<int>();
+            var questions = _IQuestionUser.GetQuestionUserByLinkId(quizId).Value.Select(x => x.QuestionUserId).ToList();
+            
+            foreach (var item in questions)
+            {
+                var temp = _IAnswerUser.GetAnswerUserByLinkId(int.Parse(item)).Value.ToList();
+                if (!temp.Any())
+                {
+                    result.Add(int.Parse(item));
+                }
+            }
+            return result;
+        }
 
         //GET api/v1/AnswerUser/{id}
         [HttpGet]
