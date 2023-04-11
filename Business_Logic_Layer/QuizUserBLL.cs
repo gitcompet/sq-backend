@@ -18,6 +18,7 @@ namespace Business_Logic_Layer
         private QuestionUserDAL _DALQuestionUser;
         private AnswerUserDAL _DALAnswerUser;
         private AnswerQuestionDAL _DALAnswerQuestion;
+        private AnonQuizScoreDAL _DALAnonQuizScore;
         private QuizComposeBLL _BLLQuizCompose;
         private Mapper _QuizUserMapper;
 
@@ -28,6 +29,7 @@ namespace Business_Logic_Layer
             _BLLQuizCompose = new QuizComposeBLL();
             _DALAnswerQuestion = new AnswerQuestionDAL();
             _DALQuestionUser = new QuestionUserDAL();
+            _DALAnonQuizScore = new AnonQuizScoreDAL();
             _DALAnswerUser = new AnswerUserDAL();
             _QuizUserMapper = new Mapper(_configQuizUser);
         }
@@ -55,6 +57,8 @@ namespace Business_Logic_Layer
                     }
                 }
                 quizUserModel.Score = score;
+                //now we evaluate comparing to other ones
+                quizUserModel.ranking = _DALAnonQuizScore.GetEvaluation(score, int.Parse(quizUserModel.QuizId));
             }
             return quizUserModel;
         }

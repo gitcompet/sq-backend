@@ -28,6 +28,7 @@ namespace Data_Access_Layer.Repository
 
 
         public virtual DbSet<Domain> Domain { get; set; }
+        public virtual DbSet<AnonQuizScore> AnonQuizScore { get; set; }
         public virtual DbSet<Language> Language { get; set; }
         public virtual DbSet<User> User { get; set; }
 
