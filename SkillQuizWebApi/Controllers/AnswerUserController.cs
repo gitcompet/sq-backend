@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text.Json.Nodes;
 
 namespace SkillAnswerUserzWebApi.Controllers
@@ -21,10 +22,14 @@ namespace SkillAnswerUserzWebApi.Controllers
     {
         private readonly InterfaceAnswerUser _IAnswerUser;
         private readonly InterfaceQuestionUser _IQuestionUser;
-        public AnswerUserController(InterfaceAnswerUser interfaceAnswerUser, InterfaceQuestionUser interfaceQuestionUser)
+        private readonly InterfaceQuizUser _IQuizUser;
+        private readonly InterfaceTestUser _ITestUser;
+        public AnswerUserController(InterfaceAnswerUser interfaceAnswerUser, InterfaceQuizUser interfaceQuizUser, InterfaceTestUser interfaceTestUser, InterfaceQuestionUser interfaceQuestionUser)
         {
             _IAnswerUser = interfaceAnswerUser;
             _IQuestionUser = interfaceQuestionUser;
+            _ITestUser = interfaceTestUser;
+            _IQuizUser = interfaceQuizUser;
         }
 
         //GET api/v1/AnswerUser
@@ -90,6 +95,17 @@ namespace SkillAnswerUserzWebApi.Controllers
         {
             if (answerUserModelPostDTO != null)
             {
+                //check first if the user accessing it is legitimate
+                var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var quizUserId = _IQuestionUser.GetQuestionUserById(int.Parse(answerUserModelPostDTO.QuestionUserId)).QuizUserId;
+                var testUserId = _IQuizUser.GetQuizUserById(int.Parse(quizUserId)).TestUserId;
+                var legitimateUser = _ITestUser.GetTestUserById(int.Parse(testUserId)).LoginId;
+
+                if (legitimateUser != userId)
+                {
+                    return StatusCode(403, "You aren't the user allowed to access this Quiz");
+                }
+
                 var answerUserModel = new AnswerUserModel(answerUserModelPostDTO);
                 //Déjà répondu?
                 var isEmpty = _IAnswerUser.GetAnswerUserByLinkId(int.Parse(answerUserModel.QuestionUserId)).Value.ToList();
