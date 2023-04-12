@@ -47,6 +47,7 @@ namespace SkillAnswerUserzWebApi.Controllers
                 var temp = _IAnswerUser.GetAnswerUserByLinkId(int.Parse(item)).Value.ToList();
                 if (!temp.Any())
                 {
+                    //IF overdue don't add it
                     result.Add(int.Parse(item));
                 }
             }
@@ -97,7 +98,7 @@ namespace SkillAnswerUserzWebApi.Controllers
                     return StatusCode(403, "You already answered this Question");
                 }
                 //Timer dépassé
-                if (_IQuestionUser.GetQuestionUserHiddenById(int.Parse(answerUserModel.QuestionUserId)).MaxValidationDate < DateTime.Now)
+                if (_IQuestionUser.GetQuestionUserById(int.Parse(answerUserModel.QuestionUserId)).MaxValidationDate < DateTime.Now)
                 {
                     return StatusCode(403, "You were out of time for this submition");
                 }
