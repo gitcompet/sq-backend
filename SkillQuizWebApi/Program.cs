@@ -95,7 +95,8 @@ namespace SkillQuizzWebApi
                     ValidateIssuerSigningKey = true,
                     RoleClaimType = ClaimTypes.Role,
                     ClockSkew = TimeSpan.Zero //this test to avoid waiting a long time for the token to be considered actually expired.
-                };                
+                };
+                o.MapInboundClaims = false;
             });
             builder.Services.AddAuthorization();
             builder.Services.AddScoped<InterfaceDomain, DomainBLL>();
