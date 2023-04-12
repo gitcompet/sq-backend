@@ -53,7 +53,11 @@ namespace SkillAnswerUserzWebApi.Controllers
                 if (!temp.Any())
                 {
                     //IF overdue don't add it
-                    result.Add(int.Parse(item));
+                    var dueDate = _IQuestionUser.GetQuestionUserById(int.Parse(item)).MaxValidationDate;
+                    if (!dueDate.HasValue || dueDate.Value > DateTime.Now)
+                    {
+                        result.Add(int.Parse(item));
+                    }
                 }
             }
             return result;
