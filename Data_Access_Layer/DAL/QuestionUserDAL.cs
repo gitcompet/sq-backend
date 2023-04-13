@@ -39,8 +39,7 @@ namespace Data_Access_Layer.DAL
         {
 
             var db = new CompetenceDbContext();
-            var d = db.QuestionUser.Where(x => x.QuizUserId == id);
-
+            var d = db.QuestionUser.Where(x => x.QuizUserId == id && (x.MaxValidationDate == null || x.MaxValidationDate > DateTime.Now));
             return d;
         }
 
