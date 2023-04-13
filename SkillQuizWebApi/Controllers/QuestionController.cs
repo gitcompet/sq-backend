@@ -95,19 +95,26 @@ namespace SkillQuizzWebApi.Controllers
                         return StatusCode(403, "The Quiz is closed");
                     }
                     //need to check if answer has already been submited
-                    var questionUserId = _IQuestionUser.GetQuestionUserByLinkId(quizUserId.Value).Value.FirstOrDefault(q => q.QuestionId == id.ToString()).QuestionUserId;
+                    var questionUser = _IQuestionUser.GetQuestionUserByLinkId(quizUserId.Value).Value.FirstOrDefault(q => q.QuestionId == id.ToString());
+                    var questionUserId = questionUser.QuestionUserId;
                     var answersUser = _IAnswerUser.GetAnswerUserByLinkId(int.Parse(questionUserId)).Value.ToList();
                     if (answersUser.Any())
                     {
                         return StatusCode(403, "You already answered this Question");
                     }
-                    //must start the "timmer" thing IF it is on
-                    if (_IQuizUser.GetQuizUserById(quizUserId.Value).Timer)
+                    //must start the "timmer" thing IF it is on;
+                    var questionDatas = _IQuestion.GetQuestionById(int.Parse(questionUser.QuestionId));
+                    if (_IQuizUser.GetQuizUserById(quizUserId.Value).Timer && _IQuestionUser.GetQuestionUserById(int.Parse(questionUserId)).MaxValidationDate == null)
                     {
-                        int span = _IQuestion.GetQuestionById(int.Parse(questionUserId)).Duration + 1;
+                        int span = questionDatas.Duration + 1;
                         TimeSpan timmer = new TimeSpan(0, span, 0);
                         DateTime endTimmer = DateTime.Now + timmer;
                         _IQuestionUser.PatchQuestionUserHidden(int.Parse(questionUserId), endTimmer);
+                    }
+                    //refuse access if overdue;
+                    if (_IQuestionUser.GetQuestionUserById(int.Parse(questionUserId)).MaxValidationDate != null && _IQuestionUser.GetQuestionUserById(int.Parse(questionUserId)).MaxValidationDate < DateTime.Now)
+                    {
+                        return StatusCode(403, "No more time for this question");
                     }
                 }
                 else

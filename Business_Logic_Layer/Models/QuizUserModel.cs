@@ -24,6 +24,6 @@ namespace Business_Logic_Layer.Models
         public Boolean IsClosed { get; set; }
         public int LanguageId { get; set; }
         public Boolean Timer { get; set; }
-        public (int, int, float) ranking { get; set; }
+        public (int, int, float)? ranking { get; set; }
     }
 }
