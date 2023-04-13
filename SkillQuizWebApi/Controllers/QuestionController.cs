@@ -114,7 +114,7 @@ namespace SkillQuizzWebApi.Controllers
                     //refuse access if overdue;
                     if (_IQuestionUser.GetQuestionUserById(int.Parse(questionUserId)).MaxValidationDate != null && _IQuestionUser.GetQuestionUserById(int.Parse(questionUserId)).MaxValidationDate < DateTime.Now)
                     {
-                        return StatusCode(403, "No more time for this question");
+                        return StatusCode(403, "You were out of time for this question");
                     }
                 }
                 else
