@@ -74,8 +74,8 @@ namespace SkillQuizzWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<QuestionModelLabel> GetQuestionById(int id, int? quizUserId)
         {
-            var role = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
-            if (role == "USER")
+            var role = HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role).ToList();
+            if (role.Count() == 1 && role.First().Value == "USER")
             {
                 if (quizUserId.HasValue)
                 {
