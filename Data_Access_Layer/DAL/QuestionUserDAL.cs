@@ -1,6 +1,7 @@
 ﻿using Data_Access_Layer.Repository;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using Org.BouncyCastle.Crypto.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,8 +40,18 @@ namespace Data_Access_Layer.DAL
         {
 
             var db = new CompetenceDbContext();
-            var d = db.QuestionUser.Where(x => x.QuizUserId == id && (x.MaxValidationDate == null || x.MaxValidationDate > DateTime.Now));
-            return d;
+            var d = db.QuestionUser.Where(x => x.QuizUserId == id && (x.MaxValidationDate == null || x.MaxValidationDate > DateTime.Now)).ToList();
+            var d1 = new List<QuestionUser>();
+            
+            foreach (var item in d)
+            {
+                if (item.MaxValidationDate == null || item.MaxValidationDate > DateTime.Now)
+                {
+                    d1.Add(item);
+                }
+            }
+
+            return d1;
         }
 
 
