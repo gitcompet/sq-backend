@@ -15,6 +15,7 @@ namespace Business_Logic_Layer.Interface
         IEnumerable<string> GetElementsLabelById(IEnumerable<string> id, string elementType, int languageId);
         List<ElementTranslationModel> GetAllElementTranslation();
         ElementTranslationModel GetElementTranslationById(int id);
+        ElementTranslationModel GetElementTranslationByKey(int id, string elementType, int languageId);
         ElementTranslationModel PostElementTranslation(ElementTranslationModel elementTranslationModel);
         ElementTranslationModel PatchElementTranslation(int id, JsonPatchDocument<ElementTranslation> elementTranslationModelJSON);
         ElementTranslationModel PutElementTranslation(ElementTranslationModel elementTranslationModel);

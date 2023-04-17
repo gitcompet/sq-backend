@@ -13,6 +13,8 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using Newtonsoft.Json.Serialization;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -97,11 +99,40 @@ namespace SkillQuizzWebApi.Controllers
         //PATCH api/v1/SubDomain/{id}
         [HttpPatch]
         [Route("{id:int}")]
-        public ActionResult<SubDomainModel> PatchSubDomain([FromRoute] int id, [FromBody] JsonPatchDocument<SubDomain> subDomainModelJSON)
+        public ActionResult<SubDomainModel> PatchSubDomain([FromRoute] int id, [FromBody] JsonPatchDocument<SubDomainModelLabel> subDomainModelLabelJSON)
         {
-            if (subDomainModelJSON != null)
+            JsonPatchDocument<SubDomain> subDomainJSONTemplate = new JsonPatchDocument<SubDomain>();
+            JsonPatchDocument<ElementTranslation> elementTranslationJSONTemplate = new JsonPatchDocument<ElementTranslation>();
+
+            var operations = subDomainModelLabelJSON.Operations;
+            var labelOperations = operations.Where(x => x.path == "/title").ToList().First();
+            operations.Remove(labelOperations);
+
+            var modelOperations = subDomainJSONTemplate.Operations;
+
+            foreach (var operation in operations)
             {
-                var subDomain = _ISubDomain.PatchSubDomain(id, subDomainModelJSON);
+                modelOperations.Add(new Operation<SubDomain>(operation.op, operation.path, operation.from, operation.value));
+            }
+
+            JsonPatchDocument<SubDomain> modelJSONOperations = new JsonPatchDocument<SubDomain>(modelOperations, new DefaultContractResolver());
+
+            if (modelJSONOperations != null)
+            {
+                var subDomain = _ISubDomain.PatchSubDomain(id, modelJSONOperations);
+
+                //update the title and labels
+                var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+
+                var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
+
+                JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+
+                int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(subDomain.SubDomainId), TYPE_LABEL.TITLE, language).ElementTranslationId);
+
+                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+
                 return Ok(subDomain);
             }
             else
