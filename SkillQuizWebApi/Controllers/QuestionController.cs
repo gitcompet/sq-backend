@@ -13,6 +13,8 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using Newtonsoft.Json.Serialization;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -141,32 +143,6 @@ namespace SkillQuizzWebApi.Controllers
             return Ok(result);
         }
 
-        /*
-        //GET api/v1/Question/{id}
-        [HttpGet]
-        [Route("{id:int}")]
-        public ActionResult<QuestionMoreModelGetDTO> GetQuestionById(int id)
-        {
-            var question = _IQuestion.GetQuestionById(id);
-            var answerQuestion = _IAnswerQuestion.GetAnswerQuestionByQuestionId(id);//list[true, false, ...]
-            var answerList = _IAnswerQuestion.GetAnswerByListId(id);//list[ID, ID, ...]
-            var answer = _IAnswer.GetAnswerByListId(answerList, TYPE_LABEL, 2); //DEFAULT ENGLISH = 2
-            System.Diagnostics.Debug.WriteLine("============================================================");
-            System.Diagnostics.Debug.WriteLine(question.QuestionId);
-            System.Diagnostics.Debug.WriteLine("============================================================");
-            var encapsulation = new QuestionMoreModelGetDTO(question, answer, answerQuestion);
-
-            if (question == null)
-            {
-                return NotFound("Invalid ID");
-            }
-
-            _IAnswer.PostAnswer(id);
-            //private readonly Business_Logic_Layer.Interface.InterfaceAnswer _IAnswer;
-
-            return Ok(encapsulation);
-        }
-        */
         //POST api/v1/Question
         [HttpPost]
         [Route("")]
@@ -197,15 +173,61 @@ namespace SkillQuizzWebApi.Controllers
             }
             return BadRequest(ModelState);
         }
-
+        
         //PATCH api/v1/Question/{id}
         [HttpPatch]
         [Route("{id:int}")]
-        public ActionResult<QuestionModel> PatchQuestion([FromRoute] int id, [FromBody] JsonPatchDocument<Question> questionModelJSON)
+        public ActionResult<QuestionModel> PatchQuestion([FromRoute] int id, [FromBody] JsonPatchDocument<QuestionModelLabel> questionModelLabelJSON)
         {
-            if (questionModelJSON != null)
+            JsonPatchDocument<Question> questionJSONTemplate = new JsonPatchDocument<Question>();
+            JsonPatchDocument<ElementTranslation> elementTranslationJSONTemplate = new JsonPatchDocument<ElementTranslation>();
+
+            var operations = questionModelLabelJSON.Operations;
+            var labelOperations = new List<Operation<QuestionModelLabel>>();
+            labelOperations.Add(operations.Where(x => x.path == "/title").ToList().First());
+            labelOperations.Add(operations.Where(x => x.path == "/label").ToList().First());
+
+            foreach (var oper in labelOperations)
             {
-                var question = _IQuestion.PatchQuestion(id, questionModelJSON);
+                operations.Remove(oper);
+            }
+
+            var modelOperations = questionJSONTemplate.Operations;
+
+            foreach ( var operation in operations )
+            {
+                modelOperations.Add(new Operation<Question>(operation.op, operation.path, operation.from, operation.value));
+            }
+
+            JsonPatchDocument<Question> modelJSONOperations = new JsonPatchDocument<Question>(modelOperations, new DefaultContractResolver());
+            
+            if (modelJSONOperations != null)
+            {
+                var question = _IQuestion.PatchQuestion(id, modelJSONOperations);
+
+                //update the title and labels
+                var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+
+                var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+
+                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.First().op, "/description", labelOperations.First().from, labelOperations.First().value));
+                
+                JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+
+                int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(question.QuestionId), TYPE_LABEL.TITLE, language).ElementTranslationId);
+
+                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+                
+                modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+
+                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.Last().op, "/description", labelOperations.Last().from, labelOperations.Last().value));
+                
+                modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+
+                elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(question.QuestionId), TYPE_LABEL.LABEL, language).ElementTranslationId);
+
+                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+                
                 return Ok(question);
             }
             else
@@ -213,6 +235,7 @@ namespace SkillQuizzWebApi.Controllers
                 return BadRequest(ModelState);
             }
         }
+
 
         //PUT api/v1/Question
         [HttpPut]

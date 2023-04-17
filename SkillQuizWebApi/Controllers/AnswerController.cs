@@ -13,6 +13,8 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using Newtonsoft.Json.Serialization;
 
 namespace SkillAnswerzWebApi.Controllers
 {
@@ -107,11 +109,57 @@ namespace SkillAnswerzWebApi.Controllers
         //PATCH api/v1/Answer/{id}
         [HttpPatch]
         [Route("{id:int}")]
-        public ActionResult<AnswerModel> PatchAnswer([FromRoute] int id, [FromBody] JsonPatchDocument<Answer> answerModelJSON)
+        public ActionResult<AnswerModel> PatchAnswer([FromRoute] int id, [FromBody] JsonPatchDocument<AnswerModelLabel> answerModelLabelJSON)
         {
-            if (answerModelJSON != null)
+            JsonPatchDocument<Answer> answerJSONTemplate = new JsonPatchDocument<Answer>();
+            JsonPatchDocument<ElementTranslation> elementTranslationJSONTemplate = new JsonPatchDocument<ElementTranslation>();
+
+            var operations = answerModelLabelJSON.Operations;
+            var labelOperations = new List<Operation<AnswerModelLabel>>();
+            labelOperations.Add(operations.Where(x => x.path == "/title").ToList().First());
+            labelOperations.Add(operations.Where(x => x.path == "/label").ToList().First());
+
+            foreach (var oper in labelOperations)
             {
-                var answer = _IAnswer.PatchAnswer(id, answerModelJSON);
+                operations.Remove(oper);
+            }
+
+            var modelOperations = answerJSONTemplate.Operations;
+
+            foreach (var operation in operations)
+            {
+                modelOperations.Add(new Operation<Answer>(operation.op, operation.path, operation.from, operation.value));
+            }
+
+            JsonPatchDocument<Answer> modelJSONOperations = new JsonPatchDocument<Answer>(modelOperations, new DefaultContractResolver());
+
+            if (modelJSONOperations != null)
+            {
+                var answer = _IAnswer.PatchAnswer(id, modelJSONOperations);
+
+                //update the title and labels
+                var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+
+                var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+
+                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.First().op, "/description", labelOperations.First().from, labelOperations.First().value));
+
+                JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+
+                int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(answer.AnswerId), TYPE_LABEL.TITLE, language).ElementTranslationId);
+
+                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+
+                modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+
+                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.Last().op, "/description", labelOperations.Last().from, labelOperations.Last().value));
+
+                modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+
+                elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(answer.AnswerId), TYPE_LABEL.LABEL, language).ElementTranslationId);
+
+                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+
                 return Ok(answer);
             }
             else
@@ -119,7 +167,6 @@ namespace SkillAnswerzWebApi.Controllers
                 return BadRequest(ModelState);
             }
         }
-
         //PUT api/v1/Answer
         [HttpPut]
         [Route("{id:int}")]

@@ -39,6 +39,14 @@ namespace Business_Logic_Layer
 
             return elementTranslationModel;
         }
+        public ElementTranslationModel GetElementTranslationByKey(int id, string elementType, int languageId)
+        {
+            var elementTranslationEntity = _DAL.GetElementTranslationByKey(id, elementType, languageId);
+
+            ElementTranslationModel elementTranslationModel = _ElementTranslationMapper.Map<ElementTranslation, ElementTranslationModel>(elementTranslationEntity);
+
+            return elementTranslationModel;
+        }
 
         public string GetElementLabelById(string id, string elementType, int languageId)
         {

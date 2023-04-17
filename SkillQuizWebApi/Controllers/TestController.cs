@@ -14,6 +14,8 @@ using System.Text.Json.Nodes;
 using static System.Net.Mime.MediaTypeNames;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using Newtonsoft.Json.Serialization;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -99,11 +101,40 @@ namespace SkillQuizzWebApi.Controllers
         //PATCH api/v1/Test/{id}
         [HttpPatch]
         [Route("{id:int}")]
-        public ActionResult<TestModel> PatchTest([FromRoute] int id, [FromBody] JsonPatchDocument<Test> testModelJSON)
+        public ActionResult<TestModel> PatchTest([FromRoute] int id, [FromBody] JsonPatchDocument<TestModelLabel> testModelLabelJSON)
         {
-            if (testModelJSON != null)
+            JsonPatchDocument<Test> testJSONTemplate = new JsonPatchDocument<Test>();
+            JsonPatchDocument<ElementTranslation> elementTranslationJSONTemplate = new JsonPatchDocument<ElementTranslation>();
+
+            var operations = testModelLabelJSON.Operations;
+            var labelOperations = operations.Where(x => x.path == "/title").ToList().First();
+            operations.Remove(labelOperations);
+
+            var modelOperations = testJSONTemplate.Operations;
+
+            foreach (var operation in operations)
             {
-                var test = _ITest.PatchTest(id, testModelJSON);
+                modelOperations.Add(new Operation<Test>(operation.op, operation.path, operation.from, operation.value));
+            }
+
+            JsonPatchDocument<Test> modelJSONOperations = new JsonPatchDocument<Test>(modelOperations, new DefaultContractResolver());
+
+            if (modelJSONOperations != null)
+            {
+                var test = _ITest.PatchTest(id, modelJSONOperations);
+
+                //update the title and labels
+                var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+
+                var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
+
+                JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+
+                int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(test.TestId), TYPE_LABEL.TITLE, language).ElementTranslationId);
+
+                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+
                 return Ok(test);
             }
             else
@@ -111,6 +142,7 @@ namespace SkillQuizzWebApi.Controllers
                 return BadRequest(ModelState);
             }
         }
+
 
         //PUT api/v1/Test
         [HttpPut]
