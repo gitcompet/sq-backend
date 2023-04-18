@@ -54,12 +54,14 @@ namespace SkillQuizzWebApi.Controllers
             var listOfCompose = _ITestCategoryCompose.GetTestCategoryComposeByTestId(id);
             var listOfCategories = new List<string>();
             var listOfLabels = new List<string>();
+            var listOfTestCategoryComposeId = new List<string>();
             foreach(TestCategoryComposeModel item in listOfCompose)
             {
+                listOfTestCategoryComposeId.Add(item.TestCategoryComposeId);
                 listOfCategories.Add(item.TestCategoryId);
                 listOfLabels.Add(_IElementTranslation.GetElementLabelById(item.TestCategoryId, TYPE_LABEL.TITLE, language));
             }
-            TestCategoryComposeModelLabel result = new TestCategoryComposeModelLabel(id.ToString(), listOfCategories, listOfLabels);
+            TestCategoryComposeModelLabel result = new TestCategoryComposeModelLabel(listOfTestCategoryComposeId, id.ToString(), listOfCategories, listOfLabels);
             return Ok(result);
         }
 
