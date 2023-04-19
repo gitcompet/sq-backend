@@ -54,12 +54,14 @@ namespace SkillQuizzWebApi.Controllers
             var listOfCompose = _ISubDomainCompose.GetSubDomainComposeByElementId(type, id);
             var listOfCategories = new List<string>();
             var listOfLabels = new List<string>();
+            var listOfIds = new List<string>();
             foreach (SubDomainComposeModel item in listOfCompose)
             {
+                listOfIds.Add(item.SubDomainComposeId);
                 listOfCategories.Add(item.SubDomainId);
                 listOfLabels.Add(_IElementTranslation.GetElementLabelById(item.SubDomainId, TYPE_LABEL.TITLE, language));
             }
-            SubDomainComposeModelLabel result = new SubDomainComposeModelLabel(id.ToString(), listOfCategories, listOfLabels);
+            SubDomainComposeModelLabel result = new SubDomainComposeModelLabel(listOfIds, id.ToString(), listOfCategories, listOfLabels);
             return Ok(result);
         }
 
