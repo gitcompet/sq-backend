@@ -13,9 +13,9 @@ namespace Business_Logic_Layer.Models
             this.ElementId = id;
             this.SubDomainNames = domNames;
             this.SubDomainId = doms;
-            this.SubDomaComposeinId = domIds;
+            this.SubDomainComposeId = domIds;
         }
-        public IEnumerable<string> SubDomaComposeinId { get; set; }
+        public IEnumerable<string> SubDomainComposeId { get; set; }
         public string ElementId { get; set; }
         public IEnumerable<string> SubDomainId { get; set; }
         public IEnumerable<string> SubDomainNames { get; set; }
