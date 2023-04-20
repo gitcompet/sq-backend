@@ -26,6 +26,15 @@ namespace Data_Access_Layer.DAL
 
             return d;
         }
+        public ElementTranslation GetElementTranslationByKey(int id, string elementType, int languageId)
+        {
+            var db = new CompetenceDbContext();
+            ElementTranslation d = new ElementTranslation();
+
+            d = db.ElementTranslation.FirstOrDefault(x => x.ElementId == id && x.ElementType == elementType && x.LanguagesId == languageId);
+
+            return d;
+        }
 
         public IEnumerable<string> GetElementsLabelById(IEnumerable<string> ids, string elementType, int languageId)
         {

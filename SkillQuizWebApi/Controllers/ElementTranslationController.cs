@@ -35,9 +35,17 @@ namespace SkillElementTranslationzWebApi.Controllers
         //GET api/v1/ElementTranslation/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<ElementTranslationModel> GetElementTranslationById(int id)
+        public ActionResult<ElementTranslationModel> GetElementTranslationById(int id, string? elementType, int? languageId)
         {
-            var elementTranslation = _IElementTranslation.GetElementTranslationById(id);
+            ElementTranslationModel elementTranslation;
+            if (languageId.HasValue && elementType != null)
+            {
+                elementTranslation = _IElementTranslation.GetElementTranslationByKey(id, elementType, languageId.Value);
+            }
+            else
+            {
+                elementTranslation = _IElementTranslation.GetElementTranslationById(id);
+            }
 
             if (elementTranslation == null)
             {

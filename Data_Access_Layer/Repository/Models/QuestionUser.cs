@@ -11,5 +11,6 @@ namespace Data_Access_Layer.Repository.Models
         public int QuestionUserId { get; set; }
         public int QuestionId { get; set; }
         public int QuizUserId { get; set; }
+        public DateTime? MaxValidationDate { get; set; }
     }
 }

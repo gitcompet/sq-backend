@@ -12,6 +12,9 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Linq;
 using System.Security.Claims;
+using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using System.IO;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -93,11 +96,50 @@ namespace SkillQuizzWebApi.Controllers
         //PATCH api/v1/Quiz/{id}
         [HttpPatch]
         [Route("{id:int}")]
-        public ActionResult<QuizModel> PatchQuiz([FromRoute] int id, [FromBody] JsonPatchDocument<Quiz> quizModelJSON)
+        public ActionResult<QuizModel> PatchQuiz([FromRoute] int id, [FromBody] JsonPatchDocument<QuizModelLabel> quizModelLabelJSON)
         {
-            if (quizModelJSON != null)
+            JsonPatchDocument<Quiz> quizJSONTemplate = new JsonPatchDocument<Quiz>();
+            JsonPatchDocument<ElementTranslation> elementTranslationJSONTemplate = new JsonPatchDocument<ElementTranslation>();
+
+            var operations = quizModelLabelJSON.Operations;
+            var labelOperationsRaw = operations.Where(x => x.path == "/title");
+            Operation<QuizModelLabel> labelOperations = null;
+            if (labelOperationsRaw.Any())
             {
-                var quiz = _IQuiz.PatchQuiz(id, quizModelJSON);
+                labelOperations = labelOperationsRaw.ToList().First();
+                operations.Remove(labelOperations);
+
+            }
+
+            var modelOperations = quizJSONTemplate.Operations;
+
+            foreach ( var operation in operations )
+            {
+                modelOperations.Add(new Operation<Quiz>(operation.op, operation.path, operation.from, operation.value));
+            }
+
+            JsonPatchDocument<Quiz> modelJSONOperations = new JsonPatchDocument<Quiz>(modelOperations, new DefaultContractResolver());
+            
+            if (modelJSONOperations != null)
+            {
+                var quiz = _IQuiz.PatchQuiz(id, modelJSONOperations);
+
+                //update the title and labels
+                var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+
+                var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+
+                if (labelOperationsRaw.Any())
+                {
+                    modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
+                }
+
+                JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+
+                int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(quiz.QuizId), TYPE_LABEL.TITLE, language).ElementTranslationId);
+
+                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+                
                 return Ok(quiz);
             }
             else

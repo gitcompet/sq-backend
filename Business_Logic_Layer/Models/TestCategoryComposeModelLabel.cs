@@ -8,12 +8,14 @@ namespace Business_Logic_Layer.Models
 {
     public class TestCategoryComposeModelLabel
     {
-        public TestCategoryComposeModelLabel(string id, IEnumerable<string> cats, IEnumerable<string> catNames)
+        public TestCategoryComposeModelLabel(IEnumerable<string> testCategoryComposeId, string id, IEnumerable<string> cats, IEnumerable<string> catNames)
         {
+            this.TestCategoryComposeId = testCategoryComposeId;
             this.TestCategoryId = cats;
             this.TestId = id;
             this.CategoryNames = catNames;
         }
+        public IEnumerable<string> TestCategoryComposeId { get; set; }
         public string TestId { get; set; }
         public IEnumerable<string> TestCategoryId { get; set; }
         public IEnumerable<string> CategoryNames { get; set; }

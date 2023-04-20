@@ -1,6 +1,7 @@
 ﻿using Data_Access_Layer.Repository;
 using Data_Access_Layer.Repository.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using Org.BouncyCastle.Crypto.Encodings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,14 +26,32 @@ namespace Data_Access_Layer.DAL
 
             return d;
         }
+        public QuestionUser GetQuestionUserHiddenById(int id)
+        {
+            var db = new CompetenceDbContext();
+            QuestionUser d = new QuestionUser();
+
+            d = db.QuestionUser.FirstOrDefault(x => x.QuestionUserId == id);
+
+            return d;
+        }
 
         public IEnumerable<QuestionUser> GetQuestionUserByLinkId(int id)
         {
 
             var db = new CompetenceDbContext();
-            var d = db.QuestionUser.Where(x => x.QuizUserId == id);
+            var d = db.QuestionUser.Where(x => x.QuizUserId == id && (x.MaxValidationDate == null || x.MaxValidationDate > DateTime.Now)).ToList();
+            var d1 = new List<QuestionUser>();
+            
+            foreach (var item in d)
+            {
+                if (item.MaxValidationDate == null || item.MaxValidationDate > DateTime.Now)
+                {
+                    d1.Add(item);
+                }
+            }
 
-            return d;
+            return d1;
         }
 
 
@@ -54,6 +73,24 @@ namespace Data_Access_Layer.DAL
             db.Update(d);
             db.SaveChanges();
             return d;
+        }
+        public bool PatchQuestionUserHidden(int id, DateTime maxValidationDate)
+        {
+            var db = new CompetenceDbContext();
+            QuestionUser d = new QuestionUser();
+
+            d = db.QuestionUser.FirstOrDefault(x => x.QuestionUserId == id);
+            if (d != null)
+            {
+                d.MaxValidationDate = maxValidationDate;
+                db.Update(d);
+                db.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public QuestionUser PutQuestionUser(QuestionUser questionUser)

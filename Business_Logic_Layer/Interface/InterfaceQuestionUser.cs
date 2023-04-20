@@ -17,6 +17,7 @@ namespace Business_Logic_Layer.Interface
         ActionResult<IEnumerable<QuestionUserModel>> GetQuestionUserByLinkId(int id);
         QuestionUserModel PostQuestionUser(QuestionUserModel questionUserModel);
         QuestionUserModel PatchQuestionUser(int id, JsonPatchDocument<QuestionUser> questionUserModelJSON);
+        bool PatchQuestionUserHidden(int id, DateTime maxValidationDate);
         QuestionUserModel PutQuestionUser(QuestionUserModel questionUserModel);
         void DeleteQuestionUser(int id);
     }
