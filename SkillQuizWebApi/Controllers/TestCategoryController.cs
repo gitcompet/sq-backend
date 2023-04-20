@@ -13,6 +13,8 @@ using System.Reflection;
 using System.Text.Json.Nodes;
 using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using Newtonsoft.Json.Serialization;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -20,7 +22,7 @@ namespace SkillQuizzWebApi.Controllers
     [Route("api/v1/[controller]")]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "ADMIN"
+        Roles = "USER,ADMIN"
      )]
     public class TestCategoryController : ControllerBase
     {
@@ -97,11 +99,48 @@ namespace SkillQuizzWebApi.Controllers
         //PATCH api/v1/TestCategory/{id}
         [HttpPatch]
         [Route("{id:int}")]
-        public ActionResult<TestCategoryModel> PatchTestCategory([FromRoute] int id, [FromBody] JsonPatchDocument<TestCategory> testCategoryModelJSON)
+        public ActionResult<TestCategoryModel> PatchTestCategory([FromRoute] int id, [FromBody] JsonPatchDocument<TestCategoryModelLabel> testCategoryModelLabelJSON)
         {
-            if (testCategoryModelJSON != null)
+            JsonPatchDocument<TestCategory> testCategoryJSONTemplate = new JsonPatchDocument<TestCategory>();
+            JsonPatchDocument<ElementTranslation> elementTranslationJSONTemplate = new JsonPatchDocument<ElementTranslation>();
+
+            var operations = testCategoryModelLabelJSON.Operations;
+            var labelOperationsRaw = operations.Where(x => x.path == "/title");
+            Operation<TestCategoryModelLabel> labelOperations = null;
+            if (labelOperationsRaw.Any())
             {
-                var testCategory = _ITestCategory.PatchTestCategory(id, testCategoryModelJSON);
+                labelOperations = labelOperationsRaw.ToList().First();
+                operations.Remove(labelOperations);
+            }
+
+            var modelOperations = testCategoryJSONTemplate.Operations;
+
+            foreach (var operation in operations)
+            {
+                modelOperations.Add(new Operation<TestCategory>(operation.op, operation.path, operation.from, operation.value));
+            }
+
+            JsonPatchDocument<TestCategory> modelJSONOperations = new JsonPatchDocument<TestCategory>(modelOperations, new DefaultContractResolver());
+
+            if (modelJSONOperations != null)
+            {
+                var testCategory = _ITestCategory.PatchTestCategory(id, modelJSONOperations);
+
+                //update the title and labels
+                var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
+
+                var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+
+                if (labelOperationsRaw.Any())
+                {
+                    modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
+                }
+                JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+
+                int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(testCategory.TestCategoryId), TYPE_LABEL.TITLE, language).ElementTranslationId);
+
+                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+
                 return Ok(testCategory);
             }
             else

@@ -72,6 +72,10 @@ namespace Business_Logic_Layer
 
             return questionUserModel;
         }
+        public bool PatchQuestionUserHidden(int id, DateTime maxValidationDate)
+        {
+            return _DAL.PatchQuestionUserHidden(id, maxValidationDate);
+        }
 
         public QuestionUserModel PutQuestionUser(QuestionUserModel questionUserModel)
         {

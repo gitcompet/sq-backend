@@ -15,6 +15,7 @@ namespace Business_Logic_Layer.Models
             this.TestUserId = quizUserModelPostDTO.TestUserId;
             this.IsClosed = false;
             this.LanguageId = 2;
+            this.Timer = quizUserModelPostDTO.Timer;
         }
         public string QuizUserId { get; set; }
         public string QuizId { get; set; }
@@ -22,5 +23,7 @@ namespace Business_Logic_Layer.Models
         public int Score { get; set; }
         public Boolean IsClosed { get; set; }
         public int LanguageId { get; set; }
+        public Boolean Timer { get; set; }
+        public (int, int, float)? ranking { get; set; }
     }
 }

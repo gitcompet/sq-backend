@@ -17,5 +17,6 @@ namespace Business_Logic_Layer.Models
         public string QuestionUserId { get; set; }
         public string QuestionId { get; set; }
         public string QuizUserId { get; set; }
+        public DateTime? MaxValidationDate { get; set; }
     }
 }

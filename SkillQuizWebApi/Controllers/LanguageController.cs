@@ -13,7 +13,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 
-namespace SkillLanguagezWebApi.Controllers
+namespace SkillQuizzWebApi.Controllers
 {
     [ApiController]
     [Authorize(

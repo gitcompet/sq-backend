@@ -18,6 +18,7 @@ namespace Business_Logic_Layer
         private QuestionUserDAL _DALQuestionUser;
         private AnswerUserDAL _DALAnswerUser;
         private AnswerQuestionDAL _DALAnswerQuestion;
+        private AnonQuizScoreDAL _DALAnonQuizScore;
         private QuizComposeBLL _BLLQuizCompose;
         private Mapper _QuizUserMapper;
 
@@ -28,6 +29,7 @@ namespace Business_Logic_Layer
             _BLLQuizCompose = new QuizComposeBLL();
             _DALAnswerQuestion = new AnswerQuestionDAL();
             _DALQuestionUser = new QuestionUserDAL();
+            _DALAnonQuizScore = new AnonQuizScoreDAL();
             _DALAnswerUser = new AnswerUserDAL();
             _QuizUserMapper = new Mapper(_configQuizUser);
         }
@@ -55,6 +57,8 @@ namespace Business_Logic_Layer
                     }
                 }
                 quizUserModel.Score = score;
+                //now we evaluate comparing to other ones
+                quizUserModel.ranking = _DALAnonQuizScore.GetEvaluation(score, int.Parse(quizUserModel.QuizId));
             }
             return quizUserModel;
         }
@@ -122,6 +126,20 @@ namespace Business_Logic_Layer
         public void DeleteQuizUser(int id)
         {
             _DAL.DeleteQuizUser(id);
+        }
+        public List<QuizUserModel> GetLastQuizValidates(int qty)
+        {
+            var temp = _DAL.GetLastQuizValidates(qty);
+            List<QuizUserModel> result = _QuizUserMapper.Map<List<QuizUser>, List<QuizUserModel>>(temp);
+
+            return result;
+        }
+        public List<QuizUserModel> GetPendingQuizes(int qty)
+        {
+            var temp = _DAL.GetPendingQuizes(qty);
+            List<QuizUserModel> result = _QuizUserMapper.Map<List<QuizUser>, List<QuizUserModel>>(temp);
+
+            return result;
         }
     }
 }

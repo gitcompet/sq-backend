@@ -8,12 +8,14 @@ namespace Business_Logic_Layer.Models
 {
     public class DomainComposeModelLabel
     {
-        public DomainComposeModelLabel(string id, IEnumerable<string> doms, IEnumerable<string> domNames)
+        public DomainComposeModelLabel(IEnumerable<string> domIds, string id, IEnumerable<string> doms, IEnumerable<string> domNames)
         {
             this.ElementId = id;
             this.DomainNames = domNames;
             this.DomainId = doms;
+            this.DomainComposeId = domIds;
         }
+        public IEnumerable<string> DomainComposeId { get; set; }
         public string ElementId { get; set; }
         public IEnumerable<string> DomainId { get; set; }
         public IEnumerable<string> DomainNames { get; set; }

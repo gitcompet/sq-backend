@@ -4,11 +4,14 @@ using Data_Access_Layer.Repository.Models;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text.Json.Nodes;
 
 namespace SkillAnswerUserzWebApi.Controllers
@@ -18,9 +21,15 @@ namespace SkillAnswerUserzWebApi.Controllers
     public class AnswerUserController : ControllerBase
     {
         private readonly InterfaceAnswerUser _IAnswerUser;
-        public AnswerUserController(InterfaceAnswerUser interfaceAnswerUser)
+        private readonly InterfaceQuestionUser _IQuestionUser;
+        private readonly InterfaceQuizUser _IQuizUser;
+        private readonly InterfaceTestUser _ITestUser;
+        public AnswerUserController(InterfaceAnswerUser interfaceAnswerUser, InterfaceQuizUser interfaceQuizUser, InterfaceTestUser interfaceTestUser, InterfaceQuestionUser interfaceQuestionUser)
         {
             _IAnswerUser = interfaceAnswerUser;
+            _IQuestionUser = interfaceQuestionUser;
+            _ITestUser = interfaceTestUser;
+            _IQuizUser = interfaceQuizUser;
         }
 
         //GET api/v1/AnswerUser
@@ -30,7 +39,29 @@ namespace SkillAnswerUserzWebApi.Controllers
         {
             return _IAnswerUser.GetAllAnswerUser();
         }
-
+        //GET api/v1/AnswerUser/Empty{quizId}
+        [HttpGet]
+        [Route("Remaining/{quizId:int}")]
+        public List<int> GetAllAnswerUser(int quizId)
+        {
+            var result = new List<int>();
+            var questions = _IQuestionUser.GetQuestionUserByLinkId(quizId).Value.Select(x => x.QuestionUserId).ToList();
+            
+            foreach (var item in questions)
+            {
+                var temp = _IAnswerUser.GetAnswerUserByLinkId(int.Parse(item)).Value.ToList();
+                if (!temp.Any())
+                {
+                    //IF overdue don't add it
+                    var dueDate = _IQuestionUser.GetQuestionUserById(int.Parse(item)).MaxValidationDate;
+                    if (!dueDate.HasValue || dueDate.Value > DateTime.Now)
+                    {
+                        result.Add(int.Parse(item));
+                    }
+                }
+            }
+            return result;
+        }
 
         //GET api/v1/AnswerUser/{id}
         [HttpGet]
@@ -68,7 +99,29 @@ namespace SkillAnswerUserzWebApi.Controllers
         {
             if (answerUserModelPostDTO != null)
             {
+                //check first if the user accessing it is legitimate
+                var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                var quizUserId = _IQuestionUser.GetQuestionUserById(int.Parse(answerUserModelPostDTO.QuestionUserId)).QuizUserId;
+                var testUserId = _IQuizUser.GetQuizUserById(int.Parse(quizUserId)).TestUserId;
+                var legitimateUser = _ITestUser.GetTestUserById(int.Parse(testUserId)).LoginId;
+
+                if (legitimateUser != userId)
+                {
+                    return StatusCode(403, "You aren't the user allowed to access this Quiz");
+                }
+
                 var answerUserModel = new AnswerUserModel(answerUserModelPostDTO);
+                //Déjà répondu?
+                var isEmpty = _IAnswerUser.GetAnswerUserByLinkId(int.Parse(answerUserModel.QuestionUserId)).Value.ToList();
+                if (isEmpty.Any())
+                {
+                    return StatusCode(403, "You already answered this Question");
+                }
+                //Timer dépassé
+                if (_IQuestionUser.GetQuestionUserById(int.Parse(answerUserModel.QuestionUserId)).MaxValidationDate < DateTime.Now)
+                {
+                    return StatusCode(403, "You were out of time for this submition");
+                }
                 var answerUserResult = _IAnswerUser.PostAnswerUser(answerUserModel);
                 if (answerUserResult != null)
                 {
