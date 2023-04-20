@@ -184,8 +184,21 @@ namespace SkillQuizzWebApi.Controllers
 
             var operations = questionModelLabelJSON.Operations;
             var labelOperations = new List<Operation<QuestionModelLabel>>();
-            labelOperations.Add(operations.Where(x => x.path == "/title").ToList().First());
-            labelOperations.Add(operations.Where(x => x.path == "/label").ToList().First());
+            bool isTitle = false;
+            bool isLabel = false;
+
+            var labelOperationsRaw = operations.Where(x => x.path == "/title");
+            if (labelOperationsRaw.Any())
+            {
+                labelOperations.Add(labelOperationsRaw.ToList().First());
+                isTitle = true;
+            }
+            labelOperationsRaw = operations.Where(x => x.path == "/label");
+            if (labelOperationsRaw.Any())
+            {
+                labelOperations.Add(labelOperationsRaw.ToList().First());
+                isLabel = true;
+            }
 
             foreach (var oper in labelOperations)
             {
@@ -209,24 +222,31 @@ namespace SkillQuizzWebApi.Controllers
                 var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
 
                 var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+                int elementTranslationId;
+                JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel;
+                if (isTitle)
+                {
 
-                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.First().op, "/description", labelOperations.First().from, labelOperations.First().value));
+                    modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.First().op, "/description", labelOperations.First().from, labelOperations.First().value));
                 
-                JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+                    modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
 
-                int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(question.QuestionId), TYPE_LABEL.TITLE, language).ElementTranslationId);
+                    elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(question.QuestionId), TYPE_LABEL.TITLE, language).ElementTranslationId);
 
-                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+                    _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+                }
+                if (isLabel)
+                {
+                    modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+
+                    modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.Last().op, "/description", labelOperations.Last().from, labelOperations.Last().value));
                 
-                modelOperationsLabel = elementTranslationJSONTemplate.Operations;
+                    modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
 
-                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.Last().op, "/description", labelOperations.Last().from, labelOperations.Last().value));
-                
-                modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
+                    elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(question.QuestionId), TYPE_LABEL.LABEL, language).ElementTranslationId);
 
-                elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(question.QuestionId), TYPE_LABEL.LABEL, language).ElementTranslationId);
-
-                _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+                    _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
+                }
                 
                 return Ok(question);
             }
