@@ -54,12 +54,14 @@ namespace SkillQuizzWebApi.Controllers
             var listOfCompose = _IDomainCompose.GetDomainComposeByElementId(type, id);
             var listOfCategories = new List<string>();
             var listOfLabels = new List<string>();
+            var listOfIds = new List<string>();
             foreach (DomainComposeModel item in listOfCompose)
             {
+                listOfIds.Add(item.DomainComposeId);
                 listOfCategories.Add(item.DomainId);
                 listOfLabels.Add(_IElementTranslation.GetElementLabelById(item.DomainId, TYPE_LABEL.TITLE, language));
             }
-            DomainComposeModelLabel result = new DomainComposeModelLabel(id.ToString(), listOfCategories, listOfLabels);
+            DomainComposeModelLabel result = new DomainComposeModelLabel(listOfIds, id.ToString(), listOfCategories, listOfLabels);
             return Ok(result);
         }
 

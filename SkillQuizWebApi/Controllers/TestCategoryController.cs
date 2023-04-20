@@ -22,7 +22,7 @@ namespace SkillQuizzWebApi.Controllers
     [Route("api/v1/[controller]")]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "ADMIN"
+        Roles = "USER,ADMIN"
      )]
     public class TestCategoryController : ControllerBase
     {
