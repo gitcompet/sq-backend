@@ -41,29 +41,18 @@ namespace SkillQuizzWebApi.Controllers
 
         //GET api/v1/Dashboard/LastQuizDone
         [HttpGet]
-        [Route("LastQuizDone")]
-        public List<QuizUserModel> GetLastQuiz(int? amount)
+        [Route("LastQuiz")]
+        public List<QuizUserModel> GetLastQuiz(int? amount, bool? done)
         {
             int qty = 5;
             if (amount.HasValue)
             {
                 qty = amount.Value;
             }
-
+            if (done.Value)
+            {
             return _IQuizUser.GetLastQuizValidates(qty);
-        }
-
-        //GET api/v1/Dashboard/PendingQuizes
-        [HttpGet]
-        [Route("PendingQuizes")]
-        public List<QuizUserModel> PendingQuizes(int? amount)
-        {
-            int qty = 5;
-            if (amount.HasValue)
-            {
-                qty = amount.Value;
             }
-
             return _IQuizUser.GetPendingQuizes(qty);
         }
     }
