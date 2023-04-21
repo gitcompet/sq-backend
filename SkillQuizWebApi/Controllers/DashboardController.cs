@@ -41,7 +41,7 @@ namespace SkillQuizzWebApi.Controllers
 
         //GET api/v1/Dashboard/LastQuizDone
         [HttpGet]
-        [Route("/LastQuizDone")]
+        [Route("LastQuizDone")]
         public List<QuizUserModel> GetLastQuiz(int? amount)
         {
             int qty = 5;
@@ -55,7 +55,7 @@ namespace SkillQuizzWebApi.Controllers
 
         //GET api/v1/Dashboard/PendingQuizes
         [HttpGet]
-        [Route("/PendingQuizes")]
+        [Route("PendingQuizes")]
         public List<QuizUserModel> PendingQuizes(int? amount)
         {
             int qty = 5;
