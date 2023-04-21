@@ -97,9 +97,13 @@ namespace SkillQuizzWebApi.Controllers
             JsonPatchDocument<ElementTranslation> elementTranslationJSONTemplate = new JsonPatchDocument<ElementTranslation>();
 
             var operations = domainModelLabelJSON.Operations;
-            var labelOperations = operations.Where(x => x.path == "/title").ToList().First();
-            operations.Remove(labelOperations);
-
+            var labelOperationsRaw = operations.Where(x => x.path == "/title");
+            Operation<DomainModelLabel> labelOperations = null;
+            if (labelOperationsRaw.Any())
+            {
+                labelOperations = labelOperationsRaw.ToList().First();
+                operations.Remove(labelOperations);
+            }
             var modelOperations = domainJSONTemplate.Operations;
 
             foreach (var operation in operations)
@@ -117,8 +121,11 @@ namespace SkillQuizzWebApi.Controllers
                 var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
 
                 var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
-                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
 
+                if (labelOperationsRaw.Any())
+                {
+                    modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
+                }
                 JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
 
                 int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(domain.DomainId), TYPE_LABEL.TITLE, language).ElementTranslationId);

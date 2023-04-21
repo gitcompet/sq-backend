@@ -22,7 +22,7 @@ namespace SkillQuizzWebApi.Controllers
     [Route("api/v1/[controller]")]
     [Authorize(
         AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
-        Roles = "ADMIN"
+        Roles = "USER,ADMIN"
      )]
     public class TestCategoryController : ControllerBase
     {
@@ -105,8 +105,13 @@ namespace SkillQuizzWebApi.Controllers
             JsonPatchDocument<ElementTranslation> elementTranslationJSONTemplate = new JsonPatchDocument<ElementTranslation>();
 
             var operations = testCategoryModelLabelJSON.Operations;
-            var labelOperations = operations.Where(x => x.path == "/title").ToList().First();
-            operations.Remove(labelOperations);
+            var labelOperationsRaw = operations.Where(x => x.path == "/title");
+            Operation<TestCategoryModelLabel> labelOperations = null;
+            if (labelOperationsRaw.Any())
+            {
+                labelOperations = labelOperationsRaw.ToList().First();
+                operations.Remove(labelOperations);
+            }
 
             var modelOperations = testCategoryJSONTemplate.Operations;
 
@@ -125,8 +130,11 @@ namespace SkillQuizzWebApi.Controllers
                 var language = int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Country).Value);
 
                 var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
-                modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
 
+                if (labelOperationsRaw.Any())
+                {
+                    modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
+                }
                 JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
 
                 int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(testCategory.TestCategoryId), TYPE_LABEL.TITLE, language).ElementTranslationId);
