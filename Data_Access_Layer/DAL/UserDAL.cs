@@ -23,7 +23,8 @@ namespace Data_Access_Layer.DAL
             User d = new User();
 
             d = db.User.FirstOrDefault(x => x.LoginId == id);
-
+            System.Diagnostics.Debug.WriteLine(id);
+            System.Diagnostics.Debug.WriteLine(d);
             return d;
         }
 
