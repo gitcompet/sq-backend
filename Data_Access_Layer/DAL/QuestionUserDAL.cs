@@ -55,8 +55,6 @@ namespace Data_Access_Layer.DAL
         }
         public IEnumerable<QuestionUser> GetQuestionUserByLinkId(int id, bool scoring)
         {
-            System.Diagnostics.Debug.WriteLine("TEST");
-            System.Diagnostics.Debug.WriteLine(id);
             var db = new CompetenceDbContext();
             var d = db.QuestionUser.Where(x => x.QuizUserId == id).ToList();
 

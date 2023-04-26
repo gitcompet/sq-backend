@@ -45,7 +45,6 @@ namespace Business_Logic_Layer
                 //for all question, get the answer made and the actual answers
                 var questionList = _BLLQuizCompose.GetQuizComposeByQuizId(int.Parse(quizUserModel.QuizId));
                 List<QuestionUser> questionUserIds = _DALQuestionUser.GetQuestionUserByLinkId(int.Parse(quizUserModel.QuizUserId), true).ToList();
-                System.Diagnostics.Debug.WriteLine(quizUserModel.QuizUserId);
                 int questionUserId;
                 foreach (var question in questionList)
                 {
@@ -87,11 +86,9 @@ namespace Business_Logic_Layer
             var quizUserEntity = _DAL.GetQuizUserByLinkId(id);
             var result = new List<QuizUserModel>();
 
-            System.Diagnostics.Debug.WriteLine("======================================");
             foreach (var item in quizUserEntity)
             {
                 QuizUserModel model = _QuizUserMapper.Map<QuizUser, QuizUserModel>(item);
-                System.Diagnostics.Debug.WriteLine(GetScoredByQuizUser(model));
                 result.Add(GetScoredByQuizUser(model));
             }
 
