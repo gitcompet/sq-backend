@@ -44,7 +44,8 @@ namespace Business_Logic_Layer
                 int score = 0;
                 //for all question, get the answer made and the actual answers
                 var questionList = _BLLQuizCompose.GetQuizComposeByQuizId(int.Parse(quizUserModel.QuizId));
-                List<QuestionUser> questionUserIds = _DALQuestionUser.GetQuestionUserByLinkId(int.Parse(quizUserModel.QuizUserId)).ToList();
+                List<QuestionUser> questionUserIds = _DALQuestionUser.GetQuestionUserByLinkId(int.Parse(quizUserModel.QuizUserId), true).ToList();
+                System.Diagnostics.Debug.WriteLine(quizUserModel.QuizUserId);
                 int questionUserId;
                 foreach (var question in questionList)
                 {
