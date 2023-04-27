@@ -26,8 +26,10 @@ namespace Data_Access_Layer.DAL
             d = db.QuizUser.FirstOrDefault(x => x.QuizUserId == id);
             var localTimezone = TimeZoneInfo.Local.Id.ToString();
             var timezone = TimeZoneInfo.FindSystemTimeZoneById(localTimezone);
-            d.AuditTrailClosingTime = TimeZoneInfo.ConvertTimeFromUtc(d.AuditTrailClosingTime.Value, timezone);
-
+            if (d.AuditTrailClosingTime.HasValue)
+            {
+                d.AuditTrailClosingTime = TimeZoneInfo.ConvertTimeFromUtc(d.AuditTrailClosingTime.Value, timezone);
+            }
             return d;
         }
         
@@ -40,7 +42,10 @@ namespace Data_Access_Layer.DAL
             var timezone = TimeZoneInfo.FindSystemTimeZoneById(localTimezone);
             foreach(var item in d)
             {
-                item.AuditTrailClosingTime = TimeZoneInfo.ConvertTimeFromUtc(item.AuditTrailClosingTime.Value, timezone);
+                if(item.AuditTrailClosingTime.HasValue)
+                {
+                    item.AuditTrailClosingTime = TimeZoneInfo.ConvertTimeFromUtc(item.AuditTrailClosingTime.Value, timezone);
+                }
             }
 
             return d;
