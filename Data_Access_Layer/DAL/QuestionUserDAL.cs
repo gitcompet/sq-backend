@@ -25,7 +25,10 @@ namespace Data_Access_Layer.DAL
             d = db.QuestionUser.FirstOrDefault(x => x.QuestionUserId == id);
             var localTimezone = TimeZoneInfo.Local.Id.ToString();
             var timezone = TimeZoneInfo.FindSystemTimeZoneById(localTimezone);
-            d.MaxValidationDate = TimeZoneInfo.ConvertTimeFromUtc(d.MaxValidationDate.Value, timezone);
+            if (d.MaxValidationDate.HasValue)
+            {
+                d.MaxValidationDate = TimeZoneInfo.ConvertTimeFromUtc(d.MaxValidationDate.Value, timezone);
+            }
             return d;
         }
         public QuestionUser GetQuestionUserHiddenById(int id)
@@ -48,7 +51,10 @@ namespace Data_Access_Layer.DAL
             var timezone = TimeZoneInfo.FindSystemTimeZoneById(localTimezone);
             foreach (var item in d)
             {
-                item.MaxValidationDate = TimeZoneInfo.ConvertTimeFromUtc(item.MaxValidationDate.Value, timezone);
+                if (item.MaxValidationDate.HasValue)
+                {
+                    item.MaxValidationDate = TimeZoneInfo.ConvertTimeFromUtc(item.MaxValidationDate.Value, timezone);
+                }
             }
             var d1 = new List<QuestionUser>();
             
