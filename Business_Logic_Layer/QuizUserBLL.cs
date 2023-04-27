@@ -16,6 +16,7 @@ namespace Business_Logic_Layer
 
         private QuizUserDAL _DAL;
         private QuestionUserDAL _DALQuestionUser;
+        private QuestionDAL _DALQuestion;
         private AnswerUserDAL _DALAnswerUser;
         private AnswerQuestionDAL _DALAnswerQuestion;
         private AnonQuizScoreDAL _DALAnonQuizScore;
@@ -29,6 +30,7 @@ namespace Business_Logic_Layer
             _BLLQuizCompose = new QuizComposeBLL();
             _DALAnswerQuestion = new AnswerQuestionDAL();
             _DALQuestionUser = new QuestionUserDAL();
+            _DALQuestion = new QuestionDAL();
             _DALAnonQuizScore = new AnonQuizScoreDAL();
             _DALAnswerUser = new AnswerUserDAL();
             _QuizUserMapper = new Mapper(_configQuizUser);
@@ -39,9 +41,10 @@ namespace Business_Logic_Layer
 
             if (quizUserModel.IsClosed)
             {
+                float totalWeight = 0;
                 List<int> answers = new List<int>();
                 List<int> expectedAnswer = new List<int>();
-                int score = 0;
+                float score = 0;
                 //for all question, get the answer made and the actual answers
                 var questionList = _BLLQuizCompose.GetQuizComposeByQuizId(int.Parse(quizUserModel.QuizId));
                 List<QuestionUser> questionUserIds = _DALQuestionUser.GetQuestionUserByLinkId(int.Parse(quizUserModel.QuizUserId), true).ToList();
@@ -51,12 +54,14 @@ namespace Business_Logic_Layer
                     expectedAnswer = _DALAnswerQuestion.GetGoodAnswerList(int.Parse(question.QuestionId)); //validé
                     questionUserId = questionUserIds.FirstOrDefault(x => x.QuestionId == int.Parse(question.QuestionId)).QuestionUserId;
                     answers = _DALAnswerUser.GetAnswerUserByLinkId(questionUserId).Select(x => x.AnswerId).ToList();
+                    float weight = _DALQuestion.GetWeight(int.Parse(question.QuestionId));
+                    totalWeight += weight;
                     if (answers.SequenceEqual(expectedAnswer))
                     {
-                        score = score + 1;
+                        score = score + weight;
                     }
                 }
-                quizUserModel.Score = score;
+                quizUserModel.Score = score/totalWeight*100;
                 //now we evaluate comparing to other ones
                 quizUserModel.ranking = _DALAnonQuizScore.GetEvaluation(score, int.Parse(quizUserModel.QuizId));
             }

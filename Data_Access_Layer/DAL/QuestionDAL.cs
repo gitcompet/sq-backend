@@ -26,6 +26,15 @@ namespace Data_Access_Layer.DAL
 
             return d;
         }
+        public float GetWeight(int id)
+        {
+            var db = new CompetenceDbContext();
+            Question d = new Question();
+
+            d = db.Question.FirstOrDefault(x => x.QuestionId == id);
+
+            return (float)d.Weight;
+        }
 
         public Question PostQuestion(Question question)
         {

@@ -10,14 +10,14 @@ namespace Data_Access_Layer.DAL
 {
     public class AnonQuizScoreDAL
     {
-        public (int, int, float) GetEvaluation(int score, int id)
+        public (int, int, float) GetEvaluation(float score, int id)
         {
             var db = new CompetenceDbContext();
             int beaten;
             int full;
             float percentage;
-
-            beaten = db.AnonQuizScore.Where(x => x.Score <= score && x.QuizId == id).Count();
+            decimal decScore = (decimal)score;
+            beaten = db.AnonQuizScore.Where(x => x.Score <= decScore && x.QuizId == id).Count();
             full = db.AnonQuizScore.Where(x => x.Score >= -1 && x.QuizId == id).Count();
             percentage = (float)1-((float)beaten / (float)full);
             return (beaten, full, percentage);

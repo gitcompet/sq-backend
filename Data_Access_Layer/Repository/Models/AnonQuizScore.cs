@@ -11,6 +11,6 @@ namespace Data_Access_Layer.Repository.Models
     {
         public int AnonQuizScoreId { get; set; }
         public int QuizId { get; set; }
-        public int Score { get; set; }
+        public decimal Score { get; set; }
     }
 }

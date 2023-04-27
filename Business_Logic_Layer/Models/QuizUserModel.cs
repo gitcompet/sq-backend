@@ -20,7 +20,7 @@ namespace Business_Logic_Layer.Models
         public string QuizUserId { get; set; }
         public string QuizId { get; set; }
         public string TestUserId { get; set; }
-        public int Score { get; set; }
+        public float Score { get; set; }
         public Boolean IsClosed { get; set; }
         public int LanguageId { get; set; }
         public Boolean Timer { get; set; }
