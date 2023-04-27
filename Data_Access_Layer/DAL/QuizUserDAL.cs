@@ -24,6 +24,9 @@ namespace Data_Access_Layer.DAL
             QuizUser d = new QuizUser();
 
             d = db.QuizUser.FirstOrDefault(x => x.QuizUserId == id);
+            var localTimezone = TimeZoneInfo.Local.Id.ToString();
+            var timezone = TimeZoneInfo.FindSystemTimeZoneById(localTimezone);
+            d.AuditTrailClosingTime = TimeZoneInfo.ConvertTimeFromUtc(d.AuditTrailClosingTime.Value, timezone);
 
             return d;
         }
@@ -32,7 +35,13 @@ namespace Data_Access_Layer.DAL
         {
 
             var db = new CompetenceDbContext();
-            var d = db.QuizUser.Where(x => x.TestUserId == id); 
+            var d = db.QuizUser.Where(x => x.TestUserId == id);
+            var localTimezone = TimeZoneInfo.Local.Id.ToString();
+            var timezone = TimeZoneInfo.FindSystemTimeZoneById(localTimezone);
+            foreach(var item in d)
+            {
+                item.AuditTrailClosingTime = TimeZoneInfo.ConvertTimeFromUtc(item.AuditTrailClosingTime.Value, timezone);
+            }
 
             return d;
         }
