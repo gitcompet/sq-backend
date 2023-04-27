@@ -15,6 +15,7 @@ using System.Security.Claims;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using System.IO;
+using System.ComponentModel;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -103,12 +104,14 @@ namespace SkillQuizzWebApi.Controllers
 
             var operations = quizModelLabelJSON.Operations;
             var labelOperationsRaw = operations.Where(x => x.path == "/title");
+            bool isTitle = false;
+
             Operation<QuizModelLabel> labelOperations = null;
             if (labelOperationsRaw.Any())
             {
+                isTitle = true;
                 labelOperations = labelOperationsRaw.ToList().First();
                 operations.Remove(labelOperations);
-
             }
 
             var modelOperations = quizJSONTemplate.Operations;
@@ -119,7 +122,7 @@ namespace SkillQuizzWebApi.Controllers
             }
 
             JsonPatchDocument<Quiz> modelJSONOperations = new JsonPatchDocument<Quiz>(modelOperations, new DefaultContractResolver());
-            
+
             if (modelJSONOperations != null)
             {
                 var quiz = _IQuiz.PatchQuiz(id, modelJSONOperations);
@@ -129,7 +132,7 @@ namespace SkillQuizzWebApi.Controllers
 
                 var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
 
-                if (labelOperationsRaw.Any())
+                if (isTitle)
                 {
                     modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
                 }
@@ -137,6 +140,7 @@ namespace SkillQuizzWebApi.Controllers
                 JsonPatchDocument<ElementTranslation> modelJSONOperationsLabel = new JsonPatchDocument<ElementTranslation>(modelOperationsLabel, new DefaultContractResolver());
 
                 int elementTranslationId = int.Parse(_IElementTranslation.GetElementTranslationByKey(int.Parse(quiz.QuizId), TYPE_LABEL.TITLE, language).ElementTranslationId);
+
 
                 _IElementTranslation.PatchElementTranslation(elementTranslationId, modelJSONOperationsLabel);
                 

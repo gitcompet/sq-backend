@@ -16,6 +16,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Newtonsoft.Json.Serialization;
+using System.ComponentModel;
 
 namespace SkillQuizzWebApi.Controllers
 {
@@ -108,9 +109,11 @@ namespace SkillQuizzWebApi.Controllers
 
             var operations = testModelLabelJSON.Operations;
             var labelOperationsRaw = operations.Where(x => x.path == "/title");
+            bool isTitle = false;
             Operation<TestModelLabel> labelOperations = null;
             if (labelOperationsRaw.Any())
             {
+                isTitle = true;
                 labelOperations = labelOperationsRaw.ToList().First();
                 operations.Remove(labelOperations);
             }
@@ -133,7 +136,7 @@ namespace SkillQuizzWebApi.Controllers
 
                 var modelOperationsLabel = elementTranslationJSONTemplate.Operations;
 
-                if (labelOperationsRaw.Any())
+                if (isTitle)
                 {
                     modelOperationsLabel.Add(new Operation<ElementTranslation>(labelOperations.op, "/description", labelOperations.from, labelOperations.value));
                 }
