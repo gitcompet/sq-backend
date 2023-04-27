@@ -23,7 +23,9 @@ namespace Data_Access_Layer.DAL
             QuestionUser d = new QuestionUser();
 
             d = db.QuestionUser.FirstOrDefault(x => x.QuestionUserId == id);
-
+            var localTimezone = TimeZoneInfo.Local.Id.ToString();
+            var timezone = TimeZoneInfo.FindSystemTimeZoneById(localTimezone);
+            d.MaxValidationDate = TimeZoneInfo.ConvertTimeFromUtc(d.MaxValidationDate.Value, timezone);
             return d;
         }
         public QuestionUser GetQuestionUserHiddenById(int id)
@@ -41,6 +43,13 @@ namespace Data_Access_Layer.DAL
 
             var db = new CompetenceDbContext();
             var d = db.QuestionUser.Where(x => x.QuizUserId == id && (x.MaxValidationDate == null || x.MaxValidationDate > DateTime.Now)).ToList();
+
+            var localTimezone = TimeZoneInfo.Local.Id.ToString();
+            var timezone = TimeZoneInfo.FindSystemTimeZoneById(localTimezone);
+            foreach (var item in d)
+            {
+                item.MaxValidationDate = TimeZoneInfo.ConvertTimeFromUtc(item.MaxValidationDate.Value, timezone);
+            }
             var d1 = new List<QuestionUser>();
             
             foreach (var item in d)
@@ -52,6 +61,13 @@ namespace Data_Access_Layer.DAL
             }
 
             return d1;
+        }
+        public IEnumerable<QuestionUser> GetQuestionUserByLinkId(int id, bool scoring)
+        {
+            var db = new CompetenceDbContext();
+            var d = db.QuestionUser.Where(x => x.QuizUserId == id).ToList();
+
+            return d;
         }
 
 
