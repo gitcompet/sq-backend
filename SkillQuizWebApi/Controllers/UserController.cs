@@ -40,16 +40,14 @@ namespace SkillUserzWebApi.Controllers
         //GET api/v1/User/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<UserModelNoPassword> GetUserById(int id)
+        public ActionResult<UserModel> GetUserById(int id)
         {
-            var rawuser = _IUser.GetUserById(id);
+            var user = _IUser.GetUserById(id);
 
-            if (rawuser == null)
+            if (user == null)
             {
                 return NotFound("Invalid ID");
             }
-
-            UserModelNoPassword user = new UserModelNoPassword(rawuser);
 
             return Ok(user);
         }
