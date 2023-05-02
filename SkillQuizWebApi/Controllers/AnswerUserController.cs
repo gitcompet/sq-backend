@@ -103,7 +103,7 @@ namespace SkillAnswerUserzWebApi.Controllers
                 var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 var quizUserId = _IQuestionUser.GetQuestionUserById(int.Parse(answerUserModelPostDTO.QuestionUserId)).QuizUserId;
                 var testUserId = _IQuizUser.GetQuizUserById(int.Parse(quizUserId)).TestUserId;
-                var legitimateUser = _ITestUser.GetTestUserById(int.Parse(testUserId)).LoginId;
+                var legitimateUser = _ITestUser.GetTestUserById(int.Parse(testUserId), false).LoginId;
 
                 if (legitimateUser != userId)
                 {

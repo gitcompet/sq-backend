@@ -84,7 +84,7 @@ namespace SkillQuizzWebApi.Controllers
                     //check first if the user accessing it is legitimate
                     var userId = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
                     var testUserId = _IQuizUser.GetQuizUserById(quizUserId.Value).TestUserId; 
-                    var legitimateUser = _ITestUser.GetTestUserById(int.Parse(testUserId)).LoginId;
+                    var legitimateUser = _ITestUser.GetTestUserById(int.Parse(testUserId), false).LoginId;
 
                     if (legitimateUser != userId)
                     {

@@ -44,26 +44,26 @@ namespace SkillTestUserzWebApi.Controllers
         //GET api/v1/TestUser/{id}
         [HttpGet]
         [Route("{id:int}")]
-        public ActionResult<IEnumerable<TestUserModel>> GetTestUserByUserId(bool? isParentURL, int id)
+        public ActionResult<IEnumerable<TestUserModel>> GetTestUserByUserId(bool? isParentURL, bool? isPending, int id)
         {
             if (isParentURL.HasValue && isParentURL.Value)
             {
-                var testUser = _ITestUser.GetTestUserByUserId(id);
+                var testUser = _ITestUser.GetTestUserByUserId(id, isPending.Value);
 
                 if (testUser == null)
                 {
-                    return NotFound("Invalid ID");
+                    return NotFound("Invalid ID or no results");
                 }
 
                 return Ok(testUser);
             }
             else
             {
-                var testUser = _ITestUser.GetTestUserById(id);
+                var testUser = _ITestUser.GetTestUserById(id, isPending.Value);
 
                 if (testUser == null)
                 {
-                    return NotFound("Invalid ID");
+                    return NotFound("Invalid ID or no results");
                 }
 
                 return Ok(testUser);
@@ -151,15 +151,15 @@ namespace SkillTestUserzWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<TestUserModel> DeleteTestUser([FromRoute] int id)
         {
-            var testUser = _ITestUser.GetTestUserById(id);
+            var testUser = _ITestUser.GetTestUserById(id, false);
 
             if (testUser == null)
             {
-                return NotFound("Invalid ID");
+                return NotFound("Invalid ID or no results");
             }
             else
             {
-                var toBeDeletedTestUser = _ITestUser.GetTestUserById(id);
+                var toBeDeletedTestUser = _ITestUser.GetTestUserById(id, false);
                 //Trouver les QuizsUser concernés
                 var testList = _IQuizUser.GetQuizUserByLinkId(int.Parse(toBeDeletedTestUser.TestUserId)).Value.ToList();
                 //supprimer les liens dans QuizUser
