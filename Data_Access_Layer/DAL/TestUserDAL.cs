@@ -16,21 +16,35 @@ namespace Data_Access_Layer.DAL
             return db.TestUser.ToList();
         }
 
-        public TestUser GetTestUserById(int id)
+        public TestUser GetTestUserById(int id, bool isPending)
         {
             var db = new CompetenceDbContext();
             TestUser d = new TestUser();
-
-            d = db.TestUser.FirstOrDefault(x => x.TestUserId == id);
+            if (isPending)
+            {
+                d = db.TestUser.FirstOrDefault(x => x.TestUserId == id && x.TestStatus == 0);
+            }
+            else
+            {
+                d = db.TestUser.FirstOrDefault(x => x.TestUserId == id);
+            }
 
             return d;
         }
 
-        public IEnumerable<TestUser> GetTestUserByUserId(int id)
+        public IEnumerable<TestUser> GetTestUserByUserId(int id, bool isPending)
         {
             var db = new CompetenceDbContext();
-            var d = db.TestUser.Where(x => x.LoginId == id);
+            IQueryable<TestUser> d;
 
+            if (isPending)
+            {
+                d = db.TestUser.Where(x => x.LoginId == id && x.TestStatus == 0);
+            }
+            else
+            {
+                d = db.TestUser.Where(x => x.LoginId == id);
+            }
             return d;
         }
 
@@ -81,7 +95,7 @@ namespace Data_Access_Layer.DAL
         { 
             var db = new CompetenceDbContext();
             TestUser d = new TestUser();
-            d = this.GetTestUserById(id);
+            d = this.GetTestUserById(id, false);
             db.TestUser.Remove(d);
             db.SaveChanges();
         }
