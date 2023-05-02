@@ -46,6 +46,10 @@ namespace SkillTestUserzWebApi.Controllers
         [Route("{id:int}")]
         public ActionResult<IEnumerable<TestUserModel>> GetTestUserByUserId(bool? isParentURL, bool? isPending, int id)
         {
+            if (!isPending.HasValue)
+            {
+                isPending = false;
+            }
             if (isParentURL.HasValue && isParentURL.Value)
             {
                 var testUser = _ITestUser.GetTestUserByUserId(id, isPending.Value);
